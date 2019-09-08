@@ -9,6 +9,6 @@ Read the manuscript [here](bioarxiv_link)
 * ```src``` contains codes (in ```Python``` and ```R```) for main and supplementary figures
 * ```figures``` contains main and supplementary figures
 
-2019 GreifLab
+2019 GreiffLab
 
 
