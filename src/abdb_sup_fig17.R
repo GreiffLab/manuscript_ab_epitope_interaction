@@ -120,10 +120,11 @@ dl_length_correlation_bar = function(){
   print(xtickbreaks)
   # stop()
   ggplot(data=dfmed, mapping = aes(x=use_case, y=ma, ymin=ma, ymax=ma+2*se, fill = exp_tag)) + 
-    geom_bar( position = position_dodge(), stat = 'identity') + 
-    geom_errorbar(position = position_dodge(0.9), width = 0.1) +
+    geom_bar( position = position_dodge(), stat = 'identity') +
+    geom_errorbar(mapping = aes(ymin=ma+2*se), position = position_dodge(0.9), width = 0.1) +
+    geom_linerange(position = position_dodge(0.9)) +
     geom_text(aes(y= ma-0.02, label = round(ma, 1)), position = position_dodge(0.9)) +
-    labs(y= 'Maximum Pearson correlation', x= 'Use case', fill = 'Experiment type') + 
+    labs(y= 'Maximum Pearson correlation of predicted vs observed length', x= 'Use case', fill = 'Experiment type') + 
     # scale_fill_discrete(labels =c('Randomized pairs', 'Observed pairs')) + 
     scale_fill_manual(values = c(alpha('lightsalmon', 0.5), 'lightsalmon'), labels =c('Randomized pairs', 'Observed pairs')) +
     scale_x_discrete(breaks = xtickbreaks, labels = xticklabels)
@@ -133,8 +134,8 @@ dl_length_correlation_bar = function(){
 
 ## run stuff
 # dl_length_correlation('abdb_outfiles_2019/merged_eval_files_paraepi_exp.csv')
-dl_length_correlation('abdb_outfiles_2019/merged_eval_files_paraepi_control.csv')
-# dl_length_correlation_bar()
+# dl_length_correlation('abdb_outfiles_2019/merged_eval_files_paraepi_control.csv')
+dl_length_correlation_bar()
 
 
 

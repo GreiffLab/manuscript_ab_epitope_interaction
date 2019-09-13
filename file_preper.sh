@@ -7,5 +7,6 @@ cp /Users/rahmadakbar/greifflab/aims/aimugen/src/abdb_prepdata_sup_fig*.py src
 rm src/*conflicted* 	
 cp /Users/rahmadakbar/Google\ Drive/Manuscripts/2018/abdb_manuscript/figures/abdb_main_figure_*.png figures
 cp /Users/rahmadakbar/Google\ Drive/Manuscripts/2018/abdb_manuscript/figures/abdb_sup_figure_*.png figures
+cp /Users/rahmadakbar/greifflab/aims/aimugen/src/abdb_outfiles_2019/*.csv datasets/preprocessed/
 
 

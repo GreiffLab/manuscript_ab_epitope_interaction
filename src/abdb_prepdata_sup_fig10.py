@@ -32,9 +32,9 @@ def get_shm_data():
                 shm_list = [item.split('>')[-1].split(':') + [idkey, percent_id, idlen, shmlen, pdbid, chain] for item
                             in contents]
                 if 'V' in shm_column:
-                    data += shm_list[:-1]
+                    data += shm_list[:-3]
                 elif 'J' in shm_column:
-                    data += shm_list[1:]
+                    data += shm_list[3:]
                 else:
                     data += shm_list[:]
                 print(shm_list)

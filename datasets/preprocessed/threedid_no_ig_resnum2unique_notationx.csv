@@ -1,0 +1,3 @@
+pdbid,sequence,shift,gap,gap_pattern,intertype,domain
+5JCG,QET,3-1,2-0,X2XX,interdomain,1-cysPrx_C
+5OVQ,TGVATPADWVPEPQTWEFTENTKVIVVP,5-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-2-1-1-1-1-1-1,4-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-1-0-0-0-0-0-0,X4XXXXXXXXXXXXXXXXXXX1XXXXXXX,interdomain,1-cysPrx_C

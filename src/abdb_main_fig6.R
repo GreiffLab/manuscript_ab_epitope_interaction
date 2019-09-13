@@ -86,8 +86,9 @@ dl_ld = function(){
   print(xtickbreaks)
   # stop()
   ggplot(data=dfmed, mapping = aes(x=use_case, y=me, ymin=me, ymax=me+2*se, fill = exp_tag)) + 
+    geom_errorbar(mapping = aes(ymin=me+2*se), position = position_dodge(0.9), width = 0.1) +
+    geom_linerange(position = position_dodge(0.9)) +
     geom_bar( position = position_dodge(), stat = 'identity') + 
-    geom_errorbar(position = position_dodge(0.9), width = 0.1) +
     geom_text(aes(y= me-0.02, label = round(me, 1)), position = position_dodge(0.9)) + 
     labs(y= 'Median prediction error', x= 'Use case', fill = 'Experiment type') + 
     # scale_fill_discrete(labels =c('Randomized pairs', 'Observed pairs')) + 
