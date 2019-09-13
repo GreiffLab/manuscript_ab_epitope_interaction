@@ -1,0 +1,10 @@
+datasets/preprocessed/threedid_no_iglike.csv filter=lfs diff=lfs merge=lfs -text
+datasets/preprocessed/threedid_no_iglike_notationx_mergedthree_letter_residue.csv filter=lfs diff=lfs merge=lfs -text
+datasets/preprocessed/abdb_segment_absequence_full_vgene_imgt_vgene_ld.csv filter=lfs diff=lfs merge=lfs -text
+datasets/preprocessed/threedid_no_ig.csv filter=lfs diff=lfs merge=lfs -text
+datasets/preprocessed/merged_eval_files10k.csv filter=lfs diff=lfs merge=lfs -text
+datasets/preprocessed/threedid_with_ig.csv filter=lfs diff=lfs merge=lfs -text
+datasets/preprocessed/paratope_epitope_internet_edges_paratope_cross_density.csv filter=lfs diff=lfs merge=lfs -text
+datasets/preprocessed/merged_eval_files.csv filter=lfs diff=lfs merge=lfs -text
+datasets/preprocessed/sub0.01_ppi_partner_overlap.csv filter=lfs diff=lfs merge=lfs -text
+datasets/preprocessed/heavy_light_ag_aaseq_antigen_full_ld.csv filter=lfs diff=lfs merge=lfs -text
