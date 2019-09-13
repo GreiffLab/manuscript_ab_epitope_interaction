@@ -7,7 +7,7 @@ Principal Investigator: greifflab.org
 
 1. File name:
 
-          respairs_segment_notationx_len_merged*.csv
+          respairs_segment_notationx_len_merged.csv
 This file contains residues pairs annotated by region (segment). Along with the structural interaction motifs for paratopes and epitopes. 
 
           Attributes:
@@ -33,7 +33,7 @@ This file contains residues pairs annotated by region (segment). Along with the 
 
 2. File formats: comma separated file (CSV).
 3. Versioning: All changes to this dataset may be documented in a changelog in this ReadMe document.
-4. A number of files in this with directory were derived from this file.
+4. A number of files in this directory were derived from this file.
 
 
 ### dl/dataset
