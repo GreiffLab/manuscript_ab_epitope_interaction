@@ -327,7 +327,7 @@ ppi_motif_distribution_intradomain = function(){
 # ppi_abdb_venn()
 # ppi_motif_len()
 # ppi_max_gap()
-ppi_residue_distribution()
+# ppi_residue_distribution()
 # ppi_residue_correlation()
 # ppi_motif_distribution_interdomain()
 # ppi_motif_distribution_intradomain()

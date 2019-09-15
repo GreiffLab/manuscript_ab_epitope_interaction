@@ -175,7 +175,6 @@ def get_paired_motifs():
     print(df.head())
     print(df.shape)
     print(len(df.gap_pattern.unique()))
-    sys.exit()
     ddf = df[df.duplicated(subset = 'pdbchainpair')]
     print(ddf.shape)
     print(df.head())

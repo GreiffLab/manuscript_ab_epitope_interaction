@@ -7,6 +7,8 @@ rsync -av /Users/rahmadakbar/greifflab/aims/aimugen/src/abdb_prepdata_sup_fig*.p
 rsync -av /Users/rahmadakbar/Google\ Drive/Manuscripts/2018/abdb_manuscript/figures/abdb_main_figure_*.png figures
 rsync -av /Users/rahmadakbar/Google\ Drive/Manuscripts/2018/abdb_manuscript/figures/abdb_sup_figure_*.png figures
 rsync -av /Users/rahmadakbar/greifflab/aims/aimugen/src/abdb_outfiles_2019/*.csv datasets/preprocessed/
+rsync -av /Users/rahmadakbar/greifflab/aims/aimugen/dl/dataset datasets/dl
+rsync -av /Users/rahmadakbar/greifflab/aims/aimugen/dl/dataset_ppi datasets/dl
 rm src/*conflicted* 	
 
 
