@@ -232,7 +232,7 @@ def make_seq_epipara_file():
     outfile.write(outcontent)
 
 
-def make_tabsep_ppi(infile, seqinput, seqoutput, motifinput, motifoutput):
+def make_tabsep_ppi(infile, dirtag, seqinput, seqoutput, motifinput, motifoutput):
     '''
     make tab separated para epi file
     :return:
@@ -277,17 +277,12 @@ def make_tabsep_ppi(infile, seqinput, seqoutput, motifinput, motifoutput):
     outcontents = [outcontent1, outcontent2, outcontent3, outcontent4, outcontent5, outcontent6]
     outtags  = ['paraepi', 'epipara', 'paraepidash', 'epiparadash', 'paraepidash_pos', 'epiparadash_pos']
     for outcontent, outtag in zip(outcontents, outtags):
-        outname = '../dl/dataset_ppi/%s.tsv' % outtag
+        outname = '../dl/%s/%s.tsv' % (dirtag,outtag)
         print(outname)
         outfile = open(outname, 'w')
         outfile.write(outcontent)
 
 
-    sys.exit()
-    outname = '../dl/dataset_ppi/paraepi.tsv'
-    outfile = open(outname, 'w')
-    outfile.write(outcontent)
-    print(outcontent)
 
 
 # run stuff
@@ -300,10 +295,10 @@ def make_tabsep_ppi(infile, seqinput, seqoutput, motifinput, motifoutput):
 # make_seq_epipara_file()
 
 ### new prep files starts here
-# make_tabsep_ppi('abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired.csv',
-#             'sequence1', 'sequence2', 'gap_pattern1', 'gap_pattern2')
+make_tabsep_ppi('abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired.csv',
+            'dataset_ppi','sequence1', 'sequence2', 'gap_pattern1', 'gap_pattern2')
 
-make_tabsep_ppi('abdb_outfiles_2019/respairs_segment_notationx_len_merged_angle_bnaber.csv',
-                'paratope', 'epitope', 'ab_motif', 'ag_motif')
+# make_tabsep_ppi('abdb_outfiles_2019/respairs_segment_notationx_len_merged_angle_bnaber.csv',
+#                 'dataset','paratope', 'epitope', 'ab_motif', 'ag_motif')
 
 

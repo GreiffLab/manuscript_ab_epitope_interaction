@@ -89,7 +89,7 @@ dl_ld = function(){
     geom_errorbar(mapping = aes(ymin=me+2*se), position = position_dodge(0.9), width = 0.1) +
     geom_linerange(position = position_dodge(0.9)) +
     geom_bar( position = position_dodge(), stat = 'identity') + 
-    geom_text(aes(y= me-0.02, label = round(me, 1)), position = position_dodge(0.9)) + 
+    geom_text(aes(y= me-0.02, label = round(me, 2)), position = position_dodge(0.9)) + 
     labs(y= 'Median prediction error', x= 'Use case', fill = 'Experiment type') + 
     # scale_fill_discrete(labels =c('Randomized pairs', 'Observed pairs')) + 
     scale_fill_manual(values = c(alpha('lightsalmon', 0.5), 'lightsalmon'), labels =c('Randomized pairs', 'Observed pairs')) +
