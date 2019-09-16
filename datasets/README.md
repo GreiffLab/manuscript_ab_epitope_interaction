@@ -1,6 +1,6 @@
-Dataset title: Preprocessed structural interaction motifs data files.
+Dataset title: Structural interaction motifs data files.
 
-Principal Investigator: greifflab.org
+Date: 2019 greifflab.org
 
 ### preprocessed
 ***
@@ -32,7 +32,7 @@ This file contains residues pairs annotated by region (segment). Along with the 
               agchain: the chain of the antigen
 
 2. File formats: comma separated file (CSV).
-3. Versioning: All changes to this dataset may be documented in a changelog in this ReadMe document.
+3. Versioning: All changes to this dataset may be documented in a changelog in this README document.
 4. A number of files in this directory were derived from this file.
 
 
@@ -45,7 +45,7 @@ This file contains residues pairs annotated by region (segment). Along with the 
           motif*pos*.tsv
           paraepi.tsv
           epipara.tsv
-These files contain pairs of paratope-epitope structural interaction motifs (motif*.tsv) [`pos` is with position] or pairs of paratope-epitope sequences (paraepi.tsv and epipara.tsv) 
+These files contain ~5000 pairs of paratope-epitope structural interaction motifs (motif*.tsv) [`pos` is with position] or pairs of paratope-epitope sequences (paraepi.tsv and epipara.tsv) 
 
           Attributes:
               epipara.tsv: first and second columns are epitope and paratope sequences respectively.
@@ -56,7 +56,29 @@ These files contain pairs of paratope-epitope structural interaction motifs (mot
               motif_paraepidash_pos.tsv: first and second columns are paratope and epitope interaction motifs respectively. With position annotation.
                            
 2. File formats: tab separated file (TSV).
-3. Versioning: All changes to this dataset may be documented in a changelog in this ReadMe document.
+3. Versioning: All changes to this dataset may be documented in a changelog in this README document.
+
+### dl/dataset_ppi
+***
+
+1. File name:
+
+          motif*.tsv
+          motif*pos*.tsv
+          paraepi.tsv
+          epipara.tsv
+These files contain ~20000 pairs of paratope-epitope structural interaction motifs (motif*.tsv) [`pos` is with position] or pairs of paratope-epitope sequences (paraepi.tsv and epipara.tsv). **For protein-protein interaction (PPI), a motif and its interacting partner are the analog to paratope and epitope in antibody-antigen scenario.** 
+
+          Attributes:
+              epipara.tsv: first and second columns are epitope and paratope sequences respectively.
+              paraepi.tsv: first and second columns are paratope and epitope sequences respectively.
+              motif_epiparadash.tsv: first and second columns are epitope and paratope interaction motifs respectively.
+              motif_paraepidash.tsv: first and second columns are paratope and epitope interaction motifs respectively.
+              motif_epiparadash_pos.tsv: first and second columns are epitope and paratope interaction motifs respectively. With position annotation.
+              motif_paraepidash_pos.tsv: first and second columns are paratope and epitope interaction motifs respectively. With position annotation.
+                           
+2. File formats: tab separated file (TSV).
+3. Versioning: All changes to this dataset may be documented in a changelog in this README document.
 
 
 ### NR\_LH\_Protein_Martin
@@ -73,7 +95,7 @@ These files contain atomic coordinates (atoms and residues) of an antibody-antig
           
                            
 2. File formats: protein data bank (PDB).
-3. Versioning: All changes to this dataset may be documented in a changelog in this ReadMe document.
+3. Versioning: All changes to this dataset may be documented in a changelog in this README document.
 
 ### 3did
 ***
@@ -89,5 +111,5 @@ The file contains residues pairs (protein-protein interaction, PPI) of all prote
           
                            
 2. File formats: 3did flat file.
-3. Versioning: All changes to this dataset may be documented in a changelog in this ReadMe document.
+3. Versioning: All changes to this dataset may be documented in a changelog in this README document.
 
