@@ -275,7 +275,8 @@ def make_tabsep_ppi(infile, dirtag, seqinput, seqoutput, motifinput, motifoutput
     print(df.m2.unique().shape)
     print(df.shape)
     outcontents = [outcontent1, outcontent2, outcontent3, outcontent4, outcontent5, outcontent6]
-    outtags  = ['paraepi', 'epipara', 'paraepidash', 'epiparadash', 'paraepidash_pos', 'epiparadash_pos']
+    outtags  = ['paraepi', 'epipara', 'motif_paraepidash', 'motif_epiparadash', 'motif_paraepidash_pos',
+                'motif_epiparadash_pos']
     for outcontent, outtag in zip(outcontents, outtags):
         outname = '../dl/%s/%s.tsv' % (dirtag,outtag)
         print(outname)
@@ -295,10 +296,10 @@ def make_tabsep_ppi(infile, dirtag, seqinput, seqoutput, motifinput, motifoutput
 # make_seq_epipara_file()
 
 ### new prep files starts here
-make_tabsep_ppi('abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired.csv',
-            'dataset_ppi','sequence1', 'sequence2', 'gap_pattern1', 'gap_pattern2')
+# make_tabsep_ppi('abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired.csv',
+#             'dataset_ppi','sequence1', 'sequence2', 'gap_pattern1', 'gap_pattern2')
 
-# make_tabsep_ppi('abdb_outfiles_2019/respairs_segment_notationx_len_merged_angle_bnaber.csv',
-#                 'dataset','paratope', 'epitope', 'ab_motif', 'ag_motif')
+make_tabsep_ppi('abdb_outfiles_2019/respairs_segment_notationx_len_merged_angle_bnaber.csv',
+                'dataset','paratope', 'epitope', 'ab_motif', 'ag_motif')
 
 

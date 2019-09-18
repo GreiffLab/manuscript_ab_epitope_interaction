@@ -184,8 +184,17 @@ motif_coverage = function(){
   outpdf(infile, 'motif_coverage', height = 10, width = 15)
 }
 
+branch_subset = function(){
+  infile = 'abdb_outfiles_2019/paratope_epitope_internet_edges.csv'
+  df = read_csv(infile)
+  dfsub = df[df$source == 'XXXX1X', ]
+  print(df)
+  print(dfsub)
+  print(sum(dfsub$weight))
+}
 
 # run stuff
 # dl_ld_binary()
 # chao_diversity()
-motif_coverage()
+# motif_coverage()
+branch_subset()
