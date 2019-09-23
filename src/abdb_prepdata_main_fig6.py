@@ -299,7 +299,7 @@ def make_tabsep_ppi(infile, dirtag, seqinput, seqoutput, motifinput, motifoutput
 # make_tabsep_ppi('abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired.csv',
 #             'dataset_ppi','sequence1', 'sequence2', 'gap_pattern1', 'gap_pattern2')
 
-make_tabsep_ppi('abdb_outfiles_2019/respairs_segment_notationx_len_merged_angle_bnaber.csv',
-                'dataset','paratope', 'epitope', 'ab_motif', 'ag_motif')
+# make_tabsep_ppi('abdb_outfiles_2019/respairs_segment_notationx_len_merged_angle_bnaber.csv',
+#                 'dataset','paratope', 'epitope', 'ab_motif', 'ag_motif')
 
 

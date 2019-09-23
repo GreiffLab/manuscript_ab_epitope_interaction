@@ -23,9 +23,12 @@ library('poweRlaw')
 library('gtools')
 library('vegan')
 library('iNEXT')
-
+library('wesanderson')
+names(wes_palettes)
 theme_set(themeakbar())
 my_spectral <- colorRampPalette(brewer.pal(8,'Spectral'))(14)
+my_darjee = colorRampPalette(wes_palette('Darjeeling1'))(8)
+print(my_darjee)
 abcolor = '#6464FF'
 abcolor2 = '#1010FF'
 abcolor3 = '#3399CC'
@@ -51,6 +54,14 @@ ppi_mcolor = rgb(ppi_mcolor_rgb[1], ppi_mcolor_rgb[2], ppi_mcolor_rgb[3])
 ppi_pcolor_rgb = c(col2rgb('darkorange'))/255
 ppi_pcolor = rgb(ppi_pcolor_rgb[1], ppi_pcolor_rgb[2], ppi_pcolor_rgb[3])
 
+my_ccols = c('salmon',
+             'deepskyblue1', 'deepskyblue2', 'deepskyblue3', 'deepskyblue4',
+             'orange1', 'orange2', 'orange3', 'orange4')
+
+
+my_ccols2 = c('salmon',
+             abcolor3, abcolor3, abcolor3, abcolor3,
+             ppi_mcolor, ppi_mcolor, ppi_mcolor, ppi_mcolor)
 
 outpdf = function(infile, tag, width=8, height=8){
   # assumes infile has extensins (.csv etc)
@@ -81,6 +92,7 @@ ld_bin = function(x){
 }
 
 dl_ld_binary = function(){
+  # output ldexact and ldnorm centers median and mean.
   infile = 'abdb_outfiles_2019/merged_eval_files.csv'
   # infile = 'abdb_outfiles_2019/merged_eval_files10k.csv'
   df = read_csv(infile)
@@ -88,30 +100,68 @@ dl_ld_binary = function(){
   bins = ld_bin(df$ldnorm) # binary ld
   print(sum(bins))
   print(dim(df))
-  df$ldnorm = bins
-  dfmed = df %>% group_by(rep, use_case, data_tag, exp_tag) %>% summarise(med = mean(ldnorm), sd = sd(ldnorm))
-  dfmed = dfmed %>% group_by(use_case, data_tag,exp_tag) %>% summarise(me = mean(med), se = sd(med)/sqrt(length(med)), len = length(med))
-  print(dfmed[order(dfmed$me),])
+  df$ldexact = bins
+  dfmed = df %>% group_by(rep, use_case, data_tag, exp_tag) %>% summarise(ldnorm_mea = mean(ldnorm), 
+                                                                          ldnorm_sd = sd(ldnorm),
+                                                                          ldexact_mea = mean(ldexact),
+                                                                          ldexact_sd = sd(ldexact))
+  print(dfmed)
+  print(dfmed[order(dfmed$ldnorm_mea),])
+  dfmed = dfmed %>% group_by(use_case, data_tag,exp_tag) %>% summarise(repldnormmea = mean(ldnorm_mea), 
+                                                                       repldnormse = sd(ldnorm_mea)/sqrt(length(ldnorm_mea)), 
+                                                                       ldnormreps = length(ldnorm_mea),
+                                                                       repldexactmea = mean(ldexact_mea), 
+                                                                       repldexactse = sd(ldexact_mea)/sqrt(length(ldexact_mea)), 
+                                                                       ldexactreps = length(ldexact_mea))
   xticklabels=  c('Motif E --> P', 'Motif + position E --> P',
                  'Motif P --> E', 'Motif + position P --> E',
                  'Sequence E --> P', 'Sequence P --> E')
   xtickbreaks = unique(dfmed$use_case)
   print(xticklabels)
   print(xtickbreaks)
-  # stop()
-  ggplot(data=dfmed, mapping = aes(x=use_case, y=me, ymin=me, ymax=me+2*se, fill = exp_tag)) + 
-    geom_errorbar(mapping = aes(ymin=me+2*se), position = position_dodge(0.9), width = 0.1) +
-    geom_linerange(position = position_dodge(0.9)) +
-    geom_bar( position = position_dodge(), stat = 'identity') + 
-    geom_text(aes(y= me-0.02, label = round(me, 2)), position = position_dodge(0.9)) + 
-    labs(y= 'Mean prediction error', x= 'Use case', fill = 'Experiment type') + 
-    # scale_fill_discrete(labels =c('Randomized pairs', 'Observed pairs')) + 
-    scale_fill_manual(values = c(alpha('lightsalmon', 0.5), 'lightsalmon'), labels =c('Randomized pairs', 'Observed pairs')) +
-    scale_x_discrete(breaks = xtickbreaks, labels = xticklabels)
-  outpdf(infile, 'absolute_bar', height = 7, width = 12)
+  print(dfmed)
+  write_csv(dfmed, 'abdb_outfiles_2019/eval_summary.csv')
+  stop()
 }
 
+sl_dl_summary = function(){
+  infile = 'abdb_outfiles_2019/sl_dl_evalsummary.csv'
+  df = read_csv(infile)
+  print(df)
+  xticklabels=  c('Motif E to P', 'Motif + position E to P',
+                 'Motif P to E', 'Motif + position P to E',
+                 'Sequence E to P', 'Sequence P to E')
+  # xtickbreaks = unique(dfmed$use_case)
+  print(xticklabels)
+  # print(xtickbreaks)
+  # print(df)
+  ggplot(data=df, mapping = aes(x=use_case, y=repldnormmea, ymin=repldnormmea, ymax=repldnormmea+2*repldnormse, fill = exp_tag2)) + 
+    geom_errorbar(mapping = aes(ymin=repldnormmea+2*repldnormse), color = 'gray', position = position_dodge(0.9), width = 0.1) +
+    geom_linerange(position = position_dodge(0.9), color = 'gray') +
+    geom_bar( position = position_dodge(), stat = 'identity') + 
+    geom_text(aes(y= repldnormmea-0.01, label = round(repldnormmea, 2)), size= 3, color = 'white', position = position_dodge(0.9)) + 
+    geom_text(aes(y=0.005, label = exp_tag2), angle=90, size= 3.5, color='white', position = position_dodge(0.9), hjust=0) + 
+    labs(y= 'Mean prediction error', x= 'Use case', fill = 'Experiment type') + 
+    scale_fill_manual(values=alpha(my_ccols2, 0.99)) + 
+    theme(legend.position = 0) + 
+    scale_x_discrete(labels = xticklabels) + 
+    theme(axis.title = element_text(size = 20, color = 'gray42'), axis.text = element_text(size=15, color='gray42'))
+  outpdf(infile, 'norm_bar', height = 7, width = 15)
 
+  ggplot(data=df, mapping = aes(x=use_case, y=repldexactmea, ymin=repldexactmea, ymax=repldexactmea+2*repldexactse, fill = exp_tag2)) + 
+    geom_errorbar(mapping = aes(ymin=repldexactmea+2*repldexactse), color= 'gray',position = position_dodge(0.9), width = 0.1) +
+    geom_linerange(position = position_dodge(0.9), color = 'gray') +
+    geom_bar( position = position_dodge(), stat = 'identity') + 
+    geom_text(aes(y= repldexactmea-0.01, label = round(repldexactmea, 2)), color = 'white', size= 3, position = position_dodge(0.9)) + 
+    geom_text(aes(y=0.005, label = exp_tag2), size= 4, color='white', angle = 90, hjust=0, position = position_dodge(0.9)) + 
+    labs(y= 'Mean prediction error', x= 'Use case', fill = 'Experiment type') + 
+    scale_fill_manual(values=alpha(my_ccols2, 0.99)) + 
+    theme(legend.position = 0) + 
+    scale_x_discrete(labels = xticklabels) + 
+    theme(axis.title = element_text(size = 20, color = 'gray42'), axis.text = element_text(size=15, color='gray42'))
+  outpdf(infile, 'exact_bar', height = 7, width = 15)
+  
+}
 
 chao_diversity = function(){
   #compute diversity estimate using chao2
@@ -197,4 +247,5 @@ branch_subset = function(){
 # dl_ld_binary()
 # chao_diversity()
 # motif_coverage()
+# sl_dl_summary()
 branch_subset()

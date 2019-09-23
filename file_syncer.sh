@@ -9,6 +9,10 @@ rsync -av /Users/rahmadakbar/Google\ Drive/Manuscripts/2018/abdb_manuscript/figu
 rsync -av /Users/rahmadakbar/greifflab/aims/aimugen/src/abdb_outfiles_2019/*.csv datasets/preprocessed/
 rsync -av /Users/rahmadakbar/greifflab/aims/aimugen/dl/dataset datasets/dl
 rsync -av /Users/rahmadakbar/greifflab/aims/aimugen/dl/dataset_ppi datasets/dl
+rsync -av /Users/rahmadakbar/greifflab/aims/aimugen/dl/dataset_ppi_uniqueseqpair datasets/dl
+rsync -av /Users/rahmadakbar/greifflab/aims/aimugen/dl/dataset_XXX datasets/dl
+rsync -av /Users/rahmadakbar/greifflab/aims/aimugen/dl/dataset_XXXX datasets/dl
+rsync -av /Users/rahmadakbar/greifflab/aims/aimugen/dl/dataset_XXXX1X datasets/dl
 rm src/*conflicted* 	
 
 

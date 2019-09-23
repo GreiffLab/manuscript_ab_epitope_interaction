@@ -92,7 +92,7 @@ def crosscheck_abdb_3did():
 
 def filter_ppi_data():
     '''
-    filters ppi data (3did) for max_gap < 8 and motif len <= 3000
+    filters ppi data (3did) for max_gap < 8 and motif len <= 300
     this ensure that the ppi data does not drift too much from abdbd data
     :return:
     '''
