@@ -53,6 +53,16 @@ rppi_mcolor = rgb(rppi_mcolor_rgb[1], ppi_mcolor_rgb[2], ppi_mcolor_rgb[3])
 rppi_pcolor_rgb = c(col2rgb('darkolivegreen3'))/255
 rppi_pcolor = rgb(rppi_pcolor_rgb[1], ppi_pcolor_rgb[2], ppi_pcolor_rgb[3])
 
+random_mcolor = '#3399CC'
+random_pcolor = '#C0C0C0'
+print(sprintf('paratope: %s', abcolor3))
+print(sprintf('epitope: %s', agcolor))
+print(sprintf('ppi motif: %s', ppi_mcolor))
+print(sprintf('ppi partner: %s', ppi_pcolor))
+print(sprintf('radom motif: %s', random_mcolor))
+print(sprintf('radom partner: %s', random_pcolor))
+
+stop()
 
 outpdf = function(infile, tag, width=8, height=8){
   # assumes infile has extensins (.csv etc)
@@ -160,10 +170,10 @@ ppi_motif_interaction = function(){
     scale_fill_manual(values = c(ppi_mcolor, ppi_pcolor)) +
     geom_text(mapping = aes(x=id, y=csum+500, label = sprintf('%s - %s', csum, percent(csum_percent)), angle = 90)) + 
     geom_text(mapping = aes(x=20, y = 8000, label = csum_label), size = 10) +
-    geom_text(mapping = aes(x=20, y = 8000-500, label = csum_label_node), size = 10) + 
+    geom_text(mapping = aes(x=20, y = 8000-500, label = csum_label_node), size = 10)  
   outpdf(outname, 'ppi_degree_cumsum', width = 28, height = 15)
   print(topndf)
-  stop()
+  # stop()
   ### end cumulative degree distribution
   ### end power law test
   ### end the degree bit
@@ -496,8 +506,8 @@ cross_reactivity_degree_cor = function(){
 
 
 # run stuff
-# ppi_motif_interaction()
-downsampled_ppi_motif_internet()
+ppi_motif_interaction()
+# downsampled_ppi_motif_internet()
 # degree_correlation()
 # cross_reactivity_density()
 # cross_reactivity_degree_cor()
