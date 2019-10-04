@@ -83,7 +83,9 @@ species_distribution_antibody = function(){
     geom_text(mapping = aes(x=hspecies, y=n+90, label = n)) + 
     coord_flip() + 
     labs(x='Species', y='# of paratopes') + 
-    geom_text(mapping = aes(x=1, y = 1000, label = total_label))
+    geom_text(mapping = aes(x=1, y = 1000, label = total_label)) + 
+    theme(axis.title = element_text(size = 30),
+          axis.text = element_text(size =20))
   
   outpdf(infile, 'hspecies_distribution', width = 10, height = 15)
   
@@ -104,12 +106,14 @@ species_distribution_antibody_complex = function(){
   print(countdf2)
   total_label = sprintf('Total species: %s', dim(countdf2)[1])
   ggplot(data = countdf2) + 
-    geom_bar(stat = 'identity', mapping = aes(x=reorder(hspecies, nn), y=nn), fill=abcolor3) + 
+    geom_bar(stat = 'identity', mapping = aes(x=reorder(hspecies, n), y=n), fill=abcolor3) + 
     # theme(axis.text.x = element_text(angle= 90)) + 
-    geom_text(mapping = aes(x=hspecies, y=nn+15, label = nn)) + 
+    geom_text(mapping = aes(x=hspecies, y=n+15, label = n)) + 
     coord_flip() + 
     labs(x='Species', y='# of structures') + 
-    geom_text(mapping = aes(x=1, y = 200, label = total_label))
+    geom_text(mapping = aes(x=1, y = 200, label = total_label)) + 
+    theme(axis.title = element_text(size = 30),
+          axis.text = element_text(size =20))
   
   outpdf(infile, 'hspecies_distribution_complex', width = 10, height = 15)
   
@@ -132,7 +136,9 @@ species_distribution_antigen = function(){
     geom_text(mapping = aes(x=ag_species2, y=n+90, label = n)) + 
     coord_flip() + 
     labs(x='  ', y='# of epitopes') + 
-    geom_text(mapping = aes(x=3, y = 1000, label = total_label))
+    geom_text(mapping = aes(x=3, y = 1000, label = total_label)) + 
+    theme(axis.title = element_text(size = 30),
+          axis.text = element_text(size =13))
   
   outpdf(infile, 'agspecies_distribution', width = 10, height = 15)
   
@@ -152,20 +158,22 @@ species_distribution_antigen_complex = function(){
   countdf2 = count(countdf, ag_species2)
   total_label = sprintf('Total species: %s', dim(countdf2)[1])
   ggplot(data = countdf2) + 
-    geom_bar(stat = 'identity', mapping = aes(x=reorder(ag_species2, nn), y=nn), fill=agcolor) + 
+    geom_bar(stat = 'identity', mapping = aes(x=reorder(ag_species2, n), y=n), fill=agcolor) + 
     # theme(axis.text.x = element_text(angle= 90)) + 
-    geom_text(mapping = aes(x=ag_species2, y=nn+15, label = nn)) + 
+    geom_text(mapping = aes(x=ag_species2, y=n+15, label = n)) + 
     coord_flip() + 
     labs(x='  ', y='# of structures') +
-    geom_text(mapping = aes(x=3, y = 200, label = total_label))
+    geom_text(mapping = aes(x=3, y = 200, label = total_label)) + 
+    theme(axis.title = element_text(size = 30),
+          axis.text = element_text(size =13))
   
   outpdf(infile, 'agspecies_distribution_complex', width = 10, height = 15)
   
 }
 
 # run stuff
-species_distribution_antibody()
+# species_distribution_antibody()
 # species_distribution_antigen()
-# species_distribution_antigen_complex()
+species_distribution_antigen_complex()
 # species_distribution_antibody_complex()
 # add complexes instead of paratopes 

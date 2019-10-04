@@ -79,12 +79,17 @@ full_length_density = function(){
   med_labels = sprintf('Median: %s', meds$med_per_chain)
   print(meds)
   ggplot(data= df) + 
-    geom_density(mapping = aes(x=motif_per_chain, fill=abchain), color= NA) + 
-    scale_fill_manual(values = c(alpha(abcolor, 0.5), alpha(abcolor3,0.5))) + 
+    # geom_density(mapping = aes(x=motif_per_chain, fill=abchain), color= NA) + 
+    geom_bar(mapping = aes(x=motif_per_chain, fill=abchain), color= NA, position = 'dodge') + 
+    scale_fill_manual(values = c(alpha(abcolor, 0.8), alpha(abcolor3,0.8))) + 
     # scale_color_manual(values = c(alpha(abcolor, 0.9), alpha(abcolor3,0.9))) + 
     # scale_color_manual(values = c(alpha(abcolor2, 0.6), alpha(abcolor3,0.9))) + 
-    geom_text(data = meds, mapping = aes(x=med_per_chain, y=maxs$max_per_chain*0.116, label= med_labels), size=5, color = c(abcolor, abcolor3)) + 
-    labs(x= '# of interaction motifs per antibody', y= 'Density', fill = 'Antibody chain', color = "Antibody chain") + 
+    geom_text(data = meds, mapping = aes(x=c(1,1), y=c(300, 290), label= med_labels), size=5, color = c(abcolor, abcolor3)) + 
+    labs(x= '# of interaction motifs per antibody', y= 'Density', fill = 'Antibody chain', color = "Antibody chain") +
+    theme(axis.text = element_text(size = 20),
+          axis.title = element_text(size = 25),
+          legend.text = element_text(size = 25),
+          legend.title = element_blank())
     # facet_wrap(~abchain)
   outpdf(infile, 'motif_perchain_density', height = 12, width = 7)
 }
@@ -106,7 +111,11 @@ plot_pattern_bar_pie_full_length <- function(infile){
     scale_fill_manual(values=c('red', 'black')) +
     scale_color_manual(values=c('red', 'black')) +
     labs (fill= 'Gap Status', color= 'Gap Status') + 
-    theme(legend.position = 'none') + 
+    theme(legend.position = 'none',
+          axis.title = element_text(size= 23),
+          strip.text = element_text(size = 20), 
+          axis.text.x = element_text(size = 15)) +
+    scale_y_continuous( breaks = c(150, 300, 450,600,750)) + 
     expand_limits(y=20 ) +
     # geom_text(mapping = aes(x=1, y= cumsum(raw_count), fill = gapstrstatus, color = gapstrstatus, label = df$label))
   outpdf(infile, 'pie', width = 8, height = 5)
@@ -130,7 +139,12 @@ plot_pattern_bar_radial_full_length <- function(infile){
     scale_fill_manual(values=c('red', 'black')) +
     scale_color_manual(values=c('red', 'black')) +
     labs (fill= 'Gap Status', color= 'Gap Status') + 
-    theme(legend.position = 'none', axis.text.y = element_blank(), axis.ticks = element_blank()) + 
+    theme(axis.text.y = element_blank(), axis.ticks = element_blank()) + 
+    theme(axis.title = element_text(size= 23),
+          strip.text = element_text(size = 20), 
+          axis.text.x = element_text(size = 15),
+          legend.text = element_text(size=20),
+          legend.title = element_blank()) +
     expand_limits(y=20 ) +
   outpdf(infile, 'radial', width = 8, height = 5)
 

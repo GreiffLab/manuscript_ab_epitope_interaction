@@ -11,6 +11,7 @@ import os
 from find_files import find_files as fifi
 import numpy as np
 import random
+import jellyfish
 
 def make_tabsep_paraepi():
     '''
@@ -296,8 +297,8 @@ def make_tabsep_ppi(infile, dirtag, seqinput, seqoutput, motifinput, motifoutput
 # make_seq_epipara_file()
 
 ### new prep files starts here
-# make_tabsep_ppi('abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired.csv',
-#             'dataset_ppi','sequence1', 'sequence2', 'gap_pattern1', 'gap_pattern2')
+make_tabsep_ppi('abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired.csv',
+            'dataset_ppi','sequence1', 'sequence2', 'gap_pattern1', 'gap_pattern2')
 
 # make_tabsep_ppi('abdb_outfiles_2019/respairs_segment_notationx_len_merged_angle_bnaber.csv',
 #                 'dataset','paratope', 'epitope', 'ab_motif', 'ag_motif')

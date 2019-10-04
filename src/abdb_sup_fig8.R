@@ -85,7 +85,11 @@ ab_ag_angle = function(){
   # geom_vline(data=agmeddf, mapping = aes(xintercept=agmeds_data), color=alpha('grey',0.7), linetype='dashed') +
   # geom_vline(data=abmeddf, mapping = aes(xintercept=abmeds_data), color=alpha('blue',0.5), linetype='dashed') +
   # theme(legend.text = element_text(size=14)) + 
-  labs(x='Motif angle (degree)', y='Density', fill='Motif source', color='Motif source')
+  labs(x='Motif angle (degree)', y='Density', fill='Motif source', color='Motif source') + 
+  theme(axis.title = element_text(size = 25),
+        legend.text = element_text(size = 25),
+        legend.title = element_blank(),
+        strip.text = element_text(size = 15))
   # outname = 'abdb_figures/angle_distribution.pdf'
   # ggsave(outname, width = 8, height = 8)
   # system(sprintf('open %s', outname))
@@ -124,7 +128,11 @@ ab_ag_angle_correlation  = function(){
   facet_wrap(~ segment, ncol = 3, scales = 'free') +
   ylim(0,250) + xlim(1,200) +
   geom_smooth(method = 'lm', mapping = aes(x=p_angle, y= e_angle), color=alpha(abcolor, 0.3)) + 
-  labs(x='Paratope angle', y='Epitope angle')
+  labs(x='Paratope angle', y='Epitope angle') + 
+  theme(axis.title = element_text(size = 25),
+        legend.text = element_text(size = 25),
+        legend.title = element_blank(),
+        strip.text = element_text(size = 15))
   # outname = 'abdb_figures/angle_correlation.pdf'
   # ggsave(outname)
   # system(sprintf('open %s', outname))

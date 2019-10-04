@@ -1,0 +1,45 @@
+use_case,data_tag,exp_tag,branch,repldnormmea,repldnormse,ldnormreps,repldexactmea,repldexactse,ldexactreps,exp_tag2,category
+seq_epipara,seq,control,XXX,0.8132704432717183,0.005680319805672471,7,0.9851239117463776,0.0020003491624178225,7,Imm deep NMT ctrl,Imm
+seq_epipara,seq,control,XXXX,0.9065863729380256,0.009334208431538078,4,0.999910168882501,5.1864019869713876e-05,4,Imm deep NMT ctrl,Imm
+seq_epipara,seq,exp,XXX,0.8182510176046578,0.004760522861275296,10,0.9824988301695158,0.001439147726482531,10,Imm deep NMT,Imm
+seq_epipara,seq,exp,XXXX,0.9027541474307936,0.0030191976423207248,7,0.9983546434223416,0.00047182036120105764,7,Imm deep NMT,Imm
+seq_paraepi,seq,control,XXX,0.9327138171726516,0.00850069953593624,2,0.9901396013791944,0.004470531570859525,2,Imm deep NMT ctrl,Imm
+seq_paraepi,seq,control,XXXX,0.9440851199744479,0.0014295397516986609,3,0.9984429272966824,0.0006252429338190548,3,Imm deep NMT ctrl,Imm
+seq_paraepi,seq,exp,XXX,0.9181456488584044,0.0020851574988810075,9,0.987090807830809,0.0009909450779728296,9,Imm deep NMT,Imm
+seq_paraepi,seq,exp,XXXX,0.9376112164449985,0.002660120461184423,10,0.9956193154741426,0.0009823885370114011,10,Imm deep NMT,Imm
+seq_epipara,seq,exp_base_marginal_proba_exp,XXXX,0.918156070888864,0.021182849267732624,10,0.9440377655400052,0.02336996587590366,10,Imm shallow marg,Imm
+seq_epipara,seq,exp_base_cond_proba_exp,XXXX,1.0,0.0,10,1.0,0.0,10,Imm shallow cond,Imm
+seq_epipara,seq,exp_base_cond_proba_with_prior_exp,XXXX,0.9362868132305132,0.017556189553157197,10,0.98028130839243,0.016714375181094032,10,Imm shallow condpr,Imm
+seq_paraepi,seq,exp_base_marginal_proba_exp,XXXX,0.8764768411947597,0.03550202629468036,10,1.0,0.0,10,Imm shallow marg,Imm
+seq_paraepi,seq,exp_base_cond_proba_exp,XXXX,1.0,0.0,10,1.0,0.0,10,Imm shallow cond,Imm
+seq_paraepi,seq,exp_base_cond_proba_with_prior_exp,XXXX,0.9588578856342759,0.01974362039825513,10,0.992048444291924,0.01036708536420411,10,Imm shallow condpr,Imm
+seq_epipara,seq,exp_base_marginal_proba_control,XXXX,0.909813304459313,0.030428078173851004,10,0.9638336156721372,0.025500527440942264,10,Imm shallow marg ctrl,Imm
+seq_epipara,seq,exp_base_cond_proba_control,XXXX,1.0,0.0,10,1.0,0.0,10,Imm shallow cond ctrl,Imm
+seq_epipara,seq,exp_base_cond_proba_with_prior_control,XXXX,0.982805707441016,0.011879681281398128,10,1.0,0.0,10,Imm shallow condpr ctrl,Imm
+seq_paraepi,seq,exp_base_marginal_proba_control,XXXX,0.8628215512734896,0.0318852168692434,10,1.0,0.0,10,Imm shallow marg ctrl,Imm
+seq_paraepi,seq,exp_base_cond_proba_control,XXXX,1.0,0.0,10,1.0,0.0,10,Imm shallow cond ctrl,Imm
+seq_paraepi,seq,exp_base_cond_proba_with_prior_control,XXXX,0.9872365006851912,0.014384520987012938,10,1.0,0.0,10,Imm shallow condpr ctrl,Imm
+seq_epipara,seq,exp_base_marginal_proba_exp,XXX,0.9387722392558426,0.025817999545839108,10,0.9570448669883468,0.020135727230945484,10,Imm shallow marg,Imm
+seq_epipara,seq,exp_base_cond_proba_exp,XXX,0.9993230240549827,0.0014273974478158742,10,1.0,0.0,10,Imm shallow cond,Imm
+seq_epipara,seq,exp_base_cond_proba_with_prior_exp,XXX,0.8896286169741948,0.01842596767389665,10,0.9360718698318212,0.01677674728787341,10,Imm shallow condpr,Imm
+seq_paraepi,seq,exp_base_marginal_proba_exp,XXX,0.7525915711221867,0.02353635468329664,10,0.9936671294005732,0.0072743687098216344,10,Imm shallow marg,Imm
+seq_paraepi,seq,exp_base_cond_proba_exp,XXX,0.9996941896024464,0.0009670573884307381,10,1.0,0.0,10,Imm shallow cond,Imm
+seq_paraepi,seq,exp_base_cond_proba_with_prior_exp,XXX,0.8744686532056603,0.019654071695335618,10,0.9658240104027164,0.02028925109500401,10,Imm shallow condpr,Imm
+seq_epipara,seq,exp_base_marginal_proba_control,XXX,0.9462000427996354,0.022322356303434186,10,0.9612139394958794,0.014276131539098354,10,Imm shallow marg ctrl,Imm
+seq_epipara,seq,exp_base_cond_proba_control,XXX,0.9992856057151543,0.0015128779348400096,10,1.0,0.0,10,Imm shallow cond ctrl,Imm
+seq_epipara,seq,exp_base_cond_proba_with_prior_control,XXX,0.9550338022221446,0.012303092818050029,10,0.9979629629629628,0.00431657623136965,10,Imm shallow condpr ctrl,Imm
+seq_paraepi,seq,exp_base_marginal_proba_control,XXX,0.7465907313884236,0.02185384897790764,10,0.9939146274271232,0.006988451492483928,10,Imm shallow marg ctrl,Imm
+seq_paraepi,seq,exp_base_cond_proba_control,XXX,0.9986402543096092,0.001765215091903734,10,1.0,0.0,10,Imm shallow cond ctrl,Imm
+seq_paraepi,seq,exp_base_cond_proba_with_prior_control,XXX,0.9193995869661676,0.02406904833165633,10,1.0,0.0,10,Imm shallow condpr ctrl,Imm
+seq_epipara,seq,exp_base_marginal_proba_exp,XXXX1X,0.9094712170617936,0.01604639274392183,10,0.9093472505792852,0.04162399557428695,10,Imm shallow marg,Imm
+seq_epipara,seq,exp_base_cond_proba_exp,XXXX1X,1.0,0.0,10,1.0,0.0,10,Imm shallow cond,Imm
+seq_epipara,seq,exp_base_cond_proba_with_prior_exp,XXXX1X,0.8715763977070001,0.022246348954411292,10,0.9114124955859768,0.0387528146022756,10,Imm shallow condpr,Imm
+seq_paraepi,seq,exp_base_marginal_proba_exp,XXXX1X,0.7220800491450337,0.04398761228923529,10,1.0,0.0,10,Imm shallow marg,Imm
+seq_paraepi,seq,exp_base_cond_proba_exp,XXXX1X,1.0,0.0,10,1.0,0.0,10,Imm shallow cond,Imm
+seq_paraepi,seq,exp_base_cond_proba_with_prior_exp,XXXX1X,0.9116667552705588,0.029219069284663394,10,0.9763726379651182,0.016069009520917873,10,Imm shallow condpr,Imm
+seq_epipara,seq,exp_base_marginal_proba_control,XXXX1X,0.9105605186293576,0.016927584365308453,10,0.9007599141326172,0.03831377209309102,10,Imm shallow marg ctrl,Imm
+seq_epipara,seq,exp_base_cond_proba_control,XXXX1X,1.0,0.0,10,1.0,0.0,10,Imm shallow cond ctrl,Imm
+seq_epipara,seq,exp_base_cond_proba_with_prior_control,XXXX1X,0.9653437460608396,0.01485660993776031,10,0.9959166666666668,0.00861066307078141,10,Imm shallow condpr ctrl,Imm
+seq_paraepi,seq,exp_base_marginal_proba_control,XXXX1X,0.7182761215939222,0.039750413080961694,10,1.0,0.0,10,Imm shallow marg ctrl,Imm
+seq_paraepi,seq,exp_base_cond_proba_control,XXXX1X,1.0,0.0,10,1.0,0.0,10,Imm shallow cond ctrl,Imm
+seq_paraepi,seq,exp_base_cond_proba_with_prior_control,XXXX1X,0.9744445393680096,0.00938183985126605,10,1.0,0.0,10,Imm shallow condpr ctrl,Imm

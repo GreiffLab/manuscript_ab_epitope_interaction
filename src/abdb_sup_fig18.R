@@ -86,82 +86,6 @@ outpng = function(infile, tag, width=8, height=8){
   print(sprintf('opening %s', outname))
 }
 
-ld_bin = function(x){
-  x[x>0] = 1
-  return = x
-}
-
-dl_ld_binary = function(){
-  # output ldexact and ldnorm centers median and mean.
-  infile = 'abdb_outfiles_2019/merged_eval_files.csv'
-  # infile = 'abdb_outfiles_2019/merged_eval_files10k.csv'
-  df = read_csv(infile)
-  print(df)
-  bins = ld_bin(df$ldnorm) # binary ld
-  print(sum(bins))
-  print(dim(df))
-  df$ldexact = bins
-  dfmed = df %>% group_by(rep, use_case, data_tag, exp_tag) %>% summarise(ldnorm_mea = mean(ldnorm), 
-                                                                          ldnorm_sd = sd(ldnorm),
-                                                                          ldexact_mea = mean(ldexact),
-                                                                          ldexact_sd = sd(ldexact))
-  print(dfmed)
-  print(dfmed[order(dfmed$ldnorm_mea),])
-  dfmed = dfmed %>% group_by(use_case, data_tag,exp_tag) %>% summarise(repldnormmea = mean(ldnorm_mea), 
-                                                                       repldnormse = sd(ldnorm_mea)/sqrt(length(ldnorm_mea)), 
-                                                                       ldnormreps = length(ldnorm_mea),
-                                                                       repldexactmea = mean(ldexact_mea), 
-                                                                       repldexactse = sd(ldexact_mea)/sqrt(length(ldexact_mea)), 
-                                                                       ldexactreps = length(ldexact_mea))
-  xticklabels=  c('Motif E --> P', 'Motif + position E --> P',
-                 'Motif P --> E', 'Motif + position P --> E',
-                 'Sequence E --> P', 'Sequence P --> E')
-  xtickbreaks = unique(dfmed$use_case)
-  print(xticklabels)
-  print(xtickbreaks)
-  print(dfmed)
-  write_csv(dfmed, 'abdb_outfiles_2019/eval_summary.csv')
-  stop()
-}
-
-sl_dl_summary = function(){
-  infile = 'abdb_outfiles_2019/sl_dl_evalsummary.csv'
-  df = read_csv(infile)
-  print(df)
-  xticklabels=  c('Motif E to P', 'Motif + position E to P',
-                 'Motif P to E', 'Motif + position P to E',
-                 'Sequence E to P', 'Sequence P to E')
-  # xtickbreaks = unique(dfmed$use_case)
-  print(xticklabels)
-  # print(xtickbreaks)
-  # print(df)
-  ggplot(data=df, mapping = aes(x=use_case, y=repldnormmea, ymin=repldnormmea, ymax=repldnormmea+2*repldnormse, fill = exp_tag2)) + 
-    geom_errorbar(mapping = aes(ymin=repldnormmea+2*repldnormse), color = 'gray', position = position_dodge(0.9), width = 0.1) +
-    geom_linerange(position = position_dodge(0.9), color = 'gray') +
-    geom_bar( position = position_dodge(), stat = 'identity') + 
-    geom_text(aes(y= repldnormmea-0.01, label = round(repldnormmea, 2)), size= 3, color = 'white', position = position_dodge(0.9)) + 
-    geom_text(aes(y=0.005, label = exp_tag2), angle=90, size= 3.5, color='white', position = position_dodge(0.9), hjust=0) + 
-    labs(y= 'Mean prediction error', x= 'Use case', fill = 'Experiment type') + 
-    scale_fill_manual(values=alpha(my_ccols2, 0.99)) + 
-    theme(legend.position = 0) + 
-    scale_x_discrete(labels = xticklabels) + 
-    theme(axis.title = element_text(size = 20, color = 'gray42'), axis.text = element_text(size=15, color='gray42'))
-  outpdf(infile, 'norm_bar', height = 7, width = 15)
-
-  ggplot(data=df, mapping = aes(x=use_case, y=repldexactmea, ymin=repldexactmea, ymax=repldexactmea+2*repldexactse, fill = exp_tag2)) + 
-    geom_errorbar(mapping = aes(ymin=repldexactmea+2*repldexactse), color= 'gray',position = position_dodge(0.9), width = 0.1) +
-    geom_linerange(position = position_dodge(0.9), color = 'gray') +
-    geom_bar( position = position_dodge(), stat = 'identity') + 
-    geom_text(aes(y= repldexactmea-0.01, label = round(repldexactmea, 2)), color = 'white', size= 3, position = position_dodge(0.9)) + 
-    geom_text(aes(y=0.005, label = exp_tag2), size= 4, color='white', angle = 90, hjust=0, position = position_dodge(0.9)) + 
-    labs(y= 'Mean prediction error', x= 'Use case', fill = 'Experiment type') + 
-    scale_fill_manual(values=alpha(my_ccols2, 0.99)) + 
-    theme(legend.position = 0) + 
-    scale_x_discrete(labels = xticklabels) + 
-    theme(axis.title = element_text(size = 20, color = 'gray42'), axis.text = element_text(size=15, color='gray42'))
-  outpdf(infile, 'exact_bar', height = 7, width = 15)
-  
-}
 
 chao_diversity = function(){
   #compute diversity estimate using chao2
@@ -234,18 +158,134 @@ motif_coverage = function(){
   outpdf(infile, 'motif_coverage', height = 10, width = 15)
 }
 
-branch_subset = function(){
-  infile = 'abdb_outfiles_2019/paratope_epitope_internet_edges.csv'
-  df = read_csv(infile)
-  dfsub = df[df$source == 'XXXX1X', ]
-  print(df)
-  print(dfsub)
-  print(sum(dfsub$weight))
+gap_status = function(x){
+  x[x > 0] = 1
+  x[x == 1] = 'discontinuous'
+  x[x == 0] = 'continuous'
+  return = x
 }
 
+pattern.bar.pie <- function(infile){
+  # infile = 'abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx_count.csv'
+  content <- read_csv(infile)
+  print(content)
+  content1 = content %>% 
+    mutate(gap_status1 = gap_status(max_gap1)) %>%
+    count(., gap_pattern1, gap_status1, intertype1)
+  print(content1)
+  content2 = content %>% 
+    mutate(gap_status2 = gap_status(max_gap2)) %>%
+    count(., gap_pattern2, gap_status2, intertype1)
+  print(content2)
+  g <- ggplot(data=content1)
+  g <- g + geom_bar(stat = 'identity', mapping = aes(x='', y= n, fill = gap_status1, color = gap_status1))
+  g <- g + facet_wrap(~ intertype1, ncol = 3)
+  g <- g + coord_polar('y', start=0)
+  g <- g + theme(axis.text.y = element_blank(), 
+                 axis.title.x = element_text(size=20),
+                 strip.text = element_text(size = 20)) +
+    labs(x=' ', y='Number of continuous and discontinous motifs') +
+    scale_fill_manual(values=c('red', 'black')) +
+    scale_color_manual(values=c('red', 'black')) +
+    labs (fill= 'Gap Status', color= 'Gap Status') + 
+    theme(legend.position = 'none')
+  outpng(infile, 'motif', height = 5)
+  ### motif partner
+  g <- ggplot(data=content2)
+  g <- g + geom_bar(stat = 'identity', mapping = aes(x='', y= n, fill = gap_status2, color = gap_status2))
+  g <- g + facet_wrap(~ intertype1, ncol = 3)
+  g <- g + coord_polar('y', start=0)
+  g <- g + theme(axis.text.y = element_blank(),
+                 axis.title.x = element_text(size=20),
+                 strip.text = element_text(size = 20)) +
+    labs(x=' ', y='Number of continuous and discontinous motifs') +
+    scale_fill_manual(values=c('red', 'black')) +
+    scale_color_manual(values=c('red', 'black')) +
+    labs (fill= 'Gap Status', color= 'Gap Status') + 
+    theme(legend.position = 'none')
+  outpng(infile, 'motif_partner', height = 5)
+    
+}
+
+
+pattern.bar.radial <- function(infile){
+  # infile = 'abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx_count.csv'
+  content <- read_csv(infile)
+  print(content)
+  content1 = content %>% 
+    mutate(gap_status1 = gap_status(max_gap1)) %>%
+    count(., gap_pattern1, gap_status1, intertype1)
+  print(content1)
+  content2 = content %>% 
+    mutate(gap_status2 = gap_status(max_gap2)) %>%
+    count(., gap_pattern2, gap_status2, intertype1)
+  print(content2)
+  ggplot(data=content1) +
+    geom_bar(stat = 'identity', mapping = aes(x=gap_pattern1, y= n, fill = gap_status1, color = gap_status1)) + 
+    facet_wrap(~ intertype1, ncol = 3) + 
+    coord_polar('y', start=0) +
+    labs(x='Motif', y='Number of shared motifs') +
+    theme(axis.title = element_text(size = 20), 
+          axis.text.y = element_blank(), 
+          axis.ticks = element_blank(),
+          strip.text = element_text(size = 20)) +
+    scale_fill_manual(values=c('red', 'black')) +
+    scale_color_manual(values=c('red', 'black')) +
+    labs (fill= 'Gap Status', color= 'Gap Status') + 
+    theme(legend.position = 'none') + 
+    scale_y_continuous(breaks = seq(0,1600, by = 500))
+  outpng(infile, 'radial_motif', height = 5)
+  # stop(000)
+  ### motif partner
+  g <- ggplot(data=content2)
+  g <- g + geom_bar(stat = 'identity', mapping = aes(x=gap_pattern2, y= n, fill = gap_status2, color = gap_status2))
+  g <- g + facet_wrap(~ intertype1, ncol = 3) + 
+    coord_polar('y', start=0) +
+    labs(x='Motif', y='Number of shared motifs') +
+    labs(x='Motif', y='Number of shared motifs') +
+    theme(axis.title = element_text(size = 20), 
+          axis.text.y = element_blank(), 
+          axis.ticks = element_blank(),
+          strip.text = element_text(size = 20)) +
+    scale_fill_manual(values=c('red', 'black')) +
+    scale_color_manual(values=c('red', 'black')) +
+    labs (fill= 'Gap Status', color= 'Gap Status') + 
+    theme(legend.position = 'none') +
+    scale_y_continuous(breaks = seq(0,1600, by = 500))
+  outpng(infile, 'radial_motif_partner', height = 5)
+    
+}
+
+
+
+pattern.bar.radial2 <- function(infile){
+  # infile = 'abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx_count.csv'
+  outname = strsplit(infile, split ='/')[[1]][2]
+  outname = paste0('abdb_figures_2019/',substr(outname, 1,nchar(outname)-4), '_radial.pdf') 
+  content <- read.csv(infile)
+  print(summary(content))
+  ggplot(data=content) + 
+    geom_bar(stat = 'identity', mapping = aes(x=gap_patterns, y= raw_count, fill = gapstrstatus, color =
+                                                gapstrstatus)) + 
+    facet_wrap(~ segment, ncol = 3) + 
+    coord_polar('y', start=0) +
+    theme(axis.text = element_text(size = 10), axis.text.y = element_blank(), axis.ticks = element_blank()) +
+    scale_fill_manual(values=c('red', 'black')) +
+    scale_color_manual(values=c('red', 'black')) +
+    # theme(panel.grid.major = element_line(colour = 'grey')) +
+    labs (x= 'Motif', y='Number of shared motifs', fill= 'Gap Status', color= 'Gap Status') +
+    theme(legend.position = 'none')
+  ggsave(outname, width=8, height=15)
+  system(sprintf('open %s', outname))
+}
+
+
+
+
 # run stuff
-# dl_ld_binary()
 # chao_diversity()
 # motif_coverage()
-# sl_dl_summary()
-branch_subset()
+pattern.bar.pie('abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired.csv')
+# pattern.bar.radial('abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired.csv')
+
+

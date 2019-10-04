@@ -75,6 +75,8 @@ ppi_abdb_venn = function(){
   agdf = read_csv(infile_ag)
   agmotif = agdf$gap_patterns
   ppidf = read_csv(infile_ppi)
+  print(ppidf)
+  # stop()
   # ppidf = subset(ppidf, max_gap < 8)
   ppimotif = ppidf$gap_pattern
   x = list(abmotif, agmotif, ppimotif)
@@ -102,22 +104,24 @@ ppi_abdb_venn = function(){
 ppi_motif_len = function(){
   infile = 'abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300.csv'
   df = read_csv(infile)
+  print(df)
+  # stop()
   # df = df[seq(100),]
   # df = subset(df, (max_gap < 8))
   medians = aggregate(df, by = list(df$intertype), median)
-  print(str(medians))
-  median_labels = sprintf('Median: %s', medians$motif_len)
-  maxs = aggregate(df, by = list(df$intertype), max)
-  max_labels = sprintf('Max: %s', maxs$motif_len)
+  medians = df %>% group_by(intertype) %>% summarise(max_len = max(motif_len), med_len = median(motif_len))
+  print(medians)
   ggplot(data= df, mapping = aes(x=intertype, y=motif_len, fill=intertype, color = intertype)) + 
-  geom_violin(color=NA) + 
-  # geom_jitter(color = alpha('orange', 0.01), size=5) + 
-  scale_fill_manual(values = c(alpha('orange'), alpha('orange',0.5))) + 
-  scale_color_manual(values = c(alpha('orange'), alpha('orange',0.5))) + 
-  geom_text(data=medians, mapping = aes(x=medians$Group.1, y=medians$motif_len), label = median_labels, color = 'Black') + 
-  geom_text(data=maxs, mapping = aes(x=maxs$Group.1, y=maxs$motif_len), label = max_labels, color = 'Black') + 
-  labs(x= 'Domain type', y = 'PPI interaction motif length') + 
-  theme(legend.position = 'none')
+    geom_violin(color=NA) + 
+    # geom_jitter(color = alpha('orange', 0.01), size=5) + 
+    scale_fill_manual(values = c(alpha('orange'), alpha('orange',0.5))) +
+    scale_color_manual(values = c(alpha('orange'), alpha('orange',0.5))) +
+    geom_text(data=medians, mapping = aes(x=intertype, y=med_len), label = sprintf('Median: %s', medians$med_len), color = 'Black') +
+    geom_text(data=medians, mapping = aes(x=intertype, y=max_len), label = sprintf('Max: %s', medians$max_len), color = 'Black') +
+    labs(x= 'Domain type', y = 'PPI interaction motif length') + 
+    theme(legend.position = 'none', 
+          axis.title = element_text(size = 25),
+          axis.text = element_text(size = 25))
   inname = strsplit(tail(strsplit(infile, '/')[[1]], n=1), '\\.')[[1]][1]
   outname = sprintf('%s/%s_ppi_motif_len.pdf', outfigdir,inname)
   ggsave(outname, width = 6, height = 9)
@@ -130,20 +134,21 @@ ppi_max_gap = function(){
   df = read_csv(infile)
   df = subset(df, max_gap < 8)
   # df = df[seq(100),]
-  medians = aggregate(df, by = list(df$intertype), median)
-  print(str(medians))
-  median_labels = sprintf('Median: %s', medians$max_gap)
-  maxs = aggregate(df, by = list(df$intertype), max)
-  max_labels = sprintf('Max: %s', maxs$max_gap)
+  maxes = df %>% group_by(intertype) %>% summarise(ma_gap = max(max_gap), med_gap = median(max_gap))
+  print(maxes)
+  print(df$max_gap)
+  # stop()
   ggplot(data= df, mapping = aes(x=intertype, y=max_gap, fill=intertype, color = intertype)) + 
-  geom_violin() +
-  # geom_jitter(color = alpha('orange', 0.01), size=5) + 
-  scale_fill_manual(values = c(alpha('orange'), alpha('orange',0.5))) + 
-  scale_color_manual(values = c(alpha('orange'), alpha('orange',0.5))) + 
-  geom_text(data=medians, mapping = aes(x=medians$Group.1, y=medians$max_gap), label = median_labels, color= 'Black') + 
-  geom_text(data=maxs, mapping = aes(x=maxs$Group.1, y=maxs$max_gap), label = max_labels, color='Black') + 
-  labs(x= 'Domain type', y = 'PPI maximum gap') + 
-  theme(legend.position = 'none')
+    geom_violin() +
+    # geom_jitter(color = alpha('orange', 0.01), size=5) + 
+    scale_fill_manual(values = c(alpha('orange'), alpha('orange',0.5))) + 
+    scale_color_manual(values = c(alpha('orange'), alpha('orange',0.5))) + 
+    geom_text(data=maxes, mapping = aes(x=intertype, y=med_gap), label = sprintf('Median: %s', maxes$med_gap), color= 'Black') +
+    geom_text(data=maxes, mapping = aes(x=intertype, y=ma_gap), label = sprintf('Median: %s', maxes$ma_gap), color= 'Black') +
+    labs(x= 'Domain type', y = 'PPI maximum gap') + 
+    theme(legend.position = 'none', 
+          axis.title = element_text(size = 25),
+          axis.text = element_text(size = 25))
   inname = strsplit(tail(strsplit(infile, '/')[[1]], n=1), '\\.')[[1]][1]
   outname = sprintf('%s/%s_ppi_max_gap.pdf', outfigdir,inname)
   ggsave(outname, width = 6, height = 9)
@@ -190,9 +195,12 @@ ppi_residue_distribution = function(){
     facet_wrap(~domain_type) +
     scale_fill_manual(values = c(alpha('orange'), alpha('orange',0.5))) +
     geom_text(data= countdf, mapping = aes(x=residue, y=percent+0.5, label = percent)) + 
-    geom_text(data= uniquepdb, mapping = aes(x=20.4, y=9.5, label = sprintf('# of proteins: %s', npdb)), hjust=0) + 
+    geom_text(data= uniquepdb, mapping = aes(x=20.4, y=7.5, label = sprintf('# of proteins: %s', npdb)), hjust=0) + 
     # scale_y_continuous(labels= percent) + 
-    theme(legend.position = 0) + 
+    theme(legend.position = 0, 
+          axis.title = element_text(size = 30),
+          axis.text = element_text(size = 20),
+          strip.text = element_text(size = 20)) + 
     coord_flip() +
     labs(y='Percentage (%)', x = 'Residue name')
   outpdf(infile, 'box_lot', width = 11, height = 11)
@@ -270,20 +278,20 @@ ppi_motif_distribution_interdomain = function(){
     geom_bar(mapping = aes(x=reorder(gap_pattern, -n), y=n), fill='orange', stat = 'identity') +
     theme(axis.text.x = element_text(angle = 90)) +
     labs(y='# of motifs', x = 'PPI motifs') +
-    theme(axis.title = element_text(size = 40), legend.title = element_text(size = 30),
+    theme(axis.title = element_text(size = 60), legend.title = element_text(size = 50),
           legend.text = element_text(size=30)) +
     geom_text(mapping = aes(x= gap_pattern, y=n+80, label = n), angle=90 )
-  outpdf(infile, 'motif_distribution', width = 28, height = 28)
+  outpdf(infile, 'motif_distribution', width = 32, height = 28)
   cumdf = topndf %>% mutate(csum = cumsum(n)) %>% mutate(csum_percent = percent(csum/sum(countdf$n)))
   print(cumdf)
   ggplot(data=cumdf) + 
     geom_bar(mapping = aes(x= reorder(gap_pattern, csum), y=csum), fill='orange', stat = 'identity') +
     theme(axis.text.x = element_blank()) +
     labs(y='Cummulative percentage (%)', x = '') + 
-    theme(axis.title = element_text(size = 40), legend.title = element_text(size = 30),
+    theme(axis.title = element_text(size = 60), legend.title = element_text(size = 50),
           legend.text = element_text(size=30)) + 
     geom_text(mapping = aes(x= gap_pattern, y=csum+900, label = csum_percent), angle=90 )
-  outpdf(infile, 'motif_csum', width = 28, height = 20)
+  outpdf(infile, 'motif_csum', width = 32, height = 20)
   
   
   
@@ -303,22 +311,67 @@ ppi_motif_distribution_intradomain = function(){
     geom_bar(mapping = aes(x=reorder(gap_pattern, -n), y=n), fill=alpha('orange',0.5), stat = 'identity') +
     theme(axis.text.x = element_text(angle = 90)) +
     labs(y='# of motifs', x = 'PPI motifs') +
-    theme(axis.title = element_text(size = 40), legend.title = element_text(size = 30),
+    theme(axis.title = element_text(size = 60), legend.title = element_text(size = 50),
           legend.text = element_text(size=30)) +
     geom_text(mapping = aes(x= gap_pattern, y=n+8, label = n), angle=90 )
-  outpdf(infile, 'motif_distribution_intra', width = 28, height = 28)
+  outpdf(infile, 'motif_distribution_intra', width = 32, height = 28)
   cumdf = topndf %>% mutate(csum = cumsum(n)) %>% mutate(csum_percent = percent(csum/sum(countdf$n)))
   print(cumdf)
   ggplot(data=cumdf) + 
     geom_bar(mapping = aes(x= reorder(gap_pattern, csum), y=csum), fill= alpha('orange', 0.5), stat = 'identity') +
     theme(axis.text.x = element_blank()) +
     labs(y='Cummulative percentage (%)', x = '') + 
-    theme(axis.title = element_text(size = 40), legend.title = element_text(size = 30),
+    theme(axis.title = element_text(size = 60), legend.title = element_text(size = 50),
           legend.text = element_text(size=30)) + 
     geom_text(mapping = aes(x= gap_pattern, y=csum+250, label = csum_percent), angle=90 )
-  outpdf(infile, 'motif_csum_intra', width = 28, height = 15)
+  outpdf(infile, 'motif_csum_intra', width = 32, height = 15)
   
   
+  
+}
+
+
+chao_diversity = function(){
+  #compute diversity estimate using chao2
+  infile = 'abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired.csv'
+  df = read_csv(infile)
+  print(df)
+  # stop()
+  ## retrofit column to match ab-ag data
+  df = df %>% rename(ab_motif = gap_pattern1,
+                  ag_motif = gap_pattern2)
+  ##
+  dfab = df %>% group_by(ab_motif) %>%tally()
+  dfab = dfab[order(-dfab$n),]
+  # chao_ab = chao1(dfab$n)
+  # print(chao_ab)
+  # print(dfab)
+  dfag = df %>% group_by(ag_motif) %>%tally()
+  dfag = dfag[order(-dfag$n),]
+  i.out = iNEXT(dfab$n, datatype = 'abundance')
+  chao_abinext = ChaoRichness(dfab$n)
+  chao_aginext = ChaoRichness(dfag$n)
+  # print(chao_ab)
+  # print(chao_abinext)
+  # chao_ag = chao1(dfag$n)
+  # print(chao_ag)
+  divdf = data.frame('divs' = c(chao_abinext$Estimator, chao_aginext$Estimator, chao_abinext$Observed, chao_aginext$Observed), 'type' = c('Potential', 'Potential', 'Observed', 'Observed'), 'source' = c('Paratope', 'Epitope', 'Paratope', 'Epitope'))
+  print(divdf)
+  divdf$source = factor(c('PPI motif', 'PPI motif partner'), levels = c('PPI motif', 'PPI motif partner'))
+  ytext = divdf$divs+(0.08*divdf$divs)
+  ytext = round(ytext)
+  ggplot(data = divdf) +
+    geom_bar(stat = 'identity', mapping = aes(reorder(type,divs), divs, fill = source), position = 'dodge') + 
+    scale_fill_manual(values = c(ppi_mcolor, ppi_pcolor), name = "Motif source", labels = c('PPI motif', 'PPI motif partner')) + 
+    facet_wrap(~source, scales='free') + 
+    geom_text(mapping = aes(x=type, y=ytext, label=round(divs))) +
+    theme(axis.title = element_text(size = 20),
+          axis.text = element_text(size = 20),
+          strip.text = element_text(size = 15),
+          legend.title = element_blank(),
+          legend.text = element_text(size = 20)) + 
+    labs(x='', y= 'Interaction motif diversity')
+  outpdf(infile, 'chao')
   
 }
 
@@ -331,3 +384,4 @@ ppi_motif_distribution_intradomain = function(){
 # ppi_residue_correlation()
 # ppi_motif_distribution_interdomain()
 # ppi_motif_distribution_intradomain()
+chao_diversity()

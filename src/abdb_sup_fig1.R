@@ -78,13 +78,16 @@ vgene.distribution <- function(){
   countdfspec2$x = c(12,20)
   countdfspec2$y = c(60, 40)
   print(countdfspec2)
-  total_labels = sprintf('Total number of V genes: %s', countdfspec2$nn)
+  total_labels = sprintf('Total number of V genes: %s', countdfspec2$n)
   ggplot(data=countdf) + 
   geom_bar(mapping = aes(x=imgt_vgenename, fill = imgt_species)) + 
   # coord_polar() + 
   facet_wrap(~ imgt_species, ncol=1, nrow=2, scales='free') +
   scale_y_log10() + 
-  theme(axis.text.x = element_text(angle = 90, size = 5)) + 
+  theme(axis.text.x = element_text(angle = 90, size = 5),
+        axis.title = element_text(size = 25),
+        strip.text = element_text(size = 20),
+        axis.text.y = element_text(size = 20)) +
   scale_fill_manual(values = c(alpha(abcolor3,0.5), alpha(abcolor3))) +
   labs(x= 'IMGT V gene', y='V gene usage (count)') +
   geom_text(data=countdfspec2, mapping = aes(x=x, y=y, label = total_labels)) +
@@ -97,7 +100,7 @@ vgene.distribution <- function(){
 absegment_sequence_diversity <- function() {
   infile = 'abdb_outfiles_2019/abdb_segment_absequence_full_vgene_imgt_vgene_ld.csv'
   df = read.csv(infile)
-  df = df[seq(100), ]
+  # df = df[seq(100), ]
   df <- df %>% group_by(segment) %>% mutate(median = median(ld))
   print(head(df))
   meds = aggregate(df[,6], list(segment=df$segment), median)
@@ -113,7 +116,9 @@ absegment_sequence_diversity <- function() {
   scale_fill_manual(values=my_spectral) +
   coord_polar() + 
   scale_y_log10() +
-  theme(legend.position = 0) + 
+  theme(legend.position = 0,
+        axis.title = element_text(size = 20),
+        strip.text = element_text(size = 20)) + 
   # theme(panel.grid.major = element_line(colour = 'grey')) +
   labs(x= ' ', y='Levenshtein distance', fill = 'Region')
   outpdf (infile, 'polar_bar', width = 12, height = 10)
@@ -156,6 +161,9 @@ agsegment_sequence_diversity <- function() {
   facet_wrap(~ region, ncol = 2) + 
   geom_text(data=meds, mapping=aes(x=15, y=10, label = med_labels)) + 
   theme(axis.text.y = element_blank()) + 
+  theme(legend.position = 0,
+        axis.title = element_text(size = 20),
+        strip.text = element_text(size = 15)) + 
   scale_fill_manual(values=my_spectral) +
   coord_polar() + 
   scale_y_log10() +

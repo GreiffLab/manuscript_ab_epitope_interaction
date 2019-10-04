@@ -79,8 +79,10 @@ plot.pattern.bar.pie <- function(infile){
     scale_fill_manual(values=c('red', 'black')) +
     scale_color_manual(values=c('red', 'black')) +
     labs (fill= 'Gap Status', color= 'Gap Status') + 
-    theme(legend.position = 'none') + 
-    expand_limits(y=20 ) + 
+    theme(legend.position = 'none',
+          axis.title = element_text(size = 23),
+          strip.text = element_text(size = 20)) + 
+    expand_limits(y=20 )
     # geom_text(mapping = aes(x=1, y= cumsum(raw_count), fill = gapstrstatus, color = gapstrstatus, label = df$label))
   outpdf(infile, 'pie_sup7', width = 8, height = 15)
 }
@@ -102,15 +104,17 @@ plot.pattern.bar.radial <- function(infile){
   scale_color_manual(values=c('red', 'black')) +
   # theme(panel.grid.major = element_line(colour = 'grey')) +
   labs (x= 'Motif', y='Number of shared motifs', fill= 'Gap Status', color= 'Gap Status') +
-  theme(legend.position = 'none')
+  theme(legend.position = 'none',
+        axis.title = element_text(size = 23),
+        strip.text = element_text(size = 20)) 
   outpdf(infile, 'radial_sup7', width = 8, height = 15)
 }
 
 
 # run stuff
-plot.pattern.bar.pie('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx_count.csv')
+# plot.pattern.bar.pie('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx_count.csv')
 # plot.pattern.bar.pie('abdb_outfiles_2019/respairs_absort_cutoff4_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx_count.csv')
 # plot.pattern.bar.pie('abdb_outfiles_2019/respairs_absort_cutoff6_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx_count.csv')
-# plot.pattern.bar.radial('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx_count.csv')
-# plot.pattern.bar.radial('abdb_outfiles_2019/respairs_absort_cutoff6_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx_count.csv')
-# plot.pattern.bar.radial('abdb_outfiles_2019/respairs_absort_cutoff4_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx_count.csv')
+plot.pattern.bar.radial('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx_count.csv')
+plot.pattern.bar.radial('abdb_outfiles_2019/respairs_absort_cutoff6_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx_count.csv')
+plot.pattern.bar.radial('abdb_outfiles_2019/respairs_absort_cutoff4_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx_count.csv')

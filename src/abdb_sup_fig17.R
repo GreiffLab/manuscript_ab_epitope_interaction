@@ -93,7 +93,8 @@ dl_length_correlation = function(infile) {
     facet_grid(embeding_dim ~ units) + 
     geom_smooth(method = 'lm', color = alpha('lightslateblue', 0.5)) + 
     labs(x= 'Length predicted output', y = 'Length observed output') + 
-    theme(axis.title = element_text(size = 25))
+    theme(axis.title = element_text(size = 40),
+          strip.text = element_text(size = 28))
   outpng(infile, 'length_correlation', height = 15, width = 18)
 }
 
@@ -124,18 +125,21 @@ dl_length_correlation_bar = function(){
     geom_errorbar(mapping = aes(ymin=ma+2*se), position = position_dodge(0.9), width = 0.1) +
     geom_linerange(position = position_dodge(0.9)) +
     geom_text(aes(y= ma-0.02, label = round(ma, 1)), position = position_dodge(0.9)) +
-    labs(y= 'Maximum Pearson correlation of predicted vs observed length', x= 'Use case', fill = 'Experiment type') + 
+    labs(y= 'predicted vs observed length (P.cor.)', x= 'Use case', fill = 'Experiment type') + 
     # scale_fill_discrete(labels =c('Randomized pairs', 'Observed pairs')) + 
     scale_fill_manual(values = c(alpha('lightsalmon', 0.5), 'lightsalmon'), labels =c('Randomized pairs', 'Observed pairs')) +
-    scale_x_discrete(breaks = xtickbreaks, labels = xticklabels)
+    scale_x_discrete(breaks = xtickbreaks, labels = xticklabels) + 
+    theme(axis.title = element_text(size = 20),
+          legend.text = element_text(size = 20),
+          legend.title = element_blank())
   outpdf(infile, 'corr_bar', height = 7, width = 12)
 }
 
 
 ## run stuff
-# dl_length_correlation('abdb_outfiles_2019/merged_eval_files_paraepi_exp.csv')
+dl_length_correlation('abdb_outfiles_2019/merged_eval_files_paraepi_exp.csv')
 # dl_length_correlation('abdb_outfiles_2019/merged_eval_files_paraepi_control.csv')
-dl_length_correlation_bar()
+# dl_length_correlation_bar()
 
 
 

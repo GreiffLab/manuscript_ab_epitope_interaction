@@ -83,7 +83,10 @@ paratope_residue_distribution = function() {
     coord_flip() + 
     scale_fill_manual(values = my_spectral) + 
     labs(y = '', x = 'Residue name', fill = 'Region') + 
-    theme(legend.position = 0) +
+    theme(legend.position = 0, 
+          axis.title = element_text(size = 25),
+          axis.text = element_text(size = 20),
+          strip.text = element_text(size = 20)) +
     geom_text(data=csumlabeldf, mapping = aes(x=abres, y=percent + 0.9, label = percent))
     # scale_y_continuous(labels = percent)
   outpdf(infile, 'paratope_residue_distribution', width = 11)
@@ -108,7 +111,10 @@ epitope_residue_distribution = function() {
     coord_flip() +
     scale_fill_manual(values = my_spectral) + 
     labs(y = '', x = 'Residue name', fill='Region') + 
-    theme(legend.position = 0) +
+    theme(legend.position = 0, 
+          axis.title = element_text(size = 25),
+          axis.text = element_text(size = 20),
+          strip.text = element_text(size = 20)) +
     geom_text(data=csumlabeldf, mapping = aes(x=agres, y=percent + 0.9, label = percent))
     # scale_y_continuous(labels = percent)
   outpdf(infile, 'epitope_residue_distribution', width = 11)
@@ -131,6 +137,12 @@ epitope_gap_residue_distribution = function() {
     geom_bar(mapping = aes(x=residue, y=percent, fill=segment), stat='identity') + 
     facet_wrap(~abchain) + 
     coord_flip() +
+    theme( 
+          axis.title = element_text(size = 25),
+          axis.text = element_text(size = 20),
+          strip.text = element_text(size = 20),
+          legend.title = element_blank(),
+          legend.text = element_text(size =20)) +
     scale_fill_manual(values = my_spectral) + 
     labs(y = 'Percentage (%)', x = 'Residue name', fill='Region') +
     geom_text(data=csumlabeldf, mapping = aes(x=residue, y=percent + 0.9, label = percent))
@@ -155,6 +167,12 @@ paratope_gap_residue_distribution = function() {
     geom_bar(mapping = aes(x=residue, y=percent, fill=segment), stat='identity') + 
     facet_wrap(~abchain) + 
     coord_flip() +
+    theme( 
+          axis.title = element_text(size = 25),
+          axis.text = element_text(size = 20),
+          strip.text = element_text(size = 20),
+          legend.title = element_blank(),
+          legend.text = element_text(size =20)) +
     scale_fill_manual(values = my_spectral) + 
     labs(y = 'Percentage (%)', x = 'Residue name', fill = 'Region') + 
     geom_text(data=csumlabeldf, mapping = aes(x=residue, y=percent + 0.9, label = percent))
@@ -164,8 +182,8 @@ paratope_gap_residue_distribution = function() {
 
 
 #run stuff
-paratope_residue_distribution()
-epitope_residue_distribution()
+# paratope_residue_distribution()
+# epitope_residue_distribution()
 epitope_gap_residue_distribution()
 paratope_gap_residue_distribution()
 

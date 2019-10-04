@@ -92,16 +92,17 @@ paratope_top_antigen = function(){
   countdf = count(df, ab_motif, ag_species2)
   print(head(countdf))
   countdf2 = count(countdf, ab_motif) 
-  toptendf = countdf2[order(-countdf2$nn),][1:20,]
+  toptendf = countdf2[order(-countdf2$n),][1:20,]
   print(toptendf)
-  labels = paste0('',toptendf$nn)
+  labels = paste0('',toptendf$n)
   print(labels)
   inname = strsplit(tail(strsplit(infile, '/')[[1]], n=1), '\\.')[[1]][1]
   outname = sprintf('%s/%s_shared_paratope_motif_antigen.pdf', outfigdir,inname)
     ggplot(data = toptendf) + 
-    geom_bar(mapping = aes(x=reorder(ab_motif,-nn), y = nn), stat = 'identity', fill=abcolor3) + 
-    theme(axis.text.x = element_text(angle = 90)) + 
-    geom_text(mapping= aes(x = toptendf$ab_motif, y=toptendf$nn+1, label=labels)) +
+    geom_bar(mapping = aes(x=reorder(ab_motif,-n), y = n), stat = 'identity', fill=abcolor3) + 
+    theme(axis.text.x = element_text(angle = 90, size = 20),
+          axis.title = element_text(size = 30)) + 
+    geom_text(mapping= aes(x = toptendf$ab_motif, y=toptendf$n+1, label=labels)) +
     labs(x='Top 20 paratope motif', y='# of antigen classes')
   ggsave(outname, width = 10, height = 8)
   system(sprintf('open %s', outname))
@@ -129,7 +130,8 @@ paratope_top_complex = function(){
   outname = sprintf('%s/%s_shared_paratope_motif_complex.pdf', outfigdir,inname)
     ggplot(data = toptendf) + 
     geom_bar(mapping = aes(x=reorder(ab_motif,-n), y = n), stat = 'identity', fill=abcolor3) + 
-    theme(axis.text.x = element_text(angle = 90)) + 
+    theme(axis.text.x = element_text(angle = 90, size = 20),
+          axis.title = element_text(size = 30)) + 
     geom_text(mapping= aes(x = toptendf$ab_motif, y=toptendf$n+10, label=labels)) +
     labs(x='Top 20 paratope motif', y='# of structures')
   ggsave(outname, width = 10, height = 8)
@@ -150,16 +152,17 @@ epitope_top_complex = function(){
   countdf = count(df, ag_motif, pdbid)
   print(head(countdf))
   countdf2 = count(countdf, ag_motif) 
-  toptendf = countdf2[order(-countdf2$nn),][1:20,]
+  toptendf = countdf2[order(-countdf2$n),][1:20,]
   print(toptendf)
-  labels = paste0('',toptendf$nn)
+  labels = paste0('',toptendf$n)
   print(labels)
   inname = strsplit(tail(strsplit(infile, '/')[[1]], n=1), '\\.')[[1]][1]
   outname = sprintf('%s/%s_shared_epitope_motif_complex.pdf', outfigdir,inname)
     ggplot(data = toptendf) + 
-    geom_bar(mapping = aes(x=reorder(ag_motif,-nn), y = nn), stat = 'identity', fill=agcolor) + 
-    theme(axis.text.x = element_text(angle = 90)) + 
-    geom_text(mapping= aes(x = toptendf$ag_motif, y=toptendf$nn+10, label=labels)) +
+    geom_bar(mapping = aes(x=reorder(ag_motif,-n), y = n), stat = 'identity', fill=agcolor) + 
+    theme(axis.text.x = element_text(angle = 90, size = 20),
+          axis.title = element_text(size = 30)) + 
+    geom_text(mapping= aes(x = toptendf$ag_motif, y=toptendf$n+10, label=labels)) +
     labs(x='Top 20 paratope motif', y='# of structures')
   ggsave(outname, width = 10, height = 8)
   system(sprintf('open %s', outname))
@@ -223,17 +226,18 @@ paratope_top_imgt_vgene = function(){
   print(head(countdf))
   countdf2 = count(countdf, ab_motif, imgt_species) 
   # countdf2 = count(countdf, ab_motif, imgt_species,abchain) 
-  toptendf = countdf2[order(-countdf2$nn),]
+  toptendf = countdf2[order(-countdf2$n),]
   print(toptendf)
-  labels = paste0('',toptendf$nn)
+  labels = paste0('',toptendf$n)
   print(labels)
   inname = strsplit(tail(strsplit(infile, '/')[[1]], n=1), '\\.')[[1]][1]
   outname = sprintf('%s/%s_shared_paratope_motif_imgt_vgene.pdf', outfigdir,inname)
     ggplot(data = toptendf) + 
-    geom_bar(mapping = aes(x=reorder(ab_motif,-nn), y = nn, fill = imgt_species), stat = 'identity', position = 'dodge') + 
-    theme(axis.text.x = element_text(angle = 90)) +
+    geom_bar(mapping = aes(x=reorder(ab_motif,-n), y = n, fill = imgt_species), stat = 'identity', position = 'dodge') + 
+    theme(axis.text.x = element_text(angle = 90, size = 20),
+          axis.title = element_text(size = 30)) + 
     # facet_wrap(~ abchain) +
-    geom_text(mapping= aes(x = toptendf$ab_motif, y=toptendf$nn+1, label=labels, fill=imgt_species), position = position_dodge(width=1)) +
+    geom_text(mapping= aes(x = toptendf$ab_motif, y=toptendf$n+1, label=labels, fill=imgt_species), position = position_dodge(width=1)) +
     scale_fill_manual(values = c(alpha(abcolor3, 0.5), abcolor3)) +
     labs(x='Top 20 paratope motif', y='# of unique V genes', fill='Species (IMGT naming)') + 
     # put legend inside
@@ -265,7 +269,8 @@ paratope_top20_cumulative = function(){
   outname = sprintf('%s/%s_paratope_top20_cumulative_percent.pdf', outfigdir,inname)
     ggplot(data = top_nmotif) + 
     geom_bar(mapping = aes(x=reorder(ab_motif,csum), y = csum), stat = 'identity', fill=abcolor3) + 
-    theme(axis.text.x = element_text(angle = 90)) + 
+    theme(axis.text.x = element_text(angle = 90, size = 13),
+          axis.title = element_text(size = 25)) + 
     geom_text(mapping= aes(x = ab_motif, y=csum+3, label=csum), angle=90) +
     geom_text(data = df, mapping= aes(x = 1, y= 80, label=total_motif_label), hjust=0) +
     labs(x='Top 20 paratope motif', y='Cumulative percentage (%)')
@@ -291,7 +296,8 @@ epitope_top20_cumulative = function(){
   outname = sprintf('%s/%s_epitope_top20_cumulative_percent.pdf', outfigdir,inname)
     ggplot(data = top_nmotif) + 
     geom_bar(mapping = aes(x=reorder(ag_motif,csum), y = csum), stat = 'identity', fill=agcolor) + 
-    theme(axis.text.x = element_text(angle = 90)) + 
+    theme(axis.text.x = element_text(angle = 90, size = 13),
+          axis.title = element_text(size = 25)) + 
     geom_text(mapping= aes(x = ag_motif, y=csum+3, label=csum), angle=90) +
     geom_text(data = df, mapping= aes(x = 1, y= 70, label=total_motif_label), hjust=0) +
     labs(x='Top 20 epitope motif', y='Cumulative percentage (%)')
@@ -303,7 +309,7 @@ epitope_top20_cumulative = function(){
 # run stuff
 # human_mouse_overlap()
 # paratope_top_antigen()
-paratope_top_complex()
+# paratope_top_complex()
 # cdr_fr_overlap_ab('abdb_outfiles_2019/respairs_segment_notationx_len_merged_species2_ab_motif_overlap_min_max.csv')
 # cdr_fr_overlap_ag('abdb_outfiles_2019/respairs_segment_notationx_len_merged_species2_ag_motif_overlap_min_max.csv')
 # paratope_top_imgt_vgene()

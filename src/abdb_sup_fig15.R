@@ -111,7 +111,10 @@ residue_contact = function(infile, ncol){
     theme(axis.text.x = element_text(angle = 90, color = axiscolor),
           axis.text.y = element_text(color=axiscolor),
           panel.background = element_blank(),
-          axis.title = element_text(hjust = 0.0)) + 
+          axis.title = element_text(hjust = 0.0, size = 45),
+          legend.text = element_text(size = 45),
+          legend.title = element_text(size = 45),
+          strip.text = element_text(size = 40)) + 
     scale_fill_gradient2(low = my_spectral[14], mid='white', high = my_spectral[1], breaks = collabels,
                           labels = paste("", collabels),
                           guide = guide_legend(
@@ -159,7 +162,9 @@ residue_contact_comp = function(infile, ncol){
     theme(axis.text.x = element_text(angle = 90, color = axiscolor),
           axis.text.y = element_text(color=axiscolor),
           panel.background = element_blank(),
-          axis.title = element_text(hjust = 0.0)) + 
+          axis.title = element_text(hjust = 0.0, size = 25),
+          legend.text = element_text(size = 25),
+          legend.title = element_text(size = 25)) + 
     scale_fill_gradient2(low = my_spectral[14], mid='white', high = my_spectral[1], breaks = collabels,
                           labels = paste("", collabels),
                           guide = guide_legend(
@@ -177,7 +182,7 @@ residue_contact_comp = function(infile, ncol){
 
 # run stuff
 residue_contact('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_residue_contact_odds.csv', 6)
-residue_contact('abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_residue_contact_odds.csv', 2)
+# residue_contact('abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_residue_contact_odds.csv', 2)
 # residue_contact_comp('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_residue_contact_odds.csv', 6)
 # residue_contact_comp('abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_residue_contact_odds.csv', 2)
 

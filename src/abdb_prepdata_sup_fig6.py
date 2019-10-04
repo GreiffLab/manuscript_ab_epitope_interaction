@@ -102,8 +102,10 @@ def filter_ppi_data():
     max_gap = 7
     max_len = 300
     df = df[(df.max_gap <= max_gap) & (df.motif_len <= max_len)]
+    ddf = df[df.duplicated(subset='pdbchainpair', keep=False)]
+    print(df.shape, ddf.shape)
     outname = infile.split('.')[0] + '_maxgap%s_maxlen%s.csv' % (max_gap, max_len)
-    df.to_csv(outname, index=False)
+    ddf.to_csv(outname, index=False)
 
 def get_ppi_residues():
     '''
@@ -171,16 +173,18 @@ def get_paired_motifs():
     :return:
     '''
     infile = 'abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300.csv'
+    # infile = 'abdb_outfiles_2019/threedid_no_iglike_notationx_merged.csv'
     df = pd.read_csv(infile)
-    print(df.head())
     print(df.shape)
-    print(len(df.gap_pattern.unique()))
     ddf = df[df.duplicated(subset = 'pdbchainpair')]
-    print(ddf.shape)
+    print(ddf.shape, ddf.shape[0]*2)
+    print(len(df.gap_pattern.unique()))
+    print(len(ddf.gap_pattern.unique()))
     print(df.head())
     data = []
     for pdbchainpair in ddf.pdbchainpair.tolist()[:]:
         cpdf = df[df.pdbchainpair == pdbchainpair]
+        print(cpdf)
         datum = cpdf.iloc[0].tolist() + cpdf.iloc[1].tolist()
         data.append(datum)
     colnames = [item+'1' for item in cpdf.columns] + [item+'2' for item in cpdf.columns]
@@ -196,5 +200,5 @@ def get_paired_motifs():
 # find_immunofam()
 # filter_iglike()
 # filter_ppi_data()
-# get_ppi_residues()
-get_paired_motifs()
+# get_paired_motifs()
+get_ppi_residues()

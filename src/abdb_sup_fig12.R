@@ -62,7 +62,6 @@ print(sprintf('ppi partner: %s', ppi_pcolor))
 print(sprintf('radom motif: %s', random_mcolor))
 print(sprintf('radom partner: %s', random_pcolor))
 
-stop()
 
 outpdf = function(infile, tag, width=8, height=8){
   # assumes infile has extensins (.csv etc)
@@ -143,9 +142,11 @@ ppi_motif_interaction = function(){
   # topndf$group = factor(topndf$group, levels = c('Paratope', 'Epitope'))
   ggplot(data = topndf[order(-topndf$score),]) +
     geom_bar(mapping = aes(x=reorder(id,-score), y=score, fill=group), stat = 'identity')+
-    theme(axis.text.x  = element_text(angle = 90), axis.title = element_text(size = 28),
-          legend.text = element_text(size = 28),
-          legend.title = element_text(size = 28), 
+    theme(axis.text.x  = element_text(angle = 90), 
+          axis.title.y = element_text(size = 40),
+          axis.title.x = element_text(size = 60),
+          legend.text = element_text(size = 60),
+          legend.title = element_blank(), 
           panel.background = element_blank())+
     labs(x='Interaction motifs (top 200 by degree)', y='# of edges (degree)', fill='Motif source')+
     scale_fill_manual(values = c(ppi_mcolor, ppi_pcolor)) +
@@ -162,18 +163,20 @@ ppi_motif_interaction = function(){
   print(csum_label_node)
   ggplot(data = topndf) +
     geom_bar(mapping = aes(x=reorder(id,csum), y=csum, fill=group), stat = 'identity')+
-    theme(axis.text.x  = element_text(angle = 90), axis.title = element_text(size = 28),
-          legend.text = element_text(size = 28),
-          legend.title = element_text(size = 28)) +
+    theme(axis.text.x  = element_text(angle = 90), 
+          axis.title.y = element_text(size = 48),
+          axis.title.x = element_text(size = 60),
+          legend.text = element_text(size = 60),
+          legend.title = element_blank()) +
           # panel.background = element_blank())+
     labs(x='Interaction motifs (top 200 by degree)', y='# of edges (degree) - percent', fill = 'Motif source')+
     scale_fill_manual(values = c(ppi_mcolor, ppi_pcolor)) +
     geom_text(mapping = aes(x=id, y=csum+500, label = sprintf('%s - %s', csum, percent(csum_percent)), angle = 90)) + 
-    geom_text(mapping = aes(x=20, y = 8000, label = csum_label), size = 10) +
-    geom_text(mapping = aes(x=20, y = 8000-500, label = csum_label_node), size = 10)  
+    geom_text(mapping = aes(x=20, y = 8000, label = csum_label), size = 10, hjust = 0) +
+    geom_text(mapping = aes(x=20, y = 8000-500, label = csum_label_node), size = 10, hjust = 0)  
   outpdf(outname, 'ppi_degree_cumsum', width = 28, height = 15)
   print(topndf)
-  # stop()
+  stop()
   ### end cumulative degree distribution
   ### end power law test
   ### end the degree bit
@@ -287,9 +290,11 @@ downsampled_ppi_motif_internet = function(){
   ggplot(data = topndf) +
     geom_bar(mapping = aes(x=reorder(motif, -n), y=n, fill = group), stat = 'identity')+
     geom_text(mapping = aes(x=motif, y=n+ste_mean+4, label = n), angle=90) +
-    theme(axis.text.x  = element_text(angle = 90), axis.title = element_text(size = 28),
-          legend.text = element_text(size = 28),
-          legend.title = element_text(size = 28),
+    theme(axis.text.x  = element_text(angle = 90), 
+          axis.title.y = element_text(size = 40),
+          axis.title.x = element_text(size = 60),
+          legend.text = element_text(size = 60),
+          legend.title = element_blank(),
           panel.background = element_blank()) +
     labs(x='Interaction motifs (top 200 by degree)', y='# of edges (mean degree)', fill='Motif source') +
     scale_fill_manual(values = c(rppi_mcolor, rppi_pcolor)) +
@@ -306,17 +311,19 @@ downsampled_ppi_motif_internet = function(){
   print(csum_label)
   ggplot(data = topndf) +
     geom_bar(mapping = aes(x=reorder(motif,csum), y=csum, fill=group), stat = 'identity')+
-    theme(axis.text.x  = element_text(angle = 90), axis.title = element_text(size = 28),
-          legend.text = element_text(size = 28),
-          legend.title = element_text(size = 28)) +
+    theme(axis.text.x  = element_text(angle = 90), 
+          axis.title.y = element_text(size = 48),
+          axis.title.x = element_text(size = 60),
+          legend.text = element_text(size = 60),
+          legend.title = element_blank()) +
     labs(x='Interaction motifs (top 200 by degree)', y='# of edges (mean degree) - percent', fill = 'Motif source')+
     scale_fill_manual(values = c(rppi_mcolor, rppi_pcolor)) +
     geom_text(mapping = aes(x=motif, y=csum+210, label = sprintf('%s - %s', csum, percent(csum_percent)), angle = 90)) + 
-    geom_text(mapping = aes(x=20, y = 3300, label = csum_label), size = 10) +
-    geom_text(mapping = aes(x=20, y = 3100, label = csum_label_node), size = 10) +
+    geom_text(mapping = aes(x=20, y = 3300, label = csum_label), size = 10, hjust = 0) +
+    geom_text(mapping = aes(x=20, y = 3100, label = csum_label_node), size = 10, hjust = 0) 
   outpdf(infile, 'downsampled_ppi_internet_degree_cumsum', width = 28, height = 15)
   ### end cum degree distribution
-  # stop()
+  stop()
   print(topndf)
   ###
   # network bit
@@ -411,8 +418,10 @@ degree_correlation = function(){
     geom_smooth(mapping = aes(x=score.x, y=score.y), color = alpha(my_spectral[3], 0.9), method = 'lm') + 
     geom_text(mapping = aes(x=0, y=100, label = scor_label), size=7, hjust=0) + 
     geom_density_2d(mapping = aes(x=score.x, y=score.y), color = my_spectral[3]) +
-    labs(x=sprintf('Randomly sampled (degree >= %s)', cutoff), y='Observed node degree') + 
-    theme(axis.title = element_text(size=20), panel.background = element_blank())
+    labs(x=sprintf('Randomly sampled (deg. > %s)', cutoff), y='Observed node degree') + 
+    theme(axis.title = element_text(size=35),
+          axis.text = element_text(size=35),
+          panel.background = element_blank())
   outpdf('ppi_ppidownsampled_degree', 'corr')
 }
 
@@ -461,7 +470,11 @@ cross_reactivity_density = function() {
     scale_color_manual(values = c(ppi_mcolor, ppi_pcolor, rppi_mcolor, rppi_pcolor)) +  
     scale_y_continuous(limits=c(0,NA), breaks=trans(yticks), labels=yticks_labels) +
     geom_rect(aes(xmin=0, xmax=0.76, ymin=trans(0.05), ymax=trans(0.06)), fill="white") + 
-    labs(x= 'Interaction partner overlap (%)', y='Density', fill = 'Motif source', color = 'Motif source')
+    labs(x= 'Interaction partner overlap (%)', y='Density', fill = 'Motif source', color = 'Motif source') + 
+    theme(axis.title = element_text(size = 25),
+          legend.text = element_text(size = 25),
+          axis.text = element_text(size = 25),
+          legend.title = element_blank())
   outpng('ppi_motif_partner', 'density', width = 20)
 
 }
@@ -497,8 +510,11 @@ cross_reactivity_degree_cor = function(){
     geom_point(mapping = aes(x=score, y=ave, color=motif_source), size = 5, alpha=0.5) + 
     facet_wrap(~ motif_source, ncol = 4, labeller = labeller(motif_source=facet_labels), scales = 'free') +
     scale_color_manual(values = c(ppi_mcolor, ppi_pcolor, rppi_mcolor, rppi_pcolor)) + 
-    labs(x='Node degree', y = 'Mean interaction partner overlap') + 
-    theme(legend.position = 0)
+    labs(x='Node degree', y = 'Mean overlap') + 
+    theme(legend.position = 0,
+          axis.title = element_text(size = 30),
+          axis.text = element_text(size = 20),
+          strip.text = element_text(size = 12))
   outpdf('degree', 'ppi_mean_overlap_scatter', width = 12, height = 4)
   
 }
@@ -506,8 +522,8 @@ cross_reactivity_degree_cor = function(){
 
 
 # run stuff
-ppi_motif_interaction()
+# ppi_motif_interaction()
 # downsampled_ppi_motif_internet()
-# degree_correlation()
+degree_correlation()
 # cross_reactivity_density()
 # cross_reactivity_degree_cor()

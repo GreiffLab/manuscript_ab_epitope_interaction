@@ -23,7 +23,7 @@ library('gtools')
 library('vegan')
 library('iNEXT')
 
-theme_set(theme.akbar())
+theme_set(themeakbar())
 my_spectral <- colorRampPalette(brewer.pal(8,'Spectral'))(14)
 abcolor = '#6464FF'
 abcolor2 = '#1010FF'
@@ -50,11 +50,13 @@ pattern.bar.pie <- function(infile){
   g <- g + facet_wrap(~ segment, ncol = 3)
   g <- g + coord_polar('y', start=0)
   g <- g + theme(axis.text.y = element_blank(), axis.text.x = element_text(size=8)) +
-    labs(x=' ', y='Number of continuous and discontinous motifs') +
+    labs(x=' ', y='# of continuous and discontinous motifs') +
     scale_fill_manual(values=c('red', 'black')) +
     scale_color_manual(values=c('red', 'black')) +
     labs (fill= 'Gap Status', color= 'Gap Status') + 
-    theme(legend.position = 'none')
+    theme(legend.position = 'none',
+          axis.title = element_text(size = 27),
+          strip.text = element_text(size = 20))
   outname <- 'abdb_figures/shared_motifs_pie.pdf'
   inname = strsplit(tail(strsplit(infile, '/')[[1]], n=1), '\\.')[[1]][1]
   outname = sprintf('%s/%s_pie.pdf', outfigdir,inname)
@@ -79,7 +81,9 @@ pattern.bar.radial <- function(infile){
     scale_color_manual(values=c('red', 'black')) +
     # theme(panel.grid.major = element_line(colour = 'grey')) +
     labs (x= 'Motif', y='Number of shared motifs', fill= 'Gap Status', color= 'Gap Status') +
-    theme(legend.position = 'none')
+    theme(legend.position = 'none',
+          axis.title = element_text(size = 27),
+          strip.text = element_text(size = 20))
   ggsave(outname, width=8, height=15)
   system(sprintf('open %s', outname))
 }
@@ -88,6 +92,6 @@ pattern.bar.radial <- function(infile){
 # run stuff
 # pattern.bar.pie('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx_count.csv')
 # pattern.bar.pie('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_epitope_segment_notationx_count.csv')
-# pattern.bar.radial('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx_count.csv')
-# pattern.bar.radial('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_epitope_segment_notationx_count.csv')
+pattern.bar.radial('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx_count.csv')
+pattern.bar.radial('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_epitope_segment_notationx_count.csv')
 

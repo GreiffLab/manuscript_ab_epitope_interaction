@@ -13,6 +13,8 @@ rsync -av /Users/rahmadakbar/greifflab/aims/aimugen/dl/dataset_ppi_uniqueseqpair
 rsync -av /Users/rahmadakbar/greifflab/aims/aimugen/dl/dataset_XXX datasets/dl
 rsync -av /Users/rahmadakbar/greifflab/aims/aimugen/dl/dataset_XXXX datasets/dl
 rsync -av /Users/rahmadakbar/greifflab/aims/aimugen/dl/dataset_XXXX1X datasets/dl
+rsync -av /Users/rahmadakbar/greifflab/aims/aimugen/dl/dataset_res datasets/dl
+rsync -av /Users/rahmadakbar/greifflab/aims/aimugen/dl/dataset_pc datasets/dl
 rm src/*conflicted* 	
 
 

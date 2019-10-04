@@ -185,8 +185,8 @@ def get_levenshtein_segments_epitope():
 
 
 # run stuff
-# get_levenshtein_segments()
+get_levenshtein_segments()
 # add_full_sequence_ab_ag()
 # get_levenshtein_agseq()
 # get_levenshtein_epitopeseq()
-get_levenshtein_segments_epitope()
+# get_levenshtein_segments_epitope()

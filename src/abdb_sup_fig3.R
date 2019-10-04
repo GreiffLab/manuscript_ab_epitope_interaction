@@ -103,8 +103,10 @@ ggplot(data = df, aes(abchain, abresnum, fill=segment)) +
   # scale_color_manual(values = my_spectral) +
   scale_fill_manual(values = cdrfr_colors) +
   labs(x=xlab, y='Residue number (Martin numbering scheme)', fill='Region') +
-  theme(legend.text = element_text(size=8)) + 
-  theme(legend.title = element_text(vjust = 1))
+  theme(legend.text = element_text(size=15)) + 
+  theme(legend.title = element_blank(),
+        axis.title = element_text(size = 25),
+        axis.text = element_text(size = 25))
 outname = 'abdb_figures/abresnum_distribution.pdf'
 inname = strsplit(tail(strsplit(infile, '/')[[1]], n=1), '\\.')[[1]][1]
 outname = sprintf('%s/%s_abresnum_distribution_sup3.pdf',outfigdir,inname)
@@ -165,20 +167,20 @@ ab.ag.venn = function(infile_ab, infile_ag){
 
 # run stuff
 # abresnum_distribution_5a('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments.csv')
-# abresnum_distribution_5a('abdb_outfiles_2019/respairs_absort_cutoff4_abresnumi_segments.csv')
-# abresnum_distribution_5a('abdb_outfiles_2019/respairs_absort_cutoff6_abresnumi_segments.csv')
-ab.ag.venn(
-  infile_ab = 'abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx.csv', 
-  infile_ag = 'abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_epitope_segment_notationx.csv' 
-)
-
-ab.ag.venn(
-  infile_ab = 'abdb_outfiles_2019/respairs_absort_cutoff6_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx.csv', 
-  infile_ag = 'abdb_outfiles_2019/respairs_absort_cutoff6_abresnumi_segments_abshift_abshiftl_epitope_segment_notationx.csv' 
-)
-
-
-ab.ag.venn(
-  infile_ab = 'abdb_outfiles_2019/respairs_absort_cutoff4_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx.csv', 
-  infile_ag = 'abdb_outfiles_2019/respairs_absort_cutoff4_abresnumi_segments_abshift_abshiftl_epitope_segment_notationx.csv' 
-)
+abresnum_distribution_5a('abdb_outfiles_2019/respairs_absort_cutoff4_abresnumi_segments.csv')
+abresnum_distribution_5a('abdb_outfiles_2019/respairs_absort_cutoff6_abresnumi_segments.csv')
+# ab.ag.venn(
+#   infile_ab = 'abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx.csv', 
+#   infile_ag = 'abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_epitope_segment_notationx.csv' 
+# )
+# 
+# ab.ag.venn(
+#   infile_ab = 'abdb_outfiles_2019/respairs_absort_cutoff6_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx.csv', 
+#   infile_ag = 'abdb_outfiles_2019/respairs_absort_cutoff6_abresnumi_segments_abshift_abshiftl_epitope_segment_notationx.csv' 
+# )
+# 
+# 
+# ab.ag.venn(
+#   infile_ab = 'abdb_outfiles_2019/respairs_absort_cutoff4_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx.csv', 
+#   infile_ag = 'abdb_outfiles_2019/respairs_absort_cutoff4_abresnumi_segments_abshift_abshiftl_epitope_segment_notationx.csv' 
+# )

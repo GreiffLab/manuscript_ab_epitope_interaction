@@ -21,7 +21,7 @@ library('poweRlaw')
 library('fossil')
 library('gtools')
 
-theme_set(theme.akbar())
+theme_set(themeakbar())
 my_spectral <- colorRampPalette(brewer.pal(8,'Spectral'))(14)
 abcolor = '#6464FF'
 abcolor2 = '#1010FF'
@@ -78,8 +78,10 @@ ggplot(data = df, aes(abchain, abresnum, fill=segment)) +
   # scale_color_manual(values = my_spectral) +
   scale_fill_manual(values = cdrfr_colors) +
   labs(x=xlab, y='Residue number (Martin numbering scheme)', fill='Region') +
-  theme(legend.text = element_text(size=8)) + 
-  theme(legend.title = element_text(vjust = 1))
+  theme(legend.text = element_text(size=15)) + 
+  theme(legend.title = element_blank(),
+        axis.text = element_text(size = 20),
+        axis.title = element_text(size = 20))
 outname = 'abdb_figures/abresnum_distribution.pdf'
 inname = strsplit(tail(strsplit(infile, '/')[[1]], n=1), '\\.')[[1]][1]
 outname = sprintf('%s/%s_abresnum_distribution.pdf',outfigdir,inname)
@@ -95,6 +97,8 @@ length.distribution <- function(infile){
 inname = strsplit(tail(strsplit(infile, '/')[[1]], n=1),'\\.')[[1]][1]
 outfile = sprintf('%s/%s_length_distribution.pdf', outfigdir, inname)
 print(outfile)
+xlabel = 'Antibody region'
+if (grepl('epitope', infile)){ xlabel = 'Antigen "region"'}
 df = read.csv(infile, stringsAsFactors = FALSE)
 if (grepl('epitope', infile)){
   df$plen = df$elen
@@ -122,11 +126,12 @@ print(summary(df))
   geom_text(data=hmaxs, size =4, mapping = aes(x=segment, y= max+1, label = paste0('max: ', round(max,1)))) +
   geom_text(data=lmeds, size=4, mapping = aes(x=segment, y=mean+0.3, label = paste0('median: ', round(mean,1)))) +
   geom_text(data=lmaxs, size =4, mapping = aes(x=segment, y= max+1, label = paste0('max: ', round(max,1)))) +
-  labs(x='Region', y = '# of interacting residues', fill='Chain') +
+  labs(x=xlabel, y = '# of interacting residues', fill='Chain') +
   # facet_wrap(~ abchain, scale = 'free') + 
   scale_color_manual(values = my_spectral) + 
-  theme(axis.text.x = element_text(size = 15)) +
-  theme(axis.title = element_text(size=25)) + 
+  theme(axis.text.x = element_text(size = 17),
+        axis.text.y = element_text(size = 25)) +
+  theme(axis.title = element_text(size=30)) + 
   theme(legend.position = 'none') + 
   scale_fill_manual(values = cdrfr_colors) 
 # outname = 'abdb_figures/paratope_length_distribution.pdf'
@@ -138,6 +143,8 @@ system(sprintf('open %s', outfile ))
 gap.distribution <- function(infile){
   # infile = 'abdb_outfiles/respairs_paratope_segment_gaponly.csv'
   # infile = 'abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_epitope_segment_gaponly.csv'
+  xlabel = 'Antibody region'
+  if (grepl('epitope', infile)){ xlabel = 'Antigen "region"'}
   df = read.csv(infile, stringsAsFactors = FALSE)
   df = subset(df, (gap < 1000)&(gap>0))
   inname = strsplit(tail(strsplit(infile, '/')[[1]], n=1), '\\.')[[1]][1]
@@ -176,9 +183,11 @@ gap.distribution <- function(infile){
   geom_text(data=lmaxs, size =4, mapping = aes(x=segment, y= max+maxadj, label = paste0('max: ', round(max,1)))) +
   # facet_wrap(~ abchain, scales = 'free_x') +
   scale_fill_manual(values = cdrfr_colors) +
-  theme(axis.text.x = element_text(size = 15)) +
-  theme(axis.title = element_text(size=25)) + 
-  labs(x='Region', y= 'Gap length (# of non-interacting residues)') + 
+  theme(axis.text.x = element_text(size = 18),
+        axis.text.y = element_text(size = 25)) +
+  theme(axis.title.x = element_text(size=30),
+        axis.title.y = element_text(size=22)) + 
+  labs(x=xlabel, y= 'Gap length (# of non-interacting residues)') + 
   theme(legend.position = 'none')
   # outname = 'abdb_figures/paratope_gap_distribution.pdf'
   ggsave(outfile, width=15)
