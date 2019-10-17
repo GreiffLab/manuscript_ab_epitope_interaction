@@ -23,9 +23,13 @@ library('poweRlaw')
 library('gtools')
 library('vegan')
 library('iNEXT')
+library('psych')
+library('circlize')
 
 theme_set(themeakbar())
 my_spectral <- colorRampPalette(brewer.pal(8,'Spectral'))(14)
+my_spectral20 <- colorRampPalette(brewer.pal(8,'Spectral'))(20)
+print(my_spectral20)
 abcolor = '#6464FF'
 abcolor2 = '#1010FF'
 abcolor3 = '#3399CC'
@@ -189,7 +193,7 @@ sequential_dependency_cluster2 = function(infile){
   # ins  = c('XXX', 'XX', 'X1X')
   # df  = df[df$motif %in% ins,]
   df$origin = sprintf('epitope', seq(1, dim(df)[1])) 
-  df$source_target = paste0(df$source, '_',df$target)
+  df$source_target = paste0(df$source2, '_',df$target2)
   df$motif_origin = paste0(df$motif, '_',df$origin)
   countdf = count(df, source_target, motif) %>% group_by(motif) %>% mutate(n = (n-min(n))/(max(n)-min(n)))
   sdf = spread(countdf, key=source_target, value=n)
@@ -200,7 +204,7 @@ sequential_dependency_cluster2 = function(infile){
   sdf[is.na(sdf)] = 0
   # sdf2 = sdf
   sdf2 = sdf[, edge_intersect]
-  stop()
+  # stop()
   sdf2mat = sdf2[,-1]
   print(sdf2mat)
   name_parts = paste(strsplit(infile, '_')[[1]][5:10], collapse = '_')
@@ -219,7 +223,7 @@ sequential_dependency_cluster2 = function(infile){
                   legend_breaks = c(0.2,0.4,0.6,0.8,1),
                   legend_labels =  c('0.2', '0.4', '0.6', '0.8','Sequential frequency\n1')
                   )
-  pdf(outname, width = 10, height = 4)
+  pdf(outname, width =20, height = 4)
   grid.draw(hmap$gtable)
   dev.off()
   system(sprintf('open %s', outname))
@@ -267,7 +271,7 @@ edges_overlap = function(infile) {
   # infile = 'abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_epitope_segment_notationx_XXX_X1X_X2X_XX_edge_next.csv'
   df = read_csv(infile)
   df$origin = sprintf('epitope', seq(1, dim(df)[1])) 
-  df$source_target = paste0(df$source, '_',df$target)
+  df$source_target = paste0(df$source2, '_',df$target2)
   df$motif_origin = paste0(df$motif, '_',df$origin)
   print(df)
   filcol = abcolor3
@@ -313,16 +317,134 @@ edges_overlap = function(infile) {
   
 }
 
+random_motif_corr = function(infile){
+  # correlate observed pair frequency and randomly drawn pair frequence
+  # infile = 'abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx_XXX_X1X_X2X_XX_edge_next.csv'
+  df = read_csv(infile)
+  motifs = unique(df$motif)
+  print(motifs)
+  outdf = data_frame()
+  ksdf =data_frame()
+  for (motif in motifs){
+    mdf = df[df$motif == motif,] #%>% group_by(source, target) %>% count()
+    mdf$pairs = paste0(mdf$source2, '-', mdf$target2)
+    rdf = data_frame()
+    n = dim(mdf)[1]
+    nrep = 100
+    for (i in seq(1,nrep)){
+      nrdf = sample_n(df, n)
+      nrdf$rep = rep(i, dim(nrdf)[1])
+      rdf = rbind(rdf, nrdf)
+    }
+    rdf$pairs = paste0(rdf$source, '-', rdf$target)
+    countrdf = count(rdf, pairs, rep)
+    # countrdf$rep2= countrdf$rep
+    # grdf =  spread(countrdf, key = rep, value = n)
+    # print(grdf)
+    # ct = psych::corr.test(grdf[,2:11])$ci
+    # print(ct)
+    rdf = rdf[rdf$pairs %in% mdf$pairs,]
+    countmdf = count(mdf, pairs)
+    countmdf$rep = rep(0, dim(countmdf)[1])
+    countrdf = count(rdf, pairs, rep)
+    mergeddf = rbind(countrdf, countmdf) %>% spread(key = rep, value = n)
+    print(dim(mergeddf))
+    # stop()
+    ct = psych::corr.test(mergeddf[2:dim(mergeddf)[2]])$ci
+    ct$motif = rep(motif, dim(ct)[1])
+    ct$test_type = c(rep('ovr',nrep), rep('rvr', dim(ct)[1]-nrep))
+    print(ct)
+    ks = ks.test(ct[ct$test_type == 'ovr',]$r, ct[ct$test_type == 'rvr',]$r)
+    ksvect = data_frame(motif = motif, dval = ks$statistic, pval = ks$p.value)
+    ksdf = rbind(ksvect, ksdf) 
+    print(ksvect)
+    # stop()
+    outdf = rbind(outdf, ct)
+    print(ct)
+    # stop()
+    print(dim(ct))
+  }
+  print(head(outdf))
+  filcols= c(abcolor3,  abcolor3)
+  if (grepl('epitope', infile)){
+    filcols = c('black', agcolor) 
+  }
+  ksdf[ksdf == 0] =  '<10e-11'
+  print(ksdf)
+  # stop()
+  ggplot(data=outdf) + 
+    # geom_point(mapping = aes(x = n.x, y= n.y)) +
+    geom_density(data = outdf, mapping = aes(r, fill=test_type), color =NA) + 
+    facet_wrap(~motif, scales = 'free') + 
+    labs(x= 'Pearson cor.', y = 'Density') + 
+    scale_fill_manual(values = c(filcols[1], ggplot2::alpha(filcols[2],0.4)),
+                      labels = c('Observed vs random', 'Random vs random')) +
+    theme(legend.position = 'bottom',
+          axis.title = element_text(size=30),
+          legend.title = element_blank(),
+          legend.text = element_text(size = 20),
+          strip.text = element_text(size = 20),
+          axis.text = element_text(size = 20)) + 
+    geom_text(data=ksdf, mapping = aes(x=-0.5, y=-1, label = sprintf('KS test p-val: %s',formatC(pval,digits = 3))), size = 6, hjust=0, vjust=0)
+  outpdf(infile, 'density')
+}
+
+seq_dep_circos = function(infile){
+  # infile = 'abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_epitope_segment_notationx_XXX_X1X_X2X_XX_edge_next.csv'
+  df = read_csv(infile)
+  df2 = read_csv('abdb_outfiles_2019/respairs_segment_notationx_len_merged_angle_bnaber_phil_pc.csv')
+  print(df2)
+  motifs = c('XXX', 'XX', 'X1X', 'X2X')
+  seqdf = df2 %>% group_by(ab_motif) %>% summarise(len = length(paratope)) 
+  print(seqdf[order(seqdf$len, decreasing = TRUE ),])
+  seqdf2 = df2 %>% group_by(ag_motif) %>% summarise(len = length(paratope)) 
+  print(seqdf2[order(seqdf2$len, decreasing = TRUE ),])
+  stop()
+  print(df)
+  countdf = count(df, source2, target2, motif)
+  print(countdf)
+  aa = unique(countdf$source2)
+  aa2 = c(aa, paste0(aa,"'"))
+  print(aa)
+  grid.col = c(my_spectral20, my_spectral20)
+  names(grid.col) = aa2
+  motifs = unique(countdf$motif)
+  for (motif in motifs){
+    motifdf = countdf[countdf$motif== motif,]
+    # motifdf = motifdf[motifdf$n>5,]
+    print(motifdf)
+    # stop()
+    inname = strsplit(tail(strsplit(infile, '/')[[1]], n=1), '\\.')[[1]][1]
+    outname = sprintf('%s/%s_%s_%s.pdf',outfigdir, inname, motif,'circos')
+    pdf(outname)
+    chordDiagram(motifdf[,c(1,2,4)], grid.col = grid.col,
+                 scale=FALSE,
+                 annotationTrack = c('grid'),
+                 annotationTrackHeight = c(0.15),)
+    circos.track(track.index = 1, panel.fun = function(x, y) {
+      circos.text(CELL_META$xcenter, CELL_META$ylim[1]+0.5, CELL_META$sector.index, 
+                  cex = 2)
+    }, bg.border = NA)  
+    system(sprintf('open %s', outname))
+    circos.clear()
+    dev.off()
+    # stop()
+  }
+}
+
+
 # run stuff
 # note to self: cytoscape is finicky: need to run 2x, separately, in order for the program to update the plots to new changes.
 # sequential_dependency_net('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_epitope_segment_notationx_XXX_X1X_X2X_XX_edge_next.csv')
 # sequential_dependency_net('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx_XXX_X1X_X2X_XX_edge_next.csv')
 # sequential_dependency_cluster()
-sequential_dependency_cluster2('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_epitope_segment_notationx_XXX_X1X_X2X_XX_edge_next.csv')
+# sequential_dependency_cluster2('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_epitope_segment_notationx_XXX_X1X_X2X_XX_edge_next.csv')
 # sequential_dependency_cluster2_alledges('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_epitope_segment_notationx_XXX_X1X_X2X_XX_edge_next.csv')
 # sequential_dependency_cluster2('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx_XXX_X1X_X2X_XX_edge_next.csv')
 # sequential_dependency_cluster2_alledges('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx_XXX_X1X_X2X_XX_edge_next.csv')
 # edges_overlap('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_epitope_segment_notationx_XXX_X1X_X2X_XX_edge_next.csv')
 # edges_overlap('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx_XXX_X1X_X2X_XX_edge_next.csv')
-
-
+random_motif_corr('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_epitope_segment_notationx_XXX_X1X_X2X_XX_edge_next.csv')
+random_motif_corr('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx_XXX_X1X_X2X_XX_edge_next.csv')
+# seq_dep_circos('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_epitope_segment_notationx_XXX_X1X_X2X_XX_edge_next.csv')
+# seq_dep_circos('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx_XXX_X1X_X2X_XX_edge_next.csv')

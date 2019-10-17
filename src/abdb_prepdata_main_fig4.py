@@ -68,16 +68,41 @@ def get_context_pattern_top3(infile):
     colnames = ['source', 'target', 'motif']
     edge_nextdf = pd.DataFrame(edges_next_single, columns=colnames)
     print(edge_nextdf.head())
+    pairdict1 = {}
+    sources = []
+    targets = []
+    for i, row in edge_nextdf.iterrows():
+        key1 = row.source + row.target
+        key2 = row.target + row.source
+        val = row.source + row.target
+        if key1 not in pairdict1:
+            pairdict1[key1] = val
+        if key2 not in pairdict1:
+            pairdict1[key2] = val
+        if key2 in pairdict1:
+            source = pairdict1[key2][0]
+            target = pairdict1[key2][1]
+            sources.append(source)
+            targets.append(target)
+        else:
+            sources.append(row.source)
+            targets.append(row.target)
+    print(len(sources))
+    print(edge_nextdf.shape)
+    edge_nextdf['source2'] = sources
+    edge_nextdf['target2'] = targets
+    print(edge_nextdf)
     outname = infile.split('.')[0] + '_%s_edge_next.csv' % ptag
     edge_nextdf.to_csv(outname, index=False)
 
 
 
 ## run stuff
-epiinfile = 'abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments' \
-             '_abshift_abshiftl_epitope_segment_notationx.csv'
+# epiinfile = 'abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments' \
+#              '_abshift_abshiftl_epitope_segment_notationx.csv'
 
 parainfile = 'abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments' \
             '_abshift_abshiftl_paratope_segment_notationx.csv'
 # get_context_pattern_top3(epiinfile)
-# get_context_pattern_top3(parainfile)
+get_context_pattern_top3(parainfile)
+

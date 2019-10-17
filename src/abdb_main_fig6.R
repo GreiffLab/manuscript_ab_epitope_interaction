@@ -71,6 +71,11 @@ outpng = function(infile, tag, width=8, height=8){
 }
 
 
+ppi_mcolor_rgb = c(col2rgb('orange'))/255
+ppi_mcolor = rgb(ppi_mcolor_rgb[1], ppi_mcolor_rgb[2], ppi_mcolor_rgb[3])
+ppi_pcolor_rgb = c(col2rgb('darkorange'))/255
+ppi_pcolor = rgb(ppi_pcolor_rgb[1], ppi_pcolor_rgb[2], ppi_pcolor_rgb[3])
+
 my_ccols = c('salmon',
              'deepskyblue1', 'deepskyblue2', 'deepskyblue3', 'deepskyblue4',
              'orange1', 'orange2', 'orange3', 'orange4')
@@ -80,7 +85,12 @@ my_ccols2 = c('salmon',
              abcolor3, abcolor3, abcolor3, abcolor3,
              ppi_mcolor, ppi_mcolor, ppi_mcolor, ppi_mcolor)
 
-
+my_ccols3 = c(ggplot2::alpha('lightpink', 1), ggplot2::alpha(abcolor,0.5),
+              ggplot2::alpha('lightpink', 1), ggplot2::alpha(abcolor,0.5), 
+              ggplot2::alpha('lightpink',1), ggplot2::alpha(abcolor,0.5), 
+              ggplot2::alpha('red', 0.5), ggplot2::alpha(abcolor3, 1))
+print(my_ccols3)
+# stop()
 
 dl_ld = function(){
   infile = 'abdb_outfiles_2019/merged_eval_files.csv'
@@ -89,7 +99,8 @@ dl_ld = function(){
   dfmed = df %>% group_by(rep, use_case, data_tag, exp_tag) %>% summarise(med = median(ldnorm), sd = sd(ldnorm))
   dfmed = dfmed %>% group_by(use_case, data_tag,exp_tag) %>% summarise(me = mean(med), se = sd(med)/sqrt(length(med)), len = length(med))
   print(dfmed[order(dfmed$me),])
-  print(df)
+  print(dfmed)
+  # stop()
   xticklabels=  c('Motif E --> P', 'Motif + position E --> P',
                  'Motif P --> E', 'Motif + position P --> E',
                  'Sequence E --> P', 'Sequence P --> E')
@@ -112,41 +123,81 @@ dl_ld = function(){
 
 
 sl_dl_summary = function(){
+  # note to self: the merge sl dl abdb_prepdata_sup_fig18
   infile = 'abdb_outfiles_2019/sl_dl_evalsummary.csv'
   df = read_csv(infile)
+  df = df[df$source == 'abdb',]
+  # print(unique(df$exp_tag))
+  print(df$repldexactmea)
+  # testv = 2*df$repldexactmea
+  # print(testv)
+  df$exp_tag = factor(df$exp_tag, levels = c('control_marginal_proba', 'exp_marginal_proba',
+                                              'control_cond_proba', 'exp_cond_proba',
+                                              'control_cond_proba_with_prior', 'exp_cond_proba_with_prior',
+                                              'control_NMT', 'exp_NMT'))
+  print('yo')
+  print(df$use_case)
+  df$use_case = factor(df$use_case, levels = c('motif_paraepi', 'motif_paraepipos', 'motif_epipara', 'motif_epiparapos',
+                                               'seq_paraepi', 'agg_paraepi', 'seq_epipara', 'agg_epipara'))
   print(df)
-  xticklabels=  c('Motif E to P', 'Motif + position E to P',
-                 'Motif P to E', 'Motif + position P to E',
-                 'Sequence E to P', 'Sequence P to E')
+  # stop()
+  xticklabels=  c('Motif P to E', 'Motif + pos P to E',
+                 'Motif E to P', 'Motif + pos E to P',
+                 'Seq P to E', 'Agg P to E',
+                 'Seq E to P', 'Agg E to P')
   # xtickbreaks = unique(dfmed$use_case)
   print(xticklabels)
+  barlabels = c()
+  for (tag in df$exp_tag){
+    if (grepl('NMT', tag)){
+      tag = '' 
+      barlabels = c(barlabels, tag)
+    }
+    if (grepl('cond_proba_with', tag)){
+      tag = 'Shallow 3' 
+      barlabels = c(barlabels, tag)
+    }
+    if (grepl('cond_proba', tag)){
+      tag = 'Shallow 2' 
+      barlabels = c(barlabels, tag)
+    }
+    if (grepl('marginal', tag)){
+      tag = 'Shallow 1' 
+      barlabels = c(barlabels, tag)
+    }
+  }
+  print(barlabels)
+  df$exp_tag2 = barlabels
+  print(df)
+  # stop()
   # print(xtickbreaks)
   # print(df)
-  ggplot(data=df, mapping = aes(x=use_case, y=repldnormmea, ymin=repldnormmea, ymax=repldnormmea+2*repldnormse, fill = exp_tag2)) + 
+  ggplot(data=df, mapping = aes(x=use_case, y=repldnormmea, ymin=repldnormmea, ymax=repldnormmea+2*repldnormse, fill = exp_tag)) + 
     geom_errorbar(mapping = aes(ymin=repldnormmea+2*repldnormse), color = 'gray', position = position_dodge(0.9), width = 0.1) +
     geom_linerange(position = position_dodge(0.9), color = 'gray') +
     geom_bar( position = position_dodge(), stat = 'identity') + 
-    geom_text(aes(y= repldnormmea-0.01, label = round(repldnormmea, 2)), size= 3, color = 'white', position = position_dodge(0.9)) + 
-    geom_text(aes(y=0.005, label = exp_tag2), angle=90, size= 3.5, color='white', position = position_dodge(0.9), hjust=0) + 
+    geom_text(aes(y= repldnormmea-0.01, label = round(repldnormmea, 2)), size= 4, color = 'black', position = position_dodge(0.9)) + 
+    geom_text(aes(y=0.005, label = exp_tag2), angle=90, size= 5, color='black', position = position_dodge(0.9), hjust=0) + 
     labs(y= 'Mean prediction error', x= 'Use case', fill = 'Experiment type') + 
-    scale_fill_manual(values=alpha(my_ccols2, 0.99)) + 
+    scale_fill_manual(values=my_ccols3) +
     theme(legend.position = 0) + 
-    scale_x_discrete(labels = xticklabels) + 
-    theme(axis.title = element_text(size = 20, color = 'gray42'), axis.text = element_text(size=15, color='gray42'))
-  outpdf(infile, 'norm_bar', height = 7, width = 15)
-
-  ggplot(data=df, mapping = aes(x=use_case, y=repldexactmea, ymin=repldexactmea, ymax=repldexactmea+2*repldexactse, fill = exp_tag2)) + 
-    geom_errorbar(mapping = aes(ymin=repldexactmea+2*repldexactse), color= 'gray',position = position_dodge(0.9), width = 0.1) +
+    scale_x_discrete(labels = xticklabels) +
+    theme(axis.title = element_text(size = 30, color = 'gray42'), 
+          axis.text = element_text(size=22, color='gray42'))
+  outpdf(infile, 'norm_bar', height = 11, width = 25)
+  stop()
+  ggplot(data=df, mapping = aes(x=use_case, y=repldexactmea, ymin=repldexactmea, ymax=repldexactmea+testv, fill = exp_tag)) + 
+    geom_errorbar(mapping = aes(ymin=repldexactmea+testv), color= 'gray',position = position_dodge(0.9), width = 0.1) +
     geom_linerange(position = position_dodge(0.9), color = 'gray') +
     geom_bar( position = position_dodge(), stat = 'identity') + 
     geom_text(aes(y= repldexactmea-0.01, label = round(repldexactmea, 2)), color = 'white', size= 3, position = position_dodge(0.9)) + 
-    geom_text(aes(y=0.005, label = exp_tag2), size= 4, color='white', angle = 90, hjust=0, position = position_dodge(0.9)) + 
+    geom_text(aes(y=0.005, label = exp_tag), size= 10, color='white', angle = 90, hjust=0, position = position_dodge(0.9)) + 
     labs(y= 'Mean prediction error', x= 'Use case', fill = 'Experiment type') + 
-    scale_fill_manual(values=alpha(my_ccols2, 0.99)) + 
+    scale_fill_manual(values=my_ccols3) + 
     theme(legend.position = 0) + 
-    scale_x_discrete(labels = xticklabels) + 
+    # scale_x_discrete(labels = xticklabels) + 
     theme(axis.title = element_text(size = 20, color = 'gray42'), axis.text = element_text(size=15, color='gray42'))
-  outpdf(infile, 'exact_bar', height = 7, width = 15)
+  outpdf(infile, 'exact_bar', height = 7, width = 20)
   
 }
 
@@ -184,12 +235,51 @@ dl_ld_binary = function(){
   xtickbreaks = unique(dfmed$use_case)
   print(xticklabels)
   print(xtickbreaks)
+  dfmed[dfmed=='control'] = 'control_NMT'
+  dfmed[dfmed=='exp'] = 'exp_NMT'
+  dfmed['source'] = rep('abdb', dim(dfmed)[1])
   print(dfmed)
+  # stop()
   write_csv(dfmed, 'abdb_outfiles_2019/eval_summary.csv')
   stop()
 }
   
+agg_dl = function(){
+  infile = 'abdb_outfiles_2019/agg_merged_eval_files.csv'
+  df = read_csv(infile)
+  print(df)
+  bins = ld_bin(df$ldnorm) # binary ld
+  print(sum(bins))
+  print(dim(df))
+  df$ldexact = bins
+  dfmed = df %>% group_by(rep, use_case, data_tag, exp_tag) %>% summarise(ldnorm_mea = mean(ldnorm), 
+                                                                          ldnorm_sd = sd(ldnorm),
+                                                                          ldexact_mea = mean(ldexact),
+                                                                          ldexact_sd = sd(ldexact))
+  print(dfmed)
+  print(dfmed[order(dfmed$ldnorm_mea),])
+  dfmed = dfmed %>% group_by(use_case, data_tag,exp_tag) %>% summarise(repldnormmea = mean(ldnorm_mea), 
+                                                                       repldnormse = sd(ldnorm_mea)/sqrt(length(ldnorm_mea)), 
+                                                                       ldnormreps = length(ldnorm_mea),
+                                                                       repldexactmea = mean(ldexact_mea), 
+                                                                       repldexactse = sd(ldexact_mea)/sqrt(length(ldexact_mea)), 
+                                                                       ldexactreps = length(ldexact_mea))
+  
+  # print(dfmed[order(dfmed$repldnormmea),])
+  dfmed[dfmed=='control'] = 'control_NMT'
+  dfmed[dfmed=='exp'] = 'exp_NMT'
+  dfmed[dfmed=='seq'] = 'agg'
+  dfmed[dfmed=='seq_epipara'] = 'agg_epipara'
+  dfmed[dfmed=='seq_paraepi'] = 'agg_paraepi'
+  dfmed['source'] = rep('abdb', dim(dfmed)[1])
+  print(dfmed)
+  # stop()
+  write_csv(dfmed, 'abdb_outfiles_2019/agg_eval_summary.csv')
+}
+
 # run stuff
-dl_ld()
-# sl_dl_summary()
+# dl_ld()
+sl_dl_summary()
 # dl_ld_binary()
+# agg_dl()
+# 

@@ -22,7 +22,7 @@ library('fossil')
 library('gtools')
 library('vegan')
 library('iNEXT')
-
+# detach('package:psych')
 
 
 theme_set(themeakbar())
@@ -46,23 +46,50 @@ outfigdir = 'abdb_figures_2019'
 
 motif.length.distribution <- function(){
   infile = 'abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_epitope_segment_notationx_len.csv'
-  df = read.csv(infile)
-  print(head(df))
-  print(group_by(df, segment))
+  infile2 = 'abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx_len.csv'
+  df = read_csv(infile)
+  df2 = read_csv(infile2)
+  print(df)
+  print(df2)
+  df3 = data_frame(motif_len = df$motif_len)
+  df3['source'] = rep('Epitope', dim(df)[1])
+  df3['segment'] = df$segment
+  df4 = data_frame(motif_len = df2$motif_len)
+  df4['source'] = rep('Paratope', dim(df2)[1])
+  df4['segment'] = df2$segment
+  mdf = rbind(df3, df4)
+  mdf['source'] = factor(mdf$source, levels = c('Paratope', 'Epitope'))
+  print(mdf)
+  dfmed = mdf %>% group_by(segment, source) %>% summarise(med = median(motif_len))
+  print(dfmed)
+  dfmedpara = dfmed[dfmed$source == 'Paratope',]
+  print(dfmedpara)
+  dfmedepi = dfmed[dfmed$source == 'Epitope',]
+  print(dfmedpara)
+  # stop()
+  # print(group_by(df, segment))
   # df$motif_len = as.numeric(df$motif_len)
   # df <- df %>% group_by(segment) %>% mutate(median = median(motif_len))
   # meds = aggregate(df[,6], list(segment=df$segment), median)
   # print(meds)
   # med_labels = paste0('median: ', meds$ld)
   # print(med_labels)
-  ggplot(data=df) + 
+  ggplot(data=mdf) + 
     # geom_bar(mapping = aes(x=motif_len), fill=my_spectral[1]) + 
     # geom_bar(stat='count', mapping = aes(x=motif_len), fill='red') + 
-    geom_density(mapping = aes(x=motif_len), fill=alpha(agcolor,0.7), color=alpha(agcolor, 0.7)) + 
-    facet_wrap(~ segment, ncol = 3, scales = 'free') + 
-    labs(x='Motif length (# of residues + # of gaps)', y='Density') + 
-    coord_flip()
-  outname = 'abdb_figures_2019/motif_length_distribution_epitope.pdf'
+    # geom_density(mapping = aes(x=motif_len), fill=alpha(agcolor,0.7), color=alpha(agcolor, 0.7)) + 
+    geom_bar(mapping = aes(x=motif_len, fill=source), position = 'dodge2') + 
+    facet_wrap(~ segment, ncol = 3) + 
+    labs(x='Motif length (# of residues + # of gaps)', y='# of motifs') + 
+    coord_flip() + 
+    scale_fill_manual(values = c(abcolor3, agcolor)) +
+    geom_text(data = dfmedpara, mapping = aes(x=20, y=3), label = sprintf('median: %s', dfmedpara$med), color=abcolor3, hjust=0) + 
+    geom_text(data = dfmedepi, mapping = aes(x=15, y=3), label = sprintf('median: %s', dfmedepi$med), color='grey34', hjust=0) + 
+    theme(legend.title = element_blank(),
+          legend.text = element_text(size = 20),
+          axis.title = element_text(size = 20),
+          strip.text = element_text(size = 15))
+  outname = 'abdb_figures_2019/motif_length_distribution_epitope_paratope.pdf'
   ggsave(outname, height = 9, width=7)
   system(sprintf('open %s', outname))
 }
@@ -122,6 +149,28 @@ ab.ag.venn = function(){
   outname = sprintf('%s/%s_venn.tiff', outfigdir,inname)
   # print(outname)
   names(x) = c('motif_ab', 'motif_ag')
+  parts = get.venn.partitions(x)
+  nonoverlapab = parts$..values..$'2'
+  nonoverlapag = parts$..values..$'3'
+  overlapabag = parts$..values..$'1'
+  a = which(grepl("[[:digit:]]", overlapabag))
+  print(overlapabag)
+  for (i in seq(1, length(parts$..values..))){
+    char = as.character(i)
+    discontinuous = which(grepl("[[:digit:]]", get(char, parts$..values..)))
+    continuous = which(!grepl("[[:digit:]]", get(char, parts$..values..)))
+    print(get(char,parts$..values..)[continuous])
+    print(get(char,parts$..values..)[discontinuous])
+    stop()
+    total = length(get(char, parts$..values..))
+    lendis = length(discontinuous)
+    
+    print(sprintf('partition size: %s', total))
+    print(sprintf('discontinous size: %s', lendis))
+    print(sprintf('discontinuous percent: %s', lendis/total))
+    # stop()
+  }
+  stop()
   venn.plot <- venn.diagram(x=x, filename=outname,
                             output = FALSE ,
                             imagetype="tiff" ,
@@ -202,19 +251,47 @@ chao_diversity = function(){
     facet_wrap(~  source, scale = 'free') + 
     scale_fill_manual(values = c(abcolor3, agcolor)) + 
     geom_text(mapping = aes(reorder(type, divs), y=c(410,1750,750, 10650) ), label = round(divdf$divs)) + 
-    labs(x = '', y = 'Interaction motif diveristy', fill = 'Motif source')
+    labs(x = '', y = 'Interaction motif diveristy', fill = 'Motif source') + 
+    theme(axis.text = element_text(size = 20),
+          legend.text = element_text(size = 25),
+          legend.title = element_blank(),
+          axis.title = element_text(size = 25),
+          strip.text = element_text(size= 20))
   outname = 'abdb_figures_2019/chao_diversity.pdf'
   ggsave(outname, height = 10, width = 8)
   system(sprintf('open %s', outname))
   
 }
 
-
+check_uniquepairs = function(){
+  infile_ab = 'abdb_outfiles_2019/respairs_segment_notationx_len_merged_angle_bnaber_phil_pc.csv' 
+  df = read_csv(infile_ab)
+  df['pairedmotif'] = paste0(df$ab_motif, '-', df$ag_motif)
+  df['pairedseq'] = paste0(df$paratope, '-', df$epitope)
+  df['pairedagg'] = paste0(df$abgapmotif3, '-', df$aggapmotif3)
+  vars = c('pairedmotif', 'pairedseq', 'pairedagg')
+  for (item in vars){
+    print(item)
+    uniquepairs = length(unique(get(item, df)))
+    print(sprintf('unique in %s %s. total %s', item, uniquepairs, dim(df)[1]))
+  }
+  infile2 = 'abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired.csv'
+  df2 = read_csv(infile2)
+  # print(df2)
+  df2['pairedmotif'] = paste0(df2$gap_pattern1, '-', df2$gap_pattern2)
+  df2['pairedseq'] = paste0(df2$sequence1, '-', df2$sequence2)
+  for (item in vars){
+    print(item)
+    uniquepairs = length(unique(get(item, df2)))
+    print(sprintf('unique in %s %s. total %s', item, uniquepairs, dim(df2)[1]))
+  }
+  
+}
 
 # runstuff
 # motif.length.distribution()
 # ab_ag_motiflen_correlation()
-# ab.ag.venn() 
+# ab.ag.venn()
 # motif_coverage()
-chao_diversity()
-  
+# chao_diversity()
+check_uniquepairs() 

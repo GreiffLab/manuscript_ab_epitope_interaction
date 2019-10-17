@@ -163,9 +163,10 @@ def resgapmotif_dataset(datasetdir, para, epi):
     infile = 'abdb_outfiles_2019/respairs_segment_notationx_len_merged_angle_bnaber_phil_pc.csv'
     df =  pd.read_csv(infile)
     print(df.shape)
-    df = df[(df.plen > 1) & (df.epitope_len >1)]
+    # df = df[(df.plen > 1) & (df.epitope_len >1)]
     print(df.shape)
-    print(df.head())
+    # print(df.head())
+    # sys.exit()
     datasetdir = '/Users/rahmadakbar/greifflab/aims/aimugen/dl/dataset_%s' % datasetdir
     os.system('mkdir %s' % datasetdir)
     outname = '%s/paraepi.tsv' % datasetdir
@@ -188,5 +189,5 @@ def resgapmotif_dataset(datasetdir, para, epi):
 # prep_data_branchld('paratope', 'epitope')
 # physchem_encoding()
 # prep_data_branchld('parpcmotif', 'epipcmotif')
-resgapmotif_dataset('res', 'abgapmotif3', 'aggapmotif3')
+resgapmotif_dataset('ressingle', 'abgapmotif3', 'aggapmotif3')
 # resgapmotif_dataset('pc', 'parpcmotif', 'epipcmotif')

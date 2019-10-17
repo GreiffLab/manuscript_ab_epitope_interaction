@@ -187,6 +187,149 @@ paratope_epitope_motif_interaction = function(){
   deleteAllNetworks()
 }
 
+
+paratope_epitope_motif_interaction_structures = function(){
+  infile = 'abdb_outfiles_2019/respairs_segment_notationx_len_merged_angle.csv'
+  name_parts = paste(strsplit(infile, '_')[[1]][4:7], collapse = '_')
+  outname = sprintf('abdb_figures_2019/%s_internet_structure.pdf', name_parts)
+  print(outname)
+  df = read_csv(infile)#[1:100,]
+  print(df)
+  motifdf = tibble('source'=df$ab_motif, 'target' = df$ag_motif) %>% mutate('source_target' = paste0(source, '_', target))
+  motifdf['pdbid'] = df$pdbid
+  motifdf['segment'] = df$segment
+  print(motifdf)
+  motifdf$target = sprintf('%s*', motifdf$target)
+  print(length(unique(motifdf$source)))
+  print(motifdf)
+  # stop()
+  count_motifdf_structure = count(motifdf, source, target, source_target, pdbid, segment)
+  count_motifdf = count(motifdf, source, target, source_target)
+  count_source_structure = count(count_motifdf_structure, source, pdbid, segment, sort = FALSE) %>% mutate('motif_source'= sprintf('Paratope', seq(1, nrow(.))))
+  count_source_structure = count(count_source_structure, source, pdbid, sort = F) %>% mutate('motif_source'= sprintf('Paratope', seq(1, nrow(.))))
+  count_source_structure = count(count_source_structure, source, sort = F) %>% mutate('motif_source'= sprintf('Paratope', seq(1, nrow(.))))
+  count_source = count(count_motifdf, source, sort = F) %>% mutate('motif_source'= sprintf('Paratope', seq(1, nrow(.))))
+  count_target_structure = count(count_motifdf_structure, target, pdbid, segment, sort = F) %>% mutate('motif_source'= sprintf('Epitope', seq(1, nrow(.))))
+  count_target_structure = count(count_target_structure, target, pdbid, sort = F) %>% mutate('motif_source'= sprintf('Epitope', seq(1, nrow(.))))
+  count_target_structure = count(count_target_structure, target, sort = F) %>% mutate('motif_source'= sprintf('Epitope', seq(1, nrow(.))))
+  count_target = count(count_motifdf, target, sort = F) %>% mutate('motif_source'= sprintf('Epitope', seq(1, nrow(.))))
+  # print(sprintf('Paratope', seq(1,nrow(count_source))))
+  print(count_source)
+  print(count_source_structure)
+  print(count_target)
+  print(count_target_structure)
+  # print(motifdf)
+  ### replace degree with # of structures
+  print(count_source)
+  count_source$n = count_source_structure$n
+  print(count_source)
+  print(count_target)
+  count_target$n = count_target_structure$n
+  print(count_target)
+  # stop()
+  motif_source = c(sprintf('Paratope', seq(1, nrow(motifdf))), sprintf('Epitope', seq(1, nrow(motifdf))))
+  source_target = data_frame('motif' = c(motifdf$source, motifdf$target), 'motif_source' = motif_source)
+  print(source_target)
+  st_motif_count = count(source_target, motif, motif_source, sort = TRUE)
+  print(st_motif_count)
+  # stop()
+  nodes = data.frame(id = c(count_source$source, count_target$target), group = c(count_source$motif_source,count_target$motif_source),
+                     score = as.integer(c(count_source$n, count_target$n)))
+  nodes2 = data.frame(id=st_motif_count$motif, score = as.integer(st_motif_count$n), stringsAsFactors=FALSE, group=st_motif_count$motif_source)
+  edges = data.frame(source = count_motifdf$source, target = count_motifdf$target, weight = count_motifdf$n, stringsAsFactors=FALSE)
+  
+  node_outfile = 'abdb_outfiles_2019/paratope_epitope_internet_nodes_structure.csv'
+  write.csv(x=nodes, file = node_outfile, row.names = FALSE)
+  edge_outfile = 'abdb_outfiles_2019/paratope_epitope_internet_edges_structure.csv'
+  write.csv(x=edges, file = edge_outfile, row.names = FALSE)
+  print('exiting...')
+  # edges = data.frame(source = motifdf$source, target = motifdf$target, stringsAsFactors=FALSE)
+  ###
+  # Berfore bulding the network, plot degree distribution
+  ###
+  ### test for powerlaw
+  m_pl = displ$new(nodes$score)
+  est = estimate_xmin(m_pl)
+  print(est)
+  bs_p = bootstrap_p(m_pl) #boostraping for statistical significance according to Clauset et al. (2009)
+  print(bs_p)
+  power_label = sprintf('alpha: %s, p-value: %s', round(est$pars,1), round(bs_p$p,1))
+  ### end power law test
+  ### degree distribution
+  topn = 200
+  topndf = nodes[order(-nodes$score),][1:topn,]
+  topndf$group = factor(topndf$group, levels = c('Paratope', 'Epitope'))
+  ggplot(data = topndf[order(-topndf$score),]) +
+    geom_bar(mapping = aes(x=reorder(id,-score), y=score, fill=group), stat = 'identity')+
+    theme(axis.text.x  = element_text(angle = 90), axis.title = element_text(size = 28),
+          legend.text = element_text(size = 28),
+          legend.title = element_text(size = 28),
+          panel.background = element_blank())+
+    labs(x='Interaction motifs (top 200 by degree)', y='# of edges (degree)', fill='Motif source')+
+    scale_fill_manual(values = c(abcolor3, agcolor)) +
+    geom_text(mapping = aes(x=id, y=score+4, label = score), angle = 90) +
+    geom_text(mapping = aes(x=180, y = 25, label = power_label), size = 10)
+  outpdf(outname, 'degree', width = 28, height = 10)
+  ### end degree distribution
+  ### cumulative degree distribution
+  print(topndf)
+  topndf = topndf %>% mutate(csum = cumsum(score)) %>% mutate(csum_percent = round(csum/sum(nodes$score),2))
+  csum_label = sprintf('Total number of edges: %s', sum(nodes$score))
+  ggplot(data = topndf) +
+    geom_bar(mapping = aes(x=reorder(id,csum), y=csum, fill=group), stat = 'identity')+
+    theme(axis.text.x  = element_text(angle = 90), axis.title = element_text(size = 28),
+          legend.text = element_text(size = 28),
+          legend.title = element_text(size = 28)) +
+          # panel.background = element_blank())+
+    labs(x='Interaction motifs (top 200 by degree)', y='# of edges (degree) - percent', fill = 'Motif source')+
+    scale_fill_manual(values = c(abcolor3, agcolor)) +
+    geom_text(mapping = aes(x=id, y=csum+150, label = sprintf('%s - %s', csum, percent(csum_percent)), angle = 90)) +
+    geom_text(mapping = aes(x=20, y = 3300, label = csum_label), size = 10)
+  outpdf(outname, 'degree_cumsum', width = 28, height = 15)
+  print(topndf)
+  # stop()
+  ### end cumulative degree distribution
+  ### end power law test
+  ### end the degree bit
+  if(file.exists(outname)){
+    response = file.remove(outname)
+  }
+  deleteAllNetworks()
+  print(getNodeShapes())
+  setNodeShapeDefault('ELLIPSE')
+  createNetworkFromDataFrames(nodes, edges)
+  # layoutNetwork('attribute-circle')
+  print(getLayoutNames())
+  node_attribute = getTableColumns()
+  node_attribute = node_attribute[order(node_attribute$name),]
+  print(head(node_attribute))
+  print(head(nodes[order(nodes$id),]))
+  node_size = sqrt(as.numeric(node_attribute$score))*7
+  # print(node_size)
+  # stop()
+  col_list = list("Paratope" = '#3399CC', "Epitope"= '#C0C0C0')
+  node_attribute[node_attribute=='Paratope'] = '#3399CC'
+  node_attribute[node_attribute=='Epitope'] = greys[5]
+  print(head(node_attribute[order(-node_attribute$score),]))
+  print(dim(node_attribute))
+  print(head(nodes))
+  print(dim(nodes))
+  # stop()
+  setNodeSizeBypass(node.names = node_attribute$name, new.sizes = node_size)
+  setNodeColorBypass(node.names = node_attribute$name, new.colors = node_attribute$group)
+  setNodeFillOpacityBypass(node.names = node_attribute$name, new.values = rep(200, nrow(node_attribute)))
+  setNodeFontSizeBypass(node.names = node_attribute$name, new.sizes = node_size)
+  setEdgeLineWidthDefault(new.width = 1)
+  setEdgeColorDefault(new.color = greys[3])
+  setNodeLabelColorBypass(node.names = node_attribute$name, new.colors = node_attribute$group)
+  bundleEdges()
+  exportImage(outname, type = 'PDF')
+  system(sprintf('open %s', outname))
+  deleteAllNetworks()
+}
+
+
+
 random_internet = function(){
   infile = 'abdb_outfiles_2019/respairs_segment_notationx_len_merged_angle.csv'
   df = read_csv(infile)
@@ -550,3 +693,7 @@ cross_reactivity_degree_cor = function(){
 # cross_reactivity_density()
 # cross_reactivity_density_logscale()
 # cross_reactivity_degree_cor()
+paratope_epitope_motif_interaction_structures()
+
+
+
