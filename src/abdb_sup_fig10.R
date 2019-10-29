@@ -137,7 +137,8 @@ shm_resnum_distribution = function(cutoff){
     geom_text(data=pcordf, mapping = aes(x=5, y = 300-20, label=scorlabel), size=7, hjust = 0) + 
     geom_text(data=chaincountdf, mapping = aes(x=5, y = 300-40, label=chaincount_label), size=7, hjust = 0) + 
     theme(legend.position = 0,
-          strip.text = element_text(size = 30)) +
+          strip.text = element_text(size = 30),
+          axis.text.y = element_text(size = 25)) +
     ylim(c(0,300))
   outpdf(infile, sprintf('resnum_distribution_id%s', cutoff*100), width = 35)
 }
@@ -157,7 +158,8 @@ paratope_resnumadj_distribution = function(){
     theme(axis.text.x = element_text(angle = 90)) + 
     labs(x='Residue position', y=' ') +
     theme(legend.position = 0,
-          strip.text = element_text(size = 30)) + 
+          strip.text = element_text(size = 30),
+          axis.text.y = element_text(size = 25)) + 
     xlim(as.character(seq(1,131)))
   outpdf(infile,'adj_resnum_distribution', width = 35)
 }
@@ -245,10 +247,10 @@ shm_paratope_resnum_cor = function(cutoff){
 
 
 # run stuff
-# shm_resnum_distribution(0.7)
-# shm_resnum_distribution(0.8)
-# shm_resnum_distribution(0.9)
-paratope_resnumadj_distribution()
+shm_resnum_distribution(0.7)
+shm_resnum_distribution(0.8)
+shm_resnum_distribution(0.9)
+# paratope_resnumadj_distribution()
 # shm_paratope_resnum_cor(0.9)
 # shm_paratope_resnum_cor(0.8)
 # shm_paratope_resnum_cor(0.7)

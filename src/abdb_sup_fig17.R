@@ -101,45 +101,66 @@ dl_length_correlation = function(infile) {
 
 dl_length_correlation_bar = function(){
   # infile = 'abdb_outfiles_2019/merged_eval_files_paraepi.csv'
+  # infile = 'abdb_outfiles_2019/merged_eval_files10k.csv'
   infile = 'abdb_outfiles_2019/merged_eval_files.csv'
+  infile2 = 'abdb_outfiles_2019/agg_merged_eval_files.csv'
   # infile = 'abdb_outfiles_2019/merged_eval_files10k.csv'
   df = read_csv(infile)
+  df2 = read_csv(infile2)
+  df2[df2 == 'seq_epipara'] = 'agg_epipara'
+  df2[df2 == 'seq_paraepi'] = 'agg_paraepi'
+  print(unique(df2$use_case))
+  df = rbind(df, df2)
+  print(df)
+  # stop()
+  df$use_case = factor(df$use_case, levels = c('motif_paraepi', 'motif_paraepipos', 'motif_epipara', 'motif_epiparapos',
+                                               'seq_paraepi', 'agg_paraepi', 'seq_epipara', 'agg_epipara'))
+  print(df)
+  # stop()
+  xticklabels=  c('Motif P to E', 'Motif + pos P to E',
+                 'Motif E to P', 'Motif + pos E to P',
+                 'Seq P to E', 'Agg P to E',
+                 'Seq E to P', 'Agg E to P')
+  # stop()
   dfmed = df %>% group_by(rep, use_case, data_tag, exp_tag, embeding_dim, units) %>% summarise(med = cor(lenpredpara, lenpara), sd = sd(ldnorm))
   dfmed = dfmed %>% group_by(use_case, data_tag,exp_tag, embeding_dim, units) %>% summarise(me = mean(med), se = sd(med)/sqrt(length(med)), len = length(med))
   print(dfmed[order(-dfmed$me),])
   dfmed = dfmed %>% group_by(use_case, data_tag,exp_tag) %>% summarise(ma = max(me, na.rm = TRUE), se = sd(me, na.rm = TRUE)/sqrt(length(me)), len = length(me))
   print(dfmed[order(-dfmed$ma),])
   print(dfmed)
-  is.na(dfmed) <- sapply(dfmed, is.infinite) 
+  is.na(dfmed) <- sapply(dfmed, is.infinite)
+  dfmed[is.na(dfmed)] = 0 
   print(dfmed)
+  # dfmed[dfmed==NA] = 0
   # stop()
-  xticklabels=  c('Motif E --> P', 'Motif + position E --> P',
-                 'Motif P --> E', 'Motif + position P --> E',
-                 'Sequence E --> P', 'Sequence P --> E')
-  xtickbreaks = unique(dfmed$use_case)
-  print(xticklabels)
-  print(xtickbreaks)
+  # xticklabels=  c('Motif E --> P', 'Motif + position E --> P',
+  #                'Motif P --> E', 'Motif + position P --> E',
+  #                'Sequence E --> P', 'Sequence P --> E')
+  # xtickbreaks = unique(dfmed$use_case)
   # stop()
   ggplot(data=dfmed, mapping = aes(x=use_case, y=ma, ymin=ma, ymax=ma+2*se, fill = exp_tag)) + 
     geom_bar( position = position_dodge(), stat = 'identity') +
     geom_errorbar(mapping = aes(ymin=ma+2*se), position = position_dodge(0.9), width = 0.1) +
     geom_linerange(position = position_dodge(0.9)) +
-    geom_text(aes(y= ma-0.02, label = round(ma, 1)), position = position_dodge(0.9)) +
-    labs(y= 'predicted vs observed length (P.cor.)', x= 'Use case', fill = 'Experiment type') + 
+    geom_text(aes(y= ma-0.02, label = round(ma, 2)), position = position_dodge(0.9)) +
+    labs(y= 'Predicted vs observed length \n(Pearson cor.)', x= 'Use case', fill = 'Experiment type') + 
     # scale_fill_discrete(labels =c('Randomized pairs', 'Observed pairs')) + 
     scale_fill_manual(values = c(alpha('lightsalmon', 0.5), 'lightsalmon'), labels =c('Randomized pairs', 'Observed pairs')) +
-    scale_x_discrete(breaks = xtickbreaks, labels = xticklabels) + 
+    # scale_x_discrete(breaks = xtickbreaks, labels = xticklabels) + 
+    scale_x_discrete(labels = xticklabels) + 
     theme(axis.title = element_text(size = 20),
+          axis.text.y = element_text(size = 20),
+          axis.text.x = element_text(size = 15),
           legend.text = element_text(size = 20),
           legend.title = element_blank())
-  outpdf(infile, 'corr_bar', height = 7, width = 12)
+  outpdf(infile, 'corr_bar', height = 7, width = 15)
 }
 
 
 ## run stuff
-dl_length_correlation('abdb_outfiles_2019/merged_eval_files_paraepi_exp.csv')
+# dl_length_correlation('abdb_outfiles_2019/merged_eval_files_paraepi_exp.csv')
 # dl_length_correlation('abdb_outfiles_2019/merged_eval_files_paraepi_control.csv')
-# dl_length_correlation_bar()
+dl_length_correlation_bar()
 
 
 

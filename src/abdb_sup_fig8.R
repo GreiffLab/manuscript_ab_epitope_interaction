@@ -70,10 +70,16 @@ ab_ag_angle = function(){
   infile = 'abdb_outfiles_2019/respairs_segment_notationx_len_merged_angle.csv'
   df = read_csv(infile)
   df = drop_na(data = df, p_angle, e_angle)
+  print(df)
+  ksdf = df %>% group_by(segment) %>% summarise(kspval = ks.test(p_angle,e_angle)$p.val)
+  ksdf$label = format(ksdf$kspval, scientific = TRUE, digits = 2)
+  print(ksdf)
+  # stop()
   meds_data = aggregate(df[, c('p_angle', 'e_angle')], list(df$segment), median)
   max_data = aggregate(df[, c('p_angle', 'e_angle')], list(df$segment), median)
   colnames(meds_data)[1] = 'segment'
   df2 = gather(df,'angle_type', 'angle', p_angle, e_angle)
+  print(df2)
   ggplot(data=df2) + 
   # geom_point(mapping = aes(x=p_angle, y=e_angle))
   geom_density(mapping = aes(x=angle, fill=angle_type, color=angle_type), alpha = 0.7) +
@@ -82,6 +88,7 @@ ab_ag_angle = function(){
   facet_wrap(~ segment, ncol = 3, scales = 'free') +
   geom_text(data=meds_data, mapping = aes(x= e_angle, y=0.01, label=paste0('Median: ',e_angle)), size=2, color=alpha('Black', 0.7)) +
   geom_text(data=meds_data, mapping = aes(x= p_angle, y=0.015, label=paste0('Median: ',p_angle)), size=2, color=alpha('Blue', 0.95)) +
+  geom_text(data=ksdf, mapping = aes(x= 75, y=0.030, label=paste0('KS p.val: ',label)), size=2, color=alpha('black', 0.95), hjust=0) +
   # geom_vline(data=agmeddf, mapping = aes(xintercept=agmeds_data), color=alpha('grey',0.7), linetype='dashed') +
   # geom_vline(data=abmeddf, mapping = aes(xintercept=abmeds_data), color=alpha('blue',0.5), linetype='dashed') +
   # theme(legend.text = element_text(size=14)) + 
@@ -140,5 +147,5 @@ ab_ag_angle_correlation  = function(){
 }
 
 # run stuff
-# ab_ag_angle()
-ab_ag_angle_correlation()
+ab_ag_angle()
+# ab_ag_angle_correlation()

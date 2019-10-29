@@ -88,10 +88,46 @@ pattern.bar.radial <- function(infile){
   system(sprintf('open %s', outname))
 }
 
+shared_structures = function(){
+  infile = 'abdb_outfiles_2019/respairs_segment_notationx_len_merged_angle_bnaber_phil_pc_reglen.csv'
+  df = read_csv(infile)
+  countdf  = count(df, pdbid, ab_motif)
+  countdf = count(countdf, ab_motif)
+  countdf2  = count(df, pdbid, ag_motif)
+  countdf2 = count(countdf2, ag_motif)
+  print(countdf)
+  outdf = data_frame()
+  for (i in seq(2,20)){
+    print(i)
+    sdf = countdf[countdf$n>=i,]
+    # print(dim(sdf))
+    newrow = data_frame(nmotif = dim(sdf)[1], cutoff = i, source = 'Paratope')
+    outdf = rbind(outdf, newrow)
+    sdf2 = countdf2[countdf2$n>i,]
+    # print(dim(sdf))
+    newrow2 = data_frame(nmotif = dim(sdf2)[1], cutoff = i, source = 'Epitope')
+    outdf = rbind(outdf, newrow2)
+    # stop()
+  }
+  outdf$source = factor(outdf$source, level = c('Paratope', 'Epitope'))
+  ggplot(data=outdf) +
+    geom_bar(mapping = aes(x=cutoff, y=nmotif, fill=source), stat = 'identity') + 
+    facet_wrap(~source, scales = 'free')+ 
+    geom_text(data=outdf, mapping = aes(x=cutoff, y=nmotif*1.1, label = nmotif)) + 
+    labs(x= 'Cut-offs for number of structures \n(2-20 structures)', y = 'Motifs found in a cut-off') + 
+    theme(axis.title = element_text(size = 25),
+          axis.text = element_text(size = 25),
+          legend.title = element_blank(), 
+          # legend.text = element_text(size=25),
+          legend.position = 0,
+          strip.text = element_text(size = 25),) +
+    scale_fill_manual(values = c(abcolor3, agcolor))
+  outpdf(infile, 'shared_structures', width = 20)
+}
 
 # run stuff
 # pattern.bar.pie('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx_count.csv')
 # pattern.bar.pie('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_epitope_segment_notationx_count.csv')
-pattern.bar.radial('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx_count.csv')
-pattern.bar.radial('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_epitope_segment_notationx_count.csv')
-
+# pattern.bar.radial('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx_count.csv')
+# pattern.bar.radial('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_epitope_segment_notationx_count.csv')
+shared_structures()

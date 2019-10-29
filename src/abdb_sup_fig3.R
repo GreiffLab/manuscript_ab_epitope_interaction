@@ -129,6 +129,23 @@ ab.ag.venn = function(infile_ab, infile_ag){
   x = list(motif_ab,motif_ag)
   partitions = get.venn.partitions(x)
   part_list = partitions$..values..
+  for (name in names(part_list)){
+    partition = get(name,partitions$..values..)
+    # print(partition)
+    discontinous = which(grepl("[[:alpha:]]", partition) & grepl("[[:digit:]]", partition))
+    discontinous_percent = length(discontinous)/length(partition)
+    continous_percent = 1-discontinous_percent
+    print(discontinous_percent)
+    print(continous_percent)
+    if (name == '1'){
+    percents = c(length(part_list$'1')/(length(part_list$'1') + length(part_list$'3')), length(part_list$'1')/(length(part_list$'1') + length(part_list$'2')))
+    percents = round(percents,2)
+    }
+    print(percents)
+    print(sprintf('discont %s, cont %s, overlap percent %s %s', discontinous_percent, continous_percent, percents[1], percents[2]))
+    # stop()
+  }
+  stop()
   percents = c(length(part_list$'1')/(length(part_list$'1') + length(part_list$'3')), length(part_list$'1')/(length(part_list$'1') + length(part_list$'2')))
   percents = round(percents,2)
   overlapdf = dfab[dfab$gap_patterns %in% part_list$'1', ]
@@ -137,6 +154,7 @@ ab.ag.venn = function(infile_ab, infile_ag){
   print(percents)
   print(continuous_count)
   print(infile_ab)
+  stop()
   inname = strsplit(tail(strsplit(infile_ab, '/')[[1]], n=1), '\\.')[[1]][1]
   outname = sprintf('%s/%s_venn_sup3.tiff', outfigdir,inname)
   # print(outname)
@@ -167,20 +185,20 @@ ab.ag.venn = function(infile_ab, infile_ag){
 
 # run stuff
 # abresnum_distribution_5a('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments.csv')
-abresnum_distribution_5a('abdb_outfiles_2019/respairs_absort_cutoff4_abresnumi_segments.csv')
-abresnum_distribution_5a('abdb_outfiles_2019/respairs_absort_cutoff6_abresnumi_segments.csv')
+# abresnum_distribution_5a('abdb_outfiles_2019/respairs_absort_cutoff4_abresnumi_segments.csv')
+# abresnum_distribution_5a('abdb_outfiles_2019/respairs_absort_cutoff6_abresnumi_segments.csv')
 # ab.ag.venn(
-#   infile_ab = 'abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx.csv', 
-#   infile_ag = 'abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_epitope_segment_notationx.csv' 
+#   infile_ab = 'abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx.csv',
+#   infile_ag = 'abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_epitope_segment_notationx.csv'
 # )
 # 
 # ab.ag.venn(
-#   infile_ab = 'abdb_outfiles_2019/respairs_absort_cutoff6_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx.csv', 
-#   infile_ag = 'abdb_outfiles_2019/respairs_absort_cutoff6_abresnumi_segments_abshift_abshiftl_epitope_segment_notationx.csv' 
+#   infile_ab = 'abdb_outfiles_2019/respairs_absort_cutoff6_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx.csv',
+#   infile_ag = 'abdb_outfiles_2019/respairs_absort_cutoff6_abresnumi_segments_abshift_abshiftl_epitope_segment_notationx.csv'
 # )
 # 
 # 
-# ab.ag.venn(
-#   infile_ab = 'abdb_outfiles_2019/respairs_absort_cutoff4_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx.csv', 
-#   infile_ag = 'abdb_outfiles_2019/respairs_absort_cutoff4_abresnumi_segments_abshift_abshiftl_epitope_segment_notationx.csv' 
-# )
+ab.ag.venn(
+  infile_ab = 'abdb_outfiles_2019/respairs_absort_cutoff4_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx.csv',
+  infile_ag = 'abdb_outfiles_2019/respairs_absort_cutoff4_abresnumi_segments_abshift_abshiftl_epitope_segment_notationx.csv'
+)

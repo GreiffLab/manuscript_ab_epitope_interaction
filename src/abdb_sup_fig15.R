@@ -85,21 +85,30 @@ residue_contact = function(infile, ncol){
   ylabel = 'Epitope'
   height = 14
   width = 25
+  axistitlesize = 45 
+  legendtitlesize = 45
+  legendtextsize = 45
+  striptextsize = 40
   if (grepl('threedid',infile)){ 
     xlabel = 'Binding partner' 
     ylabel = 'Residue'
     height = 7
-    width = 12.5}
+    width = 12.5
+    axistitlesize = 25
+    legendtitlesize = 25
+    legendtextsize = 25
+    striptextsize = 25
+    }
   df = read_csv(infile)
   sdf = spread(df, key = agres, value = logodd)
   residues = factor(unique(df$abres))
   print(residues)
-  reslist = list(charged = c('ARG', 'LYS', 'ASP', 'GLU'), polar = c('GLN', 'ASN', 'HIS', 'SER', 'THR', 'CYS'),
-                 amphiphatic = c('TRP', 'TYR'),hydrophobic = c('ALA', 'ILE', 'LEU', 'MET', 'PHE', 'VAL', 'PRO', 'GLY') )
-  df$abres = factor(df$abres, levels = c(reslist$charged, reslist$polar, reslist$amphiphatic, reslist$hydrophobic))
-  df$agres = factor(df$agres, levels = c(reslist$charged, reslist$polar, reslist$amphiphatic, reslist$hydrophobic))
+  reslist = list(charged = c('ARG', 'LYS', 'ASP', 'GLU', 'HIS'), polar = c('GLN', 'ASN', 'SER', 'THR'),
+                 amphiphatic = c('PHE','TRP', 'TYR'), nonpolar = c('CYS','ALA', 'ILE', 'LEU', 'MET', 'VAL', 'PRO', 'GLY') )
+  df$abres = factor(df$abres, levels = c(reslist$charged, reslist$polar, reslist$amphiphatic, reslist$nonpolar))
+  df$agres = factor(df$agres, levels = c(reslist$charged, reslist$polar, reslist$amphiphatic, reslist$nonpolar))
   axiscolor= c(rep('red', length(reslist$charged)), rep('salmon',length(reslist$polar)), rep('orange',length(reslist$amphiphatic)),
-               rep('blue', length(reslist$hydrophobic)))
+               rep('blue', length(reslist$nonpolar)))
   print(axiscolor)
   print(length(reslist$charged))
   collabels  = round(c(min(df$logodd, na.rm = TRUE)+1, 0, max(df$logodd, na.rm = TRUE)-1))
@@ -111,10 +120,10 @@ residue_contact = function(infile, ncol){
     theme(axis.text.x = element_text(angle = 90, color = axiscolor),
           axis.text.y = element_text(color=axiscolor),
           panel.background = element_blank(),
-          axis.title = element_text(hjust = 0.0, size = 45),
-          legend.text = element_text(size = 45),
-          legend.title = element_text(size = 45),
-          strip.text = element_text(size = 40)) + 
+          axis.title = element_text(hjust = 0.0, size = axistitlesize),
+          legend.text = element_text(size = legendtextsize),
+          legend.title = element_text(size = legendtitlesize),
+          strip.text = element_text(size = striptextsize)) + 
     scale_fill_gradient2(low = my_spectral[14], mid='white', high = my_spectral[1], breaks = collabels,
                           labels = paste("", collabels),
                           guide = guide_legend(
@@ -143,12 +152,18 @@ residue_contact_comp = function(infile, ncol){
   df = compdf
   residues = factor(unique(df$abres))
   print(residues)
-  reslist = list(charged = c('ARG', 'LYS', 'ASP', 'GLU'), polar = c('GLN', 'ASN', 'HIS', 'SER', 'THR', 'CYS'),
-                 amphiphatic = c('TRP', 'TYR'),hydrophobic = c('ALA', 'ILE', 'LEU', 'MET', 'PHE', 'VAL', 'PRO', 'GLY') )
-  df$abres = factor(df$abres, levels = c(reslist$charged, reslist$polar, reslist$amphiphatic, reslist$hydrophobic))
-  df$agres = factor(df$agres, levels = c(reslist$charged, reslist$polar, reslist$amphiphatic, reslist$hydrophobic))
+  # reslist = list(charged = c('ARG', 'LYS', 'ASP', 'GLU'), polar = c('GLN', 'ASN', 'HIS', 'SER', 'THR', 'CYS'),
+  #                amphiphatic = c('TRP', 'TYR'),hydrophobic = c('ALA', 'ILE', 'LEU', 'MET', 'PHE', 'VAL', 'PRO', 'GLY') )
+  # df$abres = factor(df$abres, levels = c(reslist$charged, reslist$polar, reslist$amphiphatic, reslist$hydrophobic))
+  # df$agres = factor(df$agres, levels = c(reslist$charged, reslist$polar, reslist$amphiphatic, reslist$hydrophobic))
+  # axiscolor= c(rep('red', length(reslist$charged)), rep('salmon',length(reslist$polar)), rep('orange',length(reslist$amphiphatic)),
+  #              rep('blue', length(reslist$hydrophobic)))
+  reslist = list(charged = c('ARG', 'LYS', 'ASP', 'GLU', 'HIS'), polar = c('GLN', 'ASN', 'SER', 'THR'),
+                 amphiphatic = c('PHE','TRP', 'TYR'), nonpolar = c('CYS','ALA', 'ILE', 'LEU', 'MET', 'VAL', 'PRO', 'GLY') )
+  df$abres = factor(df$abres, levels = c(reslist$charged, reslist$polar, reslist$amphiphatic, reslist$nonpolar))
+  df$agres = factor(df$agres, levels = c(reslist$charged, reslist$polar, reslist$amphiphatic, reslist$nonpolar))
   axiscolor= c(rep('red', length(reslist$charged)), rep('salmon',length(reslist$polar)), rep('orange',length(reslist$amphiphatic)),
-               rep('blue', length(reslist$hydrophobic)))
+               rep('blue', length(reslist$nonpolar)))
   print(axiscolor)
   print(length(reslist$charged))
   collabels  = round(c(min(df$logoddsum)+1, 0, max(df$logoddsum)-1))
@@ -181,8 +196,8 @@ residue_contact_comp = function(infile, ncol){
 
 
 # run stuff
-residue_contact('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_residue_contact_odds.csv', 6)
-# residue_contact('abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_residue_contact_odds.csv', 2)
+# residue_contact('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_residue_contact_odds.csv', 6)
+residue_contact('abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_residue_contact_odds.csv', 2)
 # residue_contact_comp('abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_residue_contact_odds.csv', 6)
 # residue_contact_comp('abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_residue_contact_odds.csv', 2)
 

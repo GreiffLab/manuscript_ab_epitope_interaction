@@ -55,6 +55,10 @@ sequential_dependency_net = function(infile) {
   df = read_csv(infile)
   print(dim(df))
   print(df)
+  df$source = df$source2
+  df$target = df$target2
+  print(df)
+  # stop()
   node_size_scaler = 1 
   if (grepl('motifpartner', infile)){
     node_color = ppi_pcolor
@@ -132,14 +136,19 @@ normalize_my <- function(x)
 seqnet_clustering = function(){
   infiles = list.files('abdb_outfiles_2019', pattern = 'seqnet_edges', full.names = TRUE)
   infiles = infiles[!grepl('homo|mus',infiles)]
+  print(infiles)
+  # stop()
   df = infiles %>%map_df(~fread(.)) 
   print(df)
+  # stop()
   dfscaled = df %>% group_by(motif_source) %>% mutate(weight = normalize_my(weight))
   print(df[df$weight>1])
   print(dfscaled)
   sdf = spread(dfscaled[,3:5], key = source_target, value = weight)
   # create row annotatation
   print(rownames(sdf))
+  print(sdf)
+  # stop()
   metarow = data.frame(
     Motif = c(rep('Epitope',4), rep('Paratope',4), rep('PPI motif',4), rep('PPI motif partner',4)), row.names = sdf$motif_source
   )
@@ -150,11 +159,12 @@ seqnet_clustering = function(){
   print(dim(df))
   sdf[is.na(sdf)] = 0
   sdf2mat = data.frame(sdf[,-1])
-  print(sdf2mat)
+  # print(sdf2mat)
+  # stop()
   rownames(sdf2mat) = sdf$motif_source
   edge_intersect = colSums(is.na(sdf[,1:ncol(sdf)])) == 0
   # sdf2 = sdf[, edge_intersect]
-  outname = 'abdb_figures_2019/paratope_epitope_ppi_seqnet_edges_heatmap.pdf'
+  outname = 'abdb_figures_2019/paratope_epitope_ppi_seqnet_edges_heatmap2.pdf'
   hmap = pheatmap(sdf2mat,
                   labels_row = sdf$motif_source,
                   annotation_row = metarow,
@@ -273,7 +283,7 @@ edges_overlap_motifwise = function() {
     print(nproteindf)
     nprotein1 = nproteindf[nproteindf$gap_pattern1==motif,]$nproteins
     nprotein2 = nproteindf[nproteindf$gap_pattern1==motif,]$nproteins2
-    sum_label_count = sprintf('Total edges: %s; Proteins: %s, %s', length(unique(df$source_target)), nprotein1, nprotein2)
+    sum_label_count = sprintf('Total edges: %s; # of Proteins: %s and %s', length(unique(df$source_target)), nprotein1, nprotein2)
     print(sum_label_count)
     # stop()
     parts = strsplit(infile, '_')[[1]]
@@ -327,11 +337,60 @@ proteins_in_motif = function(){
   return = df
 }
 
+
+seq_dep_circos = function(infile){
+  # infile = 'abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_epitope_segment_notationx_XXX_X1X_X2X_XX_edge_next.csv'
+  df = read_csv(infile)
+  df2 = read_csv('abdb_outfiles_2019/respairs_segment_notationx_len_merged_angle_bnaber_phil_pc.csv')
+  print(df)
+  # stop()
+  motifs = c('XXX', 'XX', 'X1X', 'X2X')
+  seqdf = df2 %>% group_by(ab_motif) %>% summarise(len = length(paratope)) 
+  print(seqdf[order(seqdf$len, decreasing = TRUE ),])
+  seqdf2 = df2 %>% group_by(ag_motif) %>% summarise(len = length(paratope)) 
+  print(seqdf2[order(seqdf2$len, decreasing = TRUE ),])
+  print(df)
+  countdf = count(df, source2, target2, motif)
+  print(countdf)
+  # stop()
+  aa = unique(countdf$source2)
+  aa2 = c(aa, paste0(aa,"'"))
+  print(aa)
+  grid.col = c(my_spectral20, my_spectral20)
+  names(grid.col) = aa2
+  motifs = unique(countdf$motif)
+  for (motif in motifs){
+    motifdf = countdf[countdf$motif== motif,]
+    # motifdf = motifdf[motifdf$n>5,]
+    print(motifdf)
+    # stop()
+    inname = strsplit(tail(strsplit(infile, '/')[[1]], n=1), '\\.')[[1]][1]
+    outname = sprintf('%s/%s_%s_%s.pdf',outfigdir, inname, motif,'circos')
+    pdf(outname)
+    chordDiagram(motifdf[,c(1,2,4)], grid.col = grid.col,
+                 scale=FALSE,
+                 annotationTrack = c('grid'),
+                 annotationTrackHeight = c(0.15),)
+    circos.track(track.index = 1, panel.fun = function(x, y) {
+      circos.text(CELL_META$xcenter, CELL_META$ylim[1]+0.5, CELL_META$sector.index, 
+                  cex = 2)
+    }, bg.border = NA)  
+    system(sprintf('open %s', outname))
+    circos.clear()
+    dev.off()
+    # stop()
+  }
+}
+
+
+
 # run stuff
 # sequential_dependency_net('abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired_XXX_X1X_X2X_XX_ppimotif_edge_next.csv')
 # sequential_dependency_net('abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired_XXX_X1X_X2X_XX_ppimotifpartner_edge_next.csv')
 # seqnet_clustering()
 # edges_overlap('abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired_XXX_X1X_X2X_XX_ppimotif_edge_next.csv')
 # edges_overlap('abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired_XXX_X1X_X2X_XX_ppimotifpartner_edge_next.csv')
-edges_overlap_motifwise()
+# edges_overlap_motifwise()
 # proteins_in_motif()
+# seq_dep_circos('abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired_XXX_X1X_X2X_XX_ppimotif_edge_next.csv')
+# seq_dep_circos('abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired_XXX_X1X_X2X_XX_ppimotifpartner_edge_next.csv')

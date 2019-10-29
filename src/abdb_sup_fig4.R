@@ -103,7 +103,7 @@ paratope_top_antigen = function(){
     theme(axis.text.x = element_text(angle = 90, size = 20),
           axis.title = element_text(size = 30)) + 
     geom_text(mapping= aes(x = toptendf$ab_motif, y=toptendf$n+1, label=labels)) +
-    labs(x='Top 20 paratope motif', y='# of antigen classes')
+    labs(x='Top 20 paratope motifs', y='# of antigen classes')
   ggsave(outname, width = 10, height = 8)
   system(sprintf('open %s', outname))
 }
@@ -133,7 +133,7 @@ paratope_top_complex = function(){
     theme(axis.text.x = element_text(angle = 90, size = 20),
           axis.title = element_text(size = 30)) + 
     geom_text(mapping= aes(x = toptendf$ab_motif, y=toptendf$n+10, label=labels)) +
-    labs(x='Top 20 paratope motif', y='# of structures')
+    labs(x='Top 20 paratope motifs', y='# of structures')
   ggsave(outname, width = 10, height = 8)
   system(sprintf('open %s', outname))
 }
@@ -163,7 +163,7 @@ epitope_top_complex = function(){
     theme(axis.text.x = element_text(angle = 90, size = 20),
           axis.title = element_text(size = 30)) + 
     geom_text(mapping= aes(x = toptendf$ag_motif, y=toptendf$n+10, label=labels)) +
-    labs(x='Top 20 paratope motif', y='# of structures')
+    labs(x='Top 20 epitope motifs', y='# of structures')
   ggsave(outname, width = 10, height = 8)
   system(sprintf('open %s', outname))
 }
@@ -239,7 +239,7 @@ paratope_top_imgt_vgene = function(){
     # facet_wrap(~ abchain) +
     geom_text(mapping= aes(x = toptendf$ab_motif, y=toptendf$n+1, label=labels, fill=imgt_species), position = position_dodge(width=1)) +
     scale_fill_manual(values = c(alpha(abcolor3, 0.5), abcolor3)) +
-    labs(x='Top 20 paratope motif', y='# of unique V genes', fill='Species (IMGT naming)') + 
+    labs(x='Top 20 paratope motifs', y='# of unique V genes', fill='Species (IMGT naming)') + 
     # put legend inside
     theme(
       legend.position = c(.95, .95),
@@ -273,7 +273,7 @@ paratope_top20_cumulative = function(){
           axis.title = element_text(size = 25)) + 
     geom_text(mapping= aes(x = ab_motif, y=csum+3, label=csum), angle=90) +
     geom_text(data = df, mapping= aes(x = 1, y= 80, label=total_motif_label), hjust=0) +
-    labs(x='Top 20 paratope motif', y='Cumulative percentage (%)')
+    labs(x='Top 20 paratope motifs', y='Cumulative percentage (%)')
   ggsave(outname, width = 5, height = 8)
   system(sprintf('open %s', outname))
 }
@@ -300,7 +300,7 @@ epitope_top20_cumulative = function(){
           axis.title = element_text(size = 25)) + 
     geom_text(mapping= aes(x = ag_motif, y=csum+3, label=csum), angle=90) +
     geom_text(data = df, mapping= aes(x = 1, y= 70, label=total_motif_label), hjust=0) +
-    labs(x='Top 20 epitope motif', y='Cumulative percentage (%)')
+    labs(x='Top 20 epitope motifs', y='Cumulative percentage (%)')
   ggsave(outname, width = 5, height = 8)
   system(sprintf('open %s', outname))
 }
@@ -308,14 +308,14 @@ epitope_top20_cumulative = function(){
 
 # run stuff
 # human_mouse_overlap()
-# paratope_top_antigen()
-# paratope_top_complex()
+paratope_top_antigen()
+paratope_top_complex()
 # cdr_fr_overlap_ab('abdb_outfiles_2019/respairs_segment_notationx_len_merged_species2_ab_motif_overlap_min_max.csv')
 # cdr_fr_overlap_ag('abdb_outfiles_2019/respairs_segment_notationx_len_merged_species2_ag_motif_overlap_min_max.csv')
-# paratope_top_imgt_vgene()
-# epitope_top_complex()
-# paratope_top20_cumulative()
-# epitope_top20_cumulative()
+paratope_top_imgt_vgene()
+epitope_top_complex()
+paratope_top20_cumulative()
+epitope_top20_cumulative()
 #overlap equations
 #Motif_i \cap Motif_j/\textrm{max}(Motif_i, Motif_j)
 #Motif_i \cap Motif_j/\textrm{min}(Motif_i, Motif_j)

@@ -1,8 +1,8 @@
 "id","group","score"
-"X","Paratope",115
+"X","Paratope",117
 "X11XX","Paratope",1
 "X12X","Paratope",1
-"X1X","Paratope",29
+"X1X","Paratope",28
 "X1X1X","Paratope",7
 "X1X1X1X","Paratope",4
 "X1X1X1X1X","Paratope",4
@@ -21,12 +21,12 @@
 "X1X1XXX1X","Paratope",1
 "X1X1XXX1X1X","Paratope",1
 "X1X1XXX2X1X","Paratope",1
-"X1X1XXXXX","Paratope",1
+"X1X1XXXXX","Paratope",2
 "X1X1XXXXXX1X","Paratope",1
 "X1X1XXXXXXXXXX2X","Paratope",1
 "X1X20XXXXX1X","Paratope",1
 "X1X2X","Paratope",2
-"X1X2X1X","Paratope",1
+"X1X2X1X","Paratope",2
 "X1X2XX","Paratope",1
 "X1X2XX2X1X","Paratope",2
 "X1X2XXX","Paratope",1
@@ -64,15 +64,15 @@
 "X1XX2XXXX","Paratope",1
 "X1XX3X","Paratope",1
 "X1XX3X1X","Paratope",1
-"X1XX4X","Paratope",1
+"X1XX4X","Paratope",2
 "X1XX5X","Paratope",1
 "X1XXX","Paratope",6
 "X1XXX1X","Paratope",3
 "X1XXX1X1X","Paratope",6
 "X1XXX1X1X2X","Paratope",1
-"X1XXX1X1XX","Paratope",1
+"X1XXX1X1XX","Paratope",2
 "X1XXX1XX1X","Paratope",1
-"X1XXX1XXX","Paratope",2
+"X1XXX1XXX","Paratope",3
 "X1XXX1XXX2X2X","Paratope",1
 "X1XXX1XXX5X","Paratope",1
 "X1XXX1XXXXXX","Paratope",1
@@ -84,7 +84,7 @@
 "X1XXX4X","Paratope",1
 "X1XXXX","Paratope",4
 "X1XXXX1X","Paratope",2
-"X1XXXX1X1X","Paratope",2
+"X1XXXX1X1X","Paratope",1
 "X1XXXX1X1X1X","Paratope",1
 "X1XXXX1X1X2X","Paratope",1
 "X1XXXX1XX","Paratope",1
@@ -102,7 +102,7 @@
 "X1XXXXX2X1X","Paratope",1
 "X1XXXXX5X","Paratope",1
 "X1XXXXXX","Paratope",2
-"X1XXXXXX1X","Paratope",3
+"X1XXXXXX1X","Paratope",2
 "X1XXXXXX1XX","Paratope",1
 "X1XXXXXX2X","Paratope",1
 "X1XXXXXXX","Paratope",2
@@ -135,15 +135,15 @@
 "X27X","Paratope",1
 "X27XX","Paratope",1
 "X28X","Paratope",1
-"X2X","Paratope",20
-"X2X1X","Paratope",5
+"X2X","Paratope",18
+"X2X1X","Paratope",6
 "X2X1X1X","Paratope",1
 "X2X1XX","Paratope",2
 "X2X1XX1X","Paratope",1
 "X2X1XXX","Paratope",1
 "X2X1XXXX","Paratope",1
 "X2X1XXXXXX","Paratope",1
-"X2X2X","Paratope",1
+"X2X2X","Paratope",2
 "X2X2X1X","Paratope",1
 "X2X2X1X5X","Paratope",1
 "X2X2XXX","Paratope",1
@@ -151,8 +151,8 @@
 "X2X3XX5X","Paratope",1
 "X2X4X","Paratope",1
 "X2X5X","Paratope",1
-"X2XX","Paratope",2
-"X2XX1X","Paratope",2
+"X2XX","Paratope",3
+"X2XX1X","Paratope",1
 "X2XX1X1X","Paratope",1
 "X2XX2X1X","Paratope",1
 "X2XXX","Paratope",4
@@ -170,7 +170,7 @@
 "X2XXXXXXXX1X","Paratope",1
 "X2XXXXXXXXX2X","Paratope",1
 "X2XXXXXXXXXX","Paratope",1
-"X2XXXXXXXXXX1X","Paratope",1
+"X2XXXXXXXXXX1X","Paratope",2
 "X3X","Paratope",3
 "X3X1X","Paratope",1
 "X3X1XXX","Paratope",1
@@ -184,7 +184,7 @@
 "X3XXXXX1XXX","Paratope",1
 "X3XXXXXXX1X","Paratope",1
 "X3XXXXXXXXX","Paratope",1
-"X4X","Paratope",4
+"X4X","Paratope",5
 "X4X1X","Paratope",1
 "X4X1XX","Paratope",1
 "X4X1XX1X","Paratope",1
@@ -213,8 +213,8 @@
 "X9X","Paratope",1
 "X9X2X","Paratope",2
 "XX","Paratope",33
-"XX1X","Paratope",9
-"XX1X1X","Paratope",5
+"XX1X","Paratope",8
+"XX1X1X","Paratope",4
 "XX1X1X1X","Paratope",1
 "XX1X1X5X","Paratope",1
 "XX1X1XXXXX","Paratope",1
@@ -223,7 +223,7 @@
 "XX1XX1X","Paratope",1
 "XX1XX4X5X","Paratope",1
 "XX1XXX","Paratope",2
-"XX1XXX1X","Paratope",2
+"XX1XXX1X","Paratope",1
 "XX1XXX1X1X","Paratope",1
 "XX1XXX3X","Paratope",1
 "XX1XXX6X","Paratope",1
@@ -250,14 +250,14 @@
 "XX2X","Paratope",2
 "XX2X2XXXXXXX","Paratope",1
 "XX2XX","Paratope",1
-"XX3X","Paratope",3
+"XX3X","Paratope",2
 "XX3X1X","Paratope",1
 "XX3XXX","Paratope",1
 "XX4X","Paratope",3
 "XX4XX","Paratope",2
 "XX5X","Paratope",1
-"XXX","Paratope",45
-"XXX1X","Paratope",15
+"XXX","Paratope",44
+"XXX1X","Paratope",14
 "XXX1X1X","Paratope",6
 "XXX1X1X1X","Paratope",1
 "XXX1X1XX","Paratope",1
@@ -280,7 +280,7 @@
 "XXX1XXXXXXXX","Paratope",1
 "XXX20X","Paratope",1
 "XXX21X","Paratope",1
-"XXX2X","Paratope",4
+"XXX2X","Paratope",3
 "XXX2X1X","Paratope",1
 "XXX2X1XXXX","Paratope",1
 "XXX2X1XXXXXX","Paratope",1
@@ -312,9 +312,9 @@
 "XXXX20X","Paratope",1
 "XXXX20XXXX1X","Paratope",1
 "XXXX21X","Paratope",1
-"XXXX2X","Paratope",1
+"XXXX2X","Paratope",2
 "XXXX2X1X","Paratope",1
-"XXXX2XX","Paratope",1
+"XXXX2XX","Paratope",2
 "XXXX2XXX","Paratope",1
 "XXXX3X","Paratope",1
 "XXXX3X1X","Paratope",1
@@ -323,7 +323,7 @@
 "XXXX3XXXXXX2X","Paratope",1
 "XXXX5X","Paratope",1
 "XXXX7X","Paratope",1
-"XXXXX","Paratope",18
+"XXXXX","Paratope",19
 "XXXXX17X1XX","Paratope",1
 "XXXXX1X","Paratope",5
 "XXXXX1X1X","Paratope",1
@@ -344,7 +344,7 @@
 "XXXXX2XXX1X1X","Paratope",1
 "XXXXX2XXXXX","Paratope",1
 "XXXXX4X","Paratope",1
-"XXXXXX","Paratope",17
+"XXXXXX","Paratope",16
 "XXXXXX1X","Paratope",4
 "XXXXXX1X1X","Paratope",1
 "XXXXXX1X1XXXXX","Paratope",1
@@ -363,7 +363,7 @@
 "XXXXXX3XXXXX","Paratope",1
 "XXXXXX3XXXXXX","Paratope",1
 "XXXXXXX","Paratope",8
-"XXXXXXX1X","Paratope",2
+"XXXXXXX1X","Paratope",1
 "XXXXXXX1X1XXX","Paratope",1
 "XXXXXXX1X1XXXX1X","Paratope",1
 "XXXXXXX1XX","Paratope",1
@@ -389,7 +389,7 @@
 "XXXXXXXXXX","Paratope",2
 "XXXXXXXXXX1X","Paratope",1
 "XXXXXXXXXX2XXX","Paratope",1
-"XXXXXXXXXXX","Paratope",2
+"XXXXXXXXXXX","Paratope",1
 "XXXXXXXXXXX1X","Paratope",1
 "XXXXXXXXXXX2X","Paratope",1
 "XXXXXXXXXXX4X","Paratope",1
@@ -397,7 +397,7 @@
 "XXXXXXXXXXXX1X","Paratope",1
 "XXXXXXXXXXXXX","Paratope",1
 "XXXXXXXXXXXXXX","Paratope",1
-"X*","Epitope",84
+"X*","Epitope",83
 "X100X98X3X*","Epitope",1
 "X101X1X*","Epitope",1
 "X101X99X*","Epitope",1
@@ -725,7 +725,7 @@
 "X1X37X1X*","Epitope",1
 "X1X38X39X1X*","Epitope",1
 "X1X39X*","Epitope",1
-"X1X3X*","Epitope",1
+"X1X3X*","Epitope",2
 "X1X3X179X*","Epitope",1
 "X1X3X2X*","Epitope",1
 "X1X3X4X1X*","Epitope",1
@@ -744,7 +744,7 @@
 "X1X57X60X29X32X*","Epitope",1
 "X1X58X4X*","Epitope",1
 "X1X58XX40X93X*","Epitope",1
-"X1X5X*","Epitope",2
+"X1X5X*","Epitope",1
 "X1X5X2X*","Epitope",1
 "X1X63X27X*","Epitope",1
 "X1X6X*","Epitope",1
@@ -771,7 +771,7 @@
 "X1X9X10XX*","Epitope",1
 "X1X9X12XX*","Epitope",1
 "X1X9XX*","Epitope",1
-"X1XX*","Epitope",9
+"X1XX*","Epitope",10
 "X1XX109X*","Epitope",1
 "X1XX15X41X27X*","Epitope",1
 "X1XX1X*","Epitope",2
@@ -816,7 +816,7 @@
 "X213X*","Epitope",1
 "X216X*","Epitope",1
 "X219X301X1X*","Epitope",1
-"X21X*","Epitope",1
+"X21X*","Epitope",2
 "X21X142X147XX*","Epitope",1
 "X21X18X*","Epitope",1
 "X21X1X*","Epitope",1
@@ -899,7 +899,7 @@
 "X26X44X1X*","Epitope",1
 "X26X54X*","Epitope",1
 "X26XX*","Epitope",1
-"X27X*","Epitope",2
+"X27X*","Epitope",1
 "X27X119X118X1XX*","Epitope",1
 "X27X23X24X27X*","Epitope",1
 "X27X23X8X20X7X21X*","Epitope",1
@@ -959,7 +959,7 @@
 "X2X192X108XX4X5X92XX1X3X*","Epitope",1
 "X2X19X*","Epitope",1
 "X2X19X21X*","Epitope",1
-"X2X1X*","Epitope",4
+"X2X1X*","Epitope",3
 "X2X1X1X*","Epitope",1
 "X2X1X26XX*","Epitope",1
 "X2X1X27X*","Epitope",1
@@ -1158,7 +1158,7 @@
 "X378X376X182X2X1XX*","Epitope",1
 "X378X3X204X6X2X1X*","Epitope",1
 "X378X3X383X185XXX*","Epitope",1
-"X37X*","Epitope",2
+"X37X*","Epitope",1
 "X37X129X94X3X*","Epitope",1
 "X37X1X72XX79X1X*","Epitope",1
 "X37X30X29X*","Epitope",1
@@ -1186,7 +1186,7 @@
 "X39X46X49XX*","Epitope",1
 "X39XX*","Epitope",1
 "X39XX45X5XX*","Epitope",1
-"X3X*","Epitope",11
+"X3X*","Epitope",12
 "X3X100X*","Epitope",1
 "X3X10XX1X6X2X*","Epitope",1
 "X3X114X*","Epitope",1
@@ -1250,7 +1250,7 @@
 "X3X46X83X*","Epitope",1
 "X3X48X*","Epitope",1
 "X3X49X*","Epitope",1
-"X3X4X*","Epitope",2
+"X3X4X*","Epitope",1
 "X3X4X1X*","Epitope",1
 "X3X4X3X*","Epitope",1
 "X3X4X78X*","Epitope",1
@@ -1271,7 +1271,7 @@
 "X3X6X*","Epitope",1
 "X3X77X*","Epitope",1
 "X3X77X80X3X*","Epitope",1
-"X3X7X*","Epitope",2
+"X3X7X*","Epitope",1
 "X3X7XX*","Epitope",1
 "X3X8X*","Epitope",1
 "X3X8X16X17X2X*","Epitope",1
@@ -1399,7 +1399,7 @@
 "X4XX5X2X*","Epitope",1
 "X4XX6X*","Epitope",1
 "X4XXX*","Epitope",1
-"X50X*","Epitope",2
+"X50X*","Epitope",1
 "X50X1X*","Epitope",1
 "X50X48X*","Epitope",1
 "X50X51X*","Epitope",1
@@ -1418,7 +1418,7 @@
 "X52X57X58X21X*","Epitope",1
 "X52X59X*","Epitope",1
 "X52XX40X*","Epitope",1
-"X53X*","Epitope",1
+"X53X*","Epitope",2
 "X53X18X*","Epitope",1
 "X53X1X*","Epitope",1
 "X53X4X*","Epitope",1
@@ -1491,7 +1491,7 @@
 "X5X7X*","Epitope",1
 "X5X7X118X111X*","Epitope",1
 "X5X8X*","Epitope",1
-"X5XX*","Epitope",2
+"X5XX*","Epitope",1
 "X5XX54X*","Epitope",1
 "X5XX5X*","Epitope",1
 "X5XX81X*","Epitope",1
@@ -1542,7 +1542,7 @@
 "X69X21X2X3X3X*","Epitope",1
 "X69X27X*","Epitope",1
 "X69X66X*","Epitope",1
-"X6X*","Epitope",6
+"X6X*","Epitope",5
 "X6X1061X*","Epitope",1
 "X6X1074X1068X3XX*","Epitope",1
 "X6X177X181X*","Epitope",1
@@ -1627,7 +1627,7 @@
 "X79X76X*","Epitope",1
 "X79X97X101X*","Epitope",1
 "X79XX1X*","Epitope",1
-"X7X*","Epitope",3
+"X7X*","Epitope",2
 "X7X11X*","Epitope",1
 "X7X17X1X2X*","Epitope",1
 "X7X1X*","Epitope",1
@@ -1737,7 +1737,7 @@
 "X9X8XX*","Epitope",1
 "X9XX1X*","Epitope",1
 "X9XX9X94X106X2X*","Epitope",1
-"XX*","Epitope",30
+"XX*","Epitope",28
 "XX100X102X*","Epitope",1
 "XX101X2X*","Epitope",1
 "XX103X48X*","Epitope",1
@@ -1974,7 +1974,7 @@
 "XXX5X*","Epitope",1
 "XXX81X*","Epitope",1
 "XXX82X*","Epitope",1
-"XXXX*","Epitope",2
+"XXXX*","Epitope",1
 "XXXX1X*","Epitope",1
 "XXXX32X61X*","Epitope",1
 "XXXX50X2X41X*","Epitope",1

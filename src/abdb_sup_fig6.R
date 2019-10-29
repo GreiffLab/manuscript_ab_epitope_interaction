@@ -70,12 +70,28 @@ ppi_abdb_venn = function(){
   infile_ab = 'abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx.csv' 
   infile_ag = 'abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_epitope_segment_notationx.csv' 
   infile_ppi = 'abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300.csv'
+  infilemerged = 'abdb_outfiles_2019/respairs_segment_notationx_len_merged_angle_bnaber_phil_pc.csv'
+  mergedf  = read_csv(infilemerged)
+  print(mergedf)
+  # stop()
   abdf = read_csv(infile_ab)
+  abdf = abdf[!is.na(abdf$paratope),]
   abmotif = abdf$gap_patterns
   agdf = read_csv(infile_ag)
+  agdf = agdf[!is.na(agdf$epitope),]
   agmotif = agdf$gap_patterns
   ppidf = read_csv(infile_ppi)
   print(ppidf)
+  print(abdf)
+  print(agdf)
+  # stop()
+  nlabels = sprintf('Total para: %s \nTotal epi: %s \nTotal PPI: %s', dim(mergedf)[1], dim(mergedf)[1], dim(ppidf)[1])
+  print(nlabels)
+  punique = length(unique(mergedf$ab_motif))
+  eunique = length(unique(mergedf$ag_motif))
+  ppiunique = length(unique(ppidf$gap_pattern))
+  uniquelabel = sprintf('Unique para: %s \nUnique epi: %s \nUnique PPI: %s', punique, eunique, ppiunique)
+  print(uniquelabel)
   # stop()
   # ppidf = subset(ppidf, max_gap < 8)
   ppimotif = ppidf$gap_pattern
@@ -96,7 +112,13 @@ ppi_abdb_venn = function(){
                             cat.fontface=1,
                             cat.cex = 3,
                             cat.dist = c(-0.004,-0.001, 0.0001),
-                            category.names=c("Paratope", "Epitope", "PPI")
+                            category.names=c("Paratope", "Epitope", "PPI"),
+                            main = nlabels,
+                            main.cex = 2,
+                            main.pos = c(0.15,0.15),
+                            sub = uniquelabel,
+                            sub.cex = 2,
+                            sub.pos = c(0.85,0.15)
   ) 
   system(sprintf('open %s', outname))
 }
@@ -171,6 +193,9 @@ ppi_residue_distribution = function(){
   infile = 'abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_three_letter_residue.csv'
   df = read_csv(infile)
   print(df)
+  ylab = sprintf('Percentage (%%) \n[Total number of interacting residues: %s]', dim(df)[1])
+  print(ylab)
+  # stop()
   getpdbid = function(input){
     print(str(input))
     inds = c(1:length(input))
@@ -202,7 +227,7 @@ ppi_residue_distribution = function(){
           axis.text = element_text(size = 20),
           strip.text = element_text(size = 20)) + 
     coord_flip() +
-    labs(y='Percentage (%)', x = 'Residue name')
+    labs(y=ylab, x = 'Residue name')
   outpdf(infile, 'box_lot', width = 11, height = 11)
 }
 
@@ -212,19 +237,19 @@ ppi_residue_correlation = function(){
   df = read_csv(infile)
   print(df)
   countdf = count(df, residue, domain_type)
-  countdf[countdf=='interdomain'] = 'PPI interdomain'
-  countdf[countdf=='intradomain'] = 'PPI intradomain'
+  countdf[countdf=='interdomain'] = 'PPI\ninter'
+  countdf[countdf=='intradomain'] = 'PPI\nintra'
   print(countdf)
   infile2 = 'abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments.csv'
   df2 = read_csv(infile2)
   countdf2 = count(df2, abres, abchain)
-  countdf2[countdf2=='H'] = 'Paratope heavy'
-  countdf2[countdf2=='L'] = 'Paratope light'
+  countdf2[countdf2=='H'] = 'Paratope\nheavy'
+  countdf2[countdf2=='L'] = 'Paratope\nlight'
   print(countdf2)
   setnames(countdf2, old = c('abres', 'abchain', 'n'), new=c('residue', 'domain_type', 'n'))
   countdf3 = count(df2, agres, abchain)
-  countdf3[countdf3=='H'] = 'Epitope heavy'
-  countdf3[countdf3=='L'] = 'Epitope light'
+  countdf3[countdf3=='H'] = 'Epitope\nheavy'
+  countdf3[countdf3=='L'] = 'Epitope\nlight'
   setnames(countdf3, old = c('agres', 'abchain', 'n'), new=c('residue', 'domain_type', 'n'))
   print(countdf3)
   mergedf = rbind(countdf, countdf2, countdf3)
@@ -238,15 +263,16 @@ ppi_residue_correlation = function(){
   print(cormat)
   cormat_melted = melt(cormat)
   print(cormat_melted)
-  ggplot(data = cormat_melted, aes(Var2, Var1, fill = value))+
+  ggplot(data = cormat_melted, aes(Var2, Var1, fill = round(value,2)))+
     geom_tile(color = "white")+
     scale_fill_gradient2(low = abcolor3, high = my_spectral[3], mid = "white", 
                          midpoint = 0., limit = c(-0.05,1), space = "Lab", 
                          name="Upper: Spearman\nLower: Pearson") +
     theme_minimal()+ 
-    theme(axis.text.x = element_text(angle = 0, vjust = 1, 
-                                     size = 12, hjust = 0.5),
-          legend.position = 'right') +
+    theme(axis.text = element_text(angle = 0, vjust = 1,size = 20, hjust = 0.5),
+          legend.position = 'bottom',
+          legend.text = element_text(size = 9),
+          legend) +
     coord_fixed() +
     geom_text(aes(Var2, Var1, label = value), color = "black", size = 10) +
     labs(x='', y = '')
@@ -380,8 +406,8 @@ chao_diversity = function(){
 # ppi_abdb_venn()
 # ppi_motif_len()
 # ppi_max_gap()
-# ppi_residue_distribution()
+ppi_residue_distribution()
 # ppi_residue_correlation()
 # ppi_motif_distribution_interdomain()
 # ppi_motif_distribution_intradomain()
-chao_diversity()
+# chao_diversity()

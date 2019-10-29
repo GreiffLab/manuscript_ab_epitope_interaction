@@ -58,5 +58,54 @@ def get_full_length_data():
     outdf.to_csv(outname, index=False)
 
 
+def get_region_lengths():
+    '''
+    get region lengths for each complex
+    :return:
+    '''
+    infile = 'abdb_outfiles_2019/respairs_segment_notationx_len_merged_angle_bnaber_phil_pc.csv'
+    df = pd.read_csv(infile)
+    print(df.head())
+    segment_str_path = '/Users/rahmadakbar/greifflab/aims/aimugen/datasets/segment_structures'
+    region_lens = []
+    for i,row in df.iterrows():
+        # print(row)
+        pdbid = row.pdbid
+        chain = row.abchain
+        segment = row.segment
+        filename = '%s_%s_%s.pdb' % (pdbid, chain, segment)
+        filepath = segment_str_path + '/' + filename
+        contents = open(filepath).read().splitlines()
+        resnumis = []
+        for content in contents:
+            resnum = content[22:26].strip()
+            insertion = content[27]
+            resnumi = resnum + insertion
+            resnumis.append(resnumi)
+        region_len = len(set(resnumis))
+        region_lens.append(region_len)
+    print(len(region_lens))
+    df['region_len'] = region_lens
+    print(df.head())
+    outfile = infile.split('.')[0] + '_reglen.csv'
+    print(outfile)
+    df.to_csv(outfile, index=False)
+
+
+
+
+
+
 # run stuff
-get_full_length_data()
+# get_full_length_data()
+get_region_lengths()
+
+
+
+
+
+
+
+
+
+

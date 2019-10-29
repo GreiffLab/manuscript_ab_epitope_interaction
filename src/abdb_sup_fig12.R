@@ -464,8 +464,8 @@ cross_reactivity_density = function() {
   # stop()
   ggplot(data= df) + 
     geom_density(mapping = aes(x=percent_overlap, y=trans(..density..), fill=motif_source, color = motif_source), color = NA, alpha = 0.6) + 
-    geom_text(data = meds, mapping = aes(x=c(2, 2, 14, 14), y = trans(c(2, 1.7, 2, 1.7)), label= med_labels, color=motif_source), hjust=0, show.legend = FALSE) + 
-    geom_text(data = ksdf, mapping = aes(x=c(26, 26), y = trans(c(2, 1.7)), label= c(pks_label, eks_label)), hjust =0) + 
+    geom_text(data = meds, mapping = aes(x=c(2, 2, 14, 14), y = trans(c(2, 1.7, 2, 1.7)), label= med_labels, color=motif_source), hjust=0, show.legend = FALSE, size=6) + 
+    geom_text(data = ksdf, mapping = aes(x=c(26, 26), y = trans(c(2, 1.7)), label= c(pks_label, eks_label)), hjust =0, size = 6) + 
     scale_fill_manual(values = c(ppi_mcolor, ppi_pcolor, rppi_mcolor, rppi_pcolor)) +  
     scale_color_manual(values = c(ppi_mcolor, ppi_pcolor, rppi_mcolor, rppi_pcolor)) +  
     scale_y_continuous(limits=c(0,NA), breaks=trans(yticks), labels=yticks_labels) +
@@ -510,20 +510,28 @@ cross_reactivity_degree_cor = function(){
     geom_point(mapping = aes(x=score, y=ave, color=motif_source), size = 5, alpha=0.5) + 
     facet_wrap(~ motif_source, ncol = 4, labeller = labeller(motif_source=facet_labels), scales = 'free') +
     scale_color_manual(values = c(ppi_mcolor, ppi_pcolor, rppi_mcolor, rppi_pcolor)) + 
-    labs(x='Node degree', y = 'Mean overlap') + 
+    labs(x='Node degree', y = 'Mean interaction \npartner overlap (%)') + 
     theme(legend.position = 0,
-          axis.title = element_text(size = 30),
+          axis.title = element_text(size = 25),
           axis.text = element_text(size = 20),
           strip.text = element_text(size = 12))
   outpdf('degree', 'ppi_mean_overlap_scatter', width = 12, height = 4)
   
 }
 
+check_number_of_structures = function(){
+  infile = 'abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired.csv'
+  df = read_csv(infile)
+  print(df)
+  nstruct = length(unique(df$pdbid1))
+  print(sprintf('number of structures: %s', nstruct))
+}
 
 
 # run stuff
 # ppi_motif_interaction()
 # downsampled_ppi_motif_internet()
-degree_correlation()
+# degree_correlation()
 # cross_reactivity_density()
 # cross_reactivity_degree_cor()
+check_number_of_structures()

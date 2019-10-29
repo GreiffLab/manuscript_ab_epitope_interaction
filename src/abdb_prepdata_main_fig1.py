@@ -8,6 +8,7 @@ from abdb import *
 import sys
 import os
 from find_files import find_files
+import numpy as np
 
 # create outdir
 outpath = 'abdb_outfiles_2019'
@@ -15,6 +16,31 @@ if os.path.isfile(outpath) == False:
     os.system('mkdir %s' % outpath)
 #define a cutoff
 cutoff = 5
+
+
+# examine median resolution
+def get_median_resolution():
+    '''
+    get median resolution in the final dataset
+    :return:
+    '''
+    infile = 'abdb_outfiles_2019/respairs_segment_notationx_len_merged_angle_bnaber_phil_pc.csv'
+    df = pd.read_csv(infile)
+    print(df.head())
+    pdbids = df.pdbid.unique()
+    print(len(pdbids))
+    resolutions =[]
+    for pdbid in pdbids:
+        pdbfile = '/Users/rahmadakbar/greifflab/aims/aimugen/datasets/NR_LH_Protein_Martin/' + pdbid + '.pdb'
+        contents = open(pdbfile).read().splitlines()
+        for content in contents[:10]:
+            if 'RESOLUTION' in content:
+                parts = content.split()
+                resolution = float(parts[-1])
+                resolutions.append(resolution)
+    mean_resolution = round(sum(resolutions)/len(resolutions),2)
+    median_resolution = np.median(resolutions)
+    print('Median resolution %s, total structures %s' % (median_resolution, len(resolutions)))
 
 
 # #start
@@ -46,3 +72,5 @@ cutoff = 5
 # notationx_files = find_files('abdb_outfiles_2019', 'notationx.csv')
 # notationx_files = [item for item in notationx_files if str(cutoff) in item]
 # batch_add_gap_count_data(notationx_files)
+
+get_median_resolution()

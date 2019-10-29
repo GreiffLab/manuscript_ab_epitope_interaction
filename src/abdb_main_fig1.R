@@ -135,7 +135,7 @@ print(summary(df))
   theme(legend.position = 'none') + 
   scale_fill_manual(values = cdrfr_colors) 
 # outname = 'abdb_figures/paratope_length_distribution.pdf'
-ggsave(outfile, width=15)
+ggsave(outfile, width=18)
 system(sprintf('open %s', outfile ))
 ###
 }
@@ -186,11 +186,11 @@ gap.distribution <- function(infile){
   theme(axis.text.x = element_text(size = 18),
         axis.text.y = element_text(size = 25)) +
   theme(axis.title.x = element_text(size=30),
-        axis.title.y = element_text(size=22)) + 
-  labs(x=xlabel, y= 'Gap length (# of non-interacting residues)') + 
+        axis.title.y = element_text(size=30)) + 
+  labs(x=xlabel, y= 'Gap length \n(# of non-interacting residues)') + 
   theme(legend.position = 'none')
   # outname = 'abdb_figures/paratope_gap_distribution.pdf'
-  ggsave(outfile, width=15)
+  ggsave(outfile, width=18)
   system(sprintf('open %s', outfile))
   print(summary(df))  
 }
