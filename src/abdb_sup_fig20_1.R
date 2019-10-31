@@ -57,6 +57,10 @@ ppi_mcolor = rgb(ppi_mcolor_rgb[1], ppi_mcolor_rgb[2], ppi_mcolor_rgb[3])
 ppi_pcolor_rgb = c(col2rgb('darkorange'))/255
 ppi_pcolor = rgb(ppi_pcolor_rgb[1], ppi_pcolor_rgb[2], ppi_pcolor_rgb[3])
 
+print(ppi_mcolor)
+print(ppi_pcolor)
+
+stop()
 my_ccols = c('salmon',
              'deepskyblue1', 'deepskyblue2', 'deepskyblue3', 'deepskyblue4',
              'orange1', 'orange2', 'orange3', 'orange4')

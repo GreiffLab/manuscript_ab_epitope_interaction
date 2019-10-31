@@ -4,6 +4,8 @@ import pandas as pd
 import jellyfish
 import os
 from find_files import find_files as fifi
+from io import StringIO
+
 
 pd.set_option('display.max_column', None)
 
@@ -129,6 +131,57 @@ def sl_dl_summary():
     mergeddf.to_csv(outname, index=False)
 
 
-#run stuff
+def get_ppi_resnum():
+    '''
+    get ppi resnum from the original thredid flat file
+    :return:
+    '''
+    flatfile = '/Users/rahmadakbar/greifflab/aims/aimugen/datasets/3did/3did_flat.txt'
+    flatcontents = open(flatfile).read().split('//')
+    infile = 'abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired.csv'
+    df = pd.read_csv(infile)
+    print(df.head())
+    resnum1s = []
+    resnum2s = []
+    inpdbids = df.pdbchainpair1.unique()
+    counter = 0
+    outdfs  = []
+    for flatcontent in flatcontents[:]:
+        contents = flatcontent.split('#=3D')[1:]
+        for content in contents:
+            parts = content.splitlines()[0].split()
+            pdbid = parts[0].upper()
+            chain1 = parts[1][0].upper()
+            chain2 = parts[2][0].upper()
+            # print(pdbid, chain1, chain2)
+            inpdbid = pdbid + '_' + chain1+ chain2
+            if inpdbid in inpdbids:
+                rescontent = ['res1\tres2\tresnum1\tresnum2\tssormm'] + content.splitlines()[1:]
+                icontent = '\n'.join(rescontent)
+                iocontent = StringIO(icontent)
+                dfr = pd.read_csv(iocontent, sep='\t', )
+                dfr1 = dfr.drop_duplicates(subset='resnum1')
+                # dfr2 = dfr.sort_values(by = 'resnum2').drop_duplicates(subset='resnum2')
+                dfr2 = dfr.drop_duplicates(subset='resnum2')
+                resnum1 = '-'.join([str(item) for item in dfr2.resnum2.tolist()])
+                resnum2 = '-'.join([str(item) for item in dfr1.resnum1.tolist()])
+                resnum1s.append(resnum1)
+                resnum2s.append(resnum2)
+                counter += 1
+                outdf = df[df.pdbchainpair1 == inpdbid]
+                # print(outdf)
+                outdf['resnum1'] = resnum1
+                outdf['resnum2'] = resnum2
+                outdfs.append(outdf)
+                print(counter)
+    outdf2 = pd.concat(outdfs)
+    outname = infile.split('.')[0] + '_resnum.csv'
+    print(outname)
+    outdf2.to_csv(outname, index=False)
 
-sl_dl_summary()
+
+#run stuff
+# sl_dl_summary()
+get_ppi_resnum()
+
+
