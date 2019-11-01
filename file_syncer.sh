@@ -15,6 +15,7 @@ rsync -av /Users/rahmadakbar/greifflab/aims/aimugen/dl/dataset_XXX datasets/dl
 rsync -av /Users/rahmadakbar/greifflab/aims/aimugen/dl/dataset_XXXX datasets/dl
 rsync -av /Users/rahmadakbar/greifflab/aims/aimugen/dl/dataset_XXXX1X datasets/dl
 rsync -av /Users/rahmadakbar/greifflab/aims/aimugen/dl/dataset_ressingle datasets/dl
+rsync -av /Users/rahmadakbar/greifflab/aims/aimugen/dl/dataset_ppiressingle datasets/dl
 rsync -av /Users/rahmadakbar/greifflab/aims/aimugen/dl/dataset_res datasets/dl
 rsync -av /Users/rahmadakbar/greifflab/aims/aimugen/dl/dataset_pc datasets/dl
 rsync -av /Users/rahmadakbar/greifflab/aims/aimugen/datasets/segment_structures datasets

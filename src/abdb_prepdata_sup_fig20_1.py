@@ -180,8 +180,104 @@ def get_ppi_resnum():
     outdf2.to_csv(outname, index=False)
 
 
+
+def gap_in_seq():
+    '''
+    insert gaps in within paratope/epitope sequences
+    :return:
+    '''
+    infile = 'abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired.csv'
+    df = pd.read_csv(infile)
+    print(df.shape)
+    # sys.exit()
+    abgapmotifs = []
+    abgapmotifs2 = []
+    abgapmotifs3 = []
+    aggapmotifs = []
+    aggapmotifs2 = []
+    aggapmotifs3 = []
+    for i, row in df.iterrows():
+        abgaps = row.gap_pattern1.split('X')
+        aggaps = row.gap_pattern2.split('X')
+        pchars = list(row.sequence1)
+        echars = list(row.sequence2)
+        print(abgaps, aggaps, pchars, echars)
+        # sys.exit()
+        abgapmotif  = ''
+        abgapmotif2 = ''
+        abgapmotif3 = ''
+        for res,gap in zip(pchars, abgaps[1:]):
+            abgapmotif += res + gap
+            if gap != '':
+                abgapmotif2 += res + '-'*int(gap)
+                abgapmotif3 += res + '-'
+            else:
+                abgapmotif2 += res + gap
+                abgapmotif3 += res + gap
+        aggapmotif  = ''
+        aggapmotif2 = ''
+        aggapmotif3 = ''
+        for res,gap in zip(echars, aggaps[1:]):
+            aggapmotif += res + gap
+            if gap != '':
+                aggapmotif2 += res + '-'*int(gap)
+                aggapmotif3 += res + '-'
+            else:
+                aggapmotif2 += res + gap
+                aggapmotif3 += res + gap
+        aggapmotifs.append(aggapmotif)
+        aggapmotifs2.append(aggapmotif2)
+        aggapmotifs3.append(aggapmotif3)
+        abgapmotifs.append(abgapmotif)
+        abgapmotifs2.append(abgapmotif2)
+        abgapmotifs3.append(abgapmotif3)
+    df['aggapmotif'] = aggapmotifs
+    df['aggapmotif2'] = aggapmotifs2
+    df['aggapmotif3'] = aggapmotifs3
+    df['abgapmotif'] = abgapmotifs
+    df['abgapmotif2'] = abgapmotifs2
+    df['abgapmotif3'] = abgapmotifs3
+    print(df.head())
+    outname = infile.split('.')[0] + '_phil.csv'
+    print(outname)
+    # sys.exit()
+    df.to_csv(outname, index=False)
+
+
+
+def resgapmotif_dataset(infile, datasetdir, para, epi):
+    '''
+    prepare dl dataset for residue-gap encodeing (aggregate encoding)
+    drop single chars
+    :return:
+    '''
+    # infile = 'abdb_outfiles_2019/respairs_segment_notationx_len_merged_angle_bnaber_phil_pc.csv'
+    df =  pd.read_csv(infile)
+    print(df.shape)
+    # df = df[(df.plen > 1) & (df.epitope_len >1)]
+    print(df.shape)
+    # print(df.head())
+    # sys.exit()
+    datasetdir = '/Users/rahmadakbar/greifflab/aims/aimugen/dl/dataset_%s' % datasetdir
+    os.system('mkdir %s' % datasetdir)
+    outname = '%s/paraepi.tsv' % datasetdir
+    outname2 = '%s/epipara.tsv' % datasetdir
+    print(outname, outname2)
+    # sys.exit()
+    paras = getattr(df, para)
+    epis = getattr(df, epi)
+    outcontent = '\n'.join(['\t'.join(item) for item in zip(paras, epis)])
+    outcontent2 = '\n'.join(['\t'.join(item) for item in zip(epis, paras)])
+    outfile  = open(outname, 'w')
+    outfile.write(outcontent)
+    outfile2 = open(outname2, 'w')
+    outfile2.write(outcontent2)
+
+
 #run stuff
 # sl_dl_summary()
-get_ppi_resnum()
-
+# get_ppi_resnum()
+# gap_in_seq()
+infile = 'abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired_phil.csv'
+resgapmotif_dataset(infile, 'ppiressingle', 'abgapmotif3', 'aggapmotif3')
 
