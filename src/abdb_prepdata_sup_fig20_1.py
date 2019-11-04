@@ -3,9 +3,8 @@ import sys
 import pandas as pd
 import jellyfish
 import os
-from find_files import find_files as fifi
-from io import StringIO
-
+from mpi4py import MPI
+import numpy as np
 
 pd.set_option('display.max_column', None)
 
@@ -273,11 +272,73 @@ def resgapmotif_dataset(infile, datasetdir, para, epi):
     outfile2 = open(outname2, 'w')
     outfile2.write(outcontent2)
 
+def get_ppi_interacting_segment():
+    '''
+    get ppi interacting segments from pdb files in
+    :return:
+    '''
+    pdbdir = '/Users/rahmadakbar/greifflab/aims/aimugen/datasets/3did/pdbs'
+    infile = 'abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired_resnum.csv'
+    df = pd.read_csv(infile)
+    pdbchainpairs = df.pdbchainpair1.tolist()[:20]
+    chunks = np.array_split(pdbchainpairs, 4)
+    chunks = np.array_split(pdbchainpairs,4)
+    ## scatter with mpi
+    comm = MPI.COMM_WORLD
+    size = comm.Get_size()
+    rank = comm.Get_rank()
+
+    if rank == 0:
+        data = chunks
+    else:
+        data = None
+
+    data = comm.scatter(data, root=0)
+    ## end MPI
+    for i,pdbchainpair in enumerate(data):
+        parts  = pdbchainpair.split('_')
+        pdbid = parts[0]
+        chain1 = parts[1][0]
+        chain2 =  parts[1][1]
+        cdf = df[df.pdbchainpair1 == pdbchainpair]
+        resnum1 = [int(item) for item in df.resnum2.iloc[0].split('-')]
+        resnum2 = [int(item) for item in df.resnum1.iloc[0].split('-')]
+        min1, max1 =  min(resnum1)-1, max(resnum1)+1
+        min2, max2 =  min(resnum2)-1, max(resnum2)+1
+        pdbfile = pdbdir + '/' + pdbid + '.pdb'
+        pdbchainfile1 = pdbdir + '/' + pdbid + '_' + chain1 + '.pdb'
+        pdbchainfile2 = pdbdir + '/' + pdbid + '_' + chain2 + '.pdb'
+        command1 = 'pdb_selchain -%s %s > %s' % (chain1, pdbfile, pdbchainfile1)
+        command2 = 'pdb_selchain -%s %s > %s' % (chain2, pdbfile, pdbchainfile2)
+        os.system(command1)
+        os.system(command2)
+        segmentdir = '/Users/rahmadakbar/greifflab/aims/aimugen/datasets/3did/interacting_residues'
+        sfile1 = segmentdir + '/' + pdbid + '_' + chain1 + '_interacting_segment.pdb'
+        sfile2 = segmentdir + '/' + pdbid + '_' + chain2 + '_interacting_segment.pdb'
+        scommand1 = 'pdb_selres -%s:%s %s > %s' % (min1, max1, pdbchainfile1, sfile1)
+        scommand2 = 'pdb_selres -%s:%s %s > %s' % (min2, max2, pdbchainfile2, sfile2)
+        os.system(scommand1)
+        os.system(scommand2)
+        ## remove header and other bits
+        content1 = open(sfile1).read().splitlines()
+        content1 = '\n'.join([item for item in content1 if item.startswith('ATOM')])
+        outfile1 = open(sfile1, 'w')
+        outfile1.write(content1)
+        content2 = open(sfile2).read().splitlines()
+        content2 = '\n'.join([item for item in content1 if item.startswith('ATOM')])
+        outfile2 = open(sfile2, 'w')
+        outfile2.write(content1)
+        ## end remove header and other bits
+        print('str %s done' %  i)
 
 #run stuff
 # sl_dl_summary()
 # get_ppi_resnum()
 # gap_in_seq()
-infile = 'abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired_phil.csv'
-resgapmotif_dataset(infile, 'ppiressingle', 'abgapmotif3', 'aggapmotif3')
+# infile = 'abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired_phil.csv'
+# resgapmotif_dataset(infile, 'ppiressingle', 'abgapmotif3', 'aggapmotif3')
+# lost the codes for downloading pdbs (with mpi) due to rm error.
+get_ppi_interacting_segment()
+
+
 
