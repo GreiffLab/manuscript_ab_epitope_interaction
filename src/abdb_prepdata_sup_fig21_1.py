@@ -280,8 +280,9 @@ def get_ppi_interacting_segment():
     pdbdir = '/Users/rahmadakbar/greifflab/aims/aimugen/datasets/3did/pdbs'
     infile = 'abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired_resnum.csv'
     df = pd.read_csv(infile)
-    pdbchainpairs = df.pdbchainpair1.tolist()[:20]
-    chunks = np.array_split(pdbchainpairs, 4)
+    pdbchainpairs = df.pdbchainpair1.tolist()[:]
+    # pdbchainpairs = [item for item in pdbchainpairs if item == '1VXQ_NE']
+    total_size = len(pdbchainpairs)
     chunks = np.array_split(pdbchainpairs,4)
     ## scatter with mpi
     comm = MPI.COMM_WORLD
@@ -294,42 +295,66 @@ def get_ppi_interacting_segment():
         data = None
 
     data = comm.scatter(data, root=0)
+    total_size = len(data)
     ## end MPI
+    # for i,pdbchainpair in enumerate(pdbchainpairs):
+    except_counter = 0
     for i,pdbchainpair in enumerate(data):
-        parts  = pdbchainpair.split('_')
-        pdbid = parts[0]
-        chain1 = parts[1][0]
-        chain2 =  parts[1][1]
-        cdf = df[df.pdbchainpair1 == pdbchainpair]
-        resnum1 = [int(item) for item in df.resnum2.iloc[0].split('-')]
-        resnum2 = [int(item) for item in df.resnum1.iloc[0].split('-')]
-        min1, max1 =  min(resnum1)-1, max(resnum1)+1
-        min2, max2 =  min(resnum2)-1, max(resnum2)+1
-        pdbfile = pdbdir + '/' + pdbid + '.pdb'
-        pdbchainfile1 = pdbdir + '/' + pdbid + '_' + chain1 + '.pdb'
-        pdbchainfile2 = pdbdir + '/' + pdbid + '_' + chain2 + '.pdb'
-        command1 = 'pdb_selchain -%s %s > %s' % (chain1, pdbfile, pdbchainfile1)
-        command2 = 'pdb_selchain -%s %s > %s' % (chain2, pdbfile, pdbchainfile2)
-        os.system(command1)
-        os.system(command2)
-        segmentdir = '/Users/rahmadakbar/greifflab/aims/aimugen/datasets/3did/interacting_residues'
-        sfile1 = segmentdir + '/' + pdbid + '_' + chain1 + '_%s%s_' % (chain1, chain2) + '_interacting_segment.pdb'
-        sfile2 = segmentdir + '/' + pdbid + '_' + chain2 + '_%s%s_' % (chain1, chain2) + '_interacting_segment.pdb'
-        scommand1 = 'pdb_selres -%s:%s %s > %s' % (min1, max1, pdbchainfile1, sfile1)
-        scommand2 = 'pdb_selres -%s:%s %s > %s' % (min2, max2, pdbchainfile2, sfile2)
-        os.system(scommand1)
-        os.system(scommand2)
-        ## remove header and other bits
-        content1 = open(sfile1).read().splitlines()
-        content1 = '\n'.join([item for item in content1 if item.startswith('ATOM')])
-        outfile1 = open(sfile1, 'w')
-        outfile1.write(content1)
-        content2 = open(sfile2).read().splitlines()
-        content2 = '\n'.join([item for item in content1 if item.startswith('ATOM')])
-        outfile2 = open(sfile2, 'w')
-        outfile2.write(content1)
-        ## end remove header and other bits
-        print('str %s done' %  i)
+        try:
+            parts  = pdbchainpair.split('_')
+            pdbid = parts[0]
+            chain1 = parts[1][0]
+            chain2 =  parts[1][1]
+            tag = 'inter'
+            if chain1 == chain2:
+                tag = 'intra'
+            cdf = df[df.pdbchainpair1 == pdbchainpair]
+            resnum1 = [int(item) for item in cdf.resnum1.iloc[0].split('-')]
+            resnum2 = [int(item) for item in cdf.resnum2.iloc[0].split('-')]
+            min1, max1 =  min(resnum1)-1, max(resnum1)+1
+            min2, max2 =  min(resnum2)-1, max(resnum2)+1
+            pdbfile = pdbdir + '/' + pdbid + '.pdb'
+            pdbchainfile1 = pdbdir + '/' + pdbid + '_' + chain1 + '.pdb'
+            pdbchainfile2 = pdbdir + '/' + pdbid + '_' + chain2 + '.pdb'
+            command1 = 'pdb_selchain -%s %s > %s' % (chain1, pdbfile, pdbchainfile1)
+            command2 = 'pdb_selchain -%s %s > %s' % (chain2, pdbfile, pdbchainfile2)
+            os.system(command1)
+            os.system(command2)
+            segmentdir = '/Users/rahmadakbar/greifflab/aims/aimugen/datasets/3did/interacting_residues'
+            sfile1 = segmentdir + '/' + pdbid + '_' + chain1 + '_%s%s_' % (chain1, chain2) + '_interacting_segment_%s.pdb' % tag
+            sfile2 = segmentdir + '/' + pdbid + '_' + chain2 + '_%s%s_' % (chain1, chain2) + '_interacting_segment_%s.pdb' % tag
+            scommand1 = 'pdb_selres -%s:%s %s > %s' % (min1, max1, pdbchainfile1, sfile1)
+            scommand2 = 'pdb_selres -%s:%s %s > %s' % (min2, max2, pdbchainfile2, sfile2)
+            os.system(scommand1)
+            os.system(scommand2)
+            ## remove header and other bits
+            content1 = open(sfile1).read().splitlines()
+            content1 = '\n'.join([item for item in content1 if item.startswith('ATOM')])
+            outfile1 = open(sfile1, 'w')
+            outfile1.write(content1)
+            content2 = open(sfile2).read().splitlines()
+            content2 = '\n'.join([item for item in content2 if item.startswith('ATOM')])
+            outfile2 = open(sfile2, 'w')
+            outfile2.write(content2)
+            ## end remove header and other bits
+            print('str %s done of %s, rank %s' %  (i, total_size, rank))
+            # print('str %s of %s' % (i, total_size))
+            # print(cdf)
+            # sys.exit()
+        except:
+            except_counter += 1
+            print(except_counter)
+
+def check_structures():
+    '''
+    check 0 byte structure
+    :return:
+    '''
+    egstr = '5ZR1_AA'
+    infile = 'abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired_resnum.csv'
+    df = pd.read_csv(infile)
+    sdf = df[df.pdbchainpair2 ==egstr]
+    print(sdf)
 
 #run stuff
 # sl_dl_summary()
@@ -339,6 +364,7 @@ def get_ppi_interacting_segment():
 # resgapmotif_dataset(infile, 'ppiressingle', 'abgapmotif3', 'aggapmotif3')
 # lost the codes for downloading pdbs (with mpi) due to rm error.
 get_ppi_interacting_segment()
+# check_structures()
 
 
 
