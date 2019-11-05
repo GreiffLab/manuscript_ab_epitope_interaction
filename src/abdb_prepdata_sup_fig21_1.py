@@ -344,6 +344,7 @@ def get_ppi_interacting_segment():
         except:
             except_counter += 1
             print(except_counter)
+            print('excepting...')
 
 def check_structures():
     '''
