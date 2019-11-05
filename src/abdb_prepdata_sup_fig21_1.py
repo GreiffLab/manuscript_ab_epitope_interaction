@@ -354,8 +354,12 @@ def check_structures():
     egstr = '5ZR1_AA'
     infile = 'abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired_resnum.csv'
     df = pd.read_csv(infile)
-    sdf = df[df.pdbchainpair2 ==egstr]
-    print(sdf)
+    df2 = df.sort_values(by = 'pdbid1')
+    df2 = df2[df2.pdbid1 =='1JUN']
+    # print(df.head())
+    print(df2)
+    # sdf = df[df.pdbchainpair2 ==egstr]
+    # print(sdf)
 
 #run stuff
 # sl_dl_summary()
@@ -364,8 +368,8 @@ def check_structures():
 # infile = 'abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired_phil.csv'
 # resgapmotif_dataset(infile, 'ppiressingle', 'abgapmotif3', 'aggapmotif3')
 # lost the codes for downloading pdbs (with mpi) due to rm error.
-get_ppi_interacting_segment()
-# check_structures()
+# get_ppi_interacting_segment()
+check_structures()
 
 
 
