@@ -354,12 +354,37 @@ def check_structures():
     egstr = '5ZR1_AA'
     infile = 'abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired_resnum.csv'
     df = pd.read_csv(infile)
+    uniquepdbids = df.pdbid1.unique()
+    print(uniquepdbids)
+    outdf = pd.DataFrame(uniquepdbids, columns=['pdbid'])
+    print(outdf)
+    outdf.to_csv('abdb_outfiles_2019/ppi_unique_pdbid.csv', index=False)
+    sys.exit()
     df2 = df.sort_values(by = 'pdbid1')
     df2 = df2[df2.pdbid1 =='1JUN']
     # print(df.head())
     print(df2)
     # sdf = df[df.pdbchainpair2 ==egstr]
     # print(sdf)
+
+def add_flipped_chain():
+    '''
+    add flipped chain to ppi file
+    :return:
+    '''
+    infile = 'abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired_resnum.csv'
+    df = pd.read_csv(infile)
+    print(df.head())
+    flippeds = []
+    for i,row in df.iterrows():
+        chainpair = row.pdbchainpair1
+        print(chainpair)
+        fchainpair = chainpair.split('_')[0] + '_' + chainpair.split('_')[-1][1] + chainpair.split('_')[-1][0]
+        print(fchainpair)
+        flippeds.append(fchainpair)
+    df['pdbchainpair3'] = flippeds
+    outname = infile.split('.')[0] + '_flipped.csv'
+    df.to_csv(outname, index=False)
 
 #run stuff
 # sl_dl_summary()
@@ -369,7 +394,6 @@ def check_structures():
 # resgapmotif_dataset(infile, 'ppiressingle', 'abgapmotif3', 'aggapmotif3')
 # lost the codes for downloading pdbs (with mpi) due to rm error.
 # get_ppi_interacting_segment()
-check_structures()
-
-
+# check_structures()
+add_flipped_chain()
 
