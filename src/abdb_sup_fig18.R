@@ -307,7 +307,8 @@ shared_structures = function(){
     geom_bar(mapping = aes(x=cutoff, y=nmotif, fill=source), stat = 'identity') + 
     facet_wrap(~source, scales = 'free')+ 
     geom_text(data=outdf, mapping = aes(x=cutoff, y=nmotif, label = sprintf('%s\n%s%%', nmotif, round(motif_percent,2)*100)), nudge_y = 40) + 
-    labs(x= 'Cut-offs for number of structures \n(2-20 structures)', y = 'Motifs found in a cut-off') + 
+    # labs(x= 'Cut-offs for number of structures \n(2-20 structures)', y = 'Motifs found in a cut-off') + 
+    labs(x= '# of PPI complexes\n(2-20 structures)', y = '# of motifs found across a given\nPPI complexes') + 
     theme(axis.title = element_text(size = 25),
           axis.text = element_text(size = 25),
           legend.title = element_blank(), 

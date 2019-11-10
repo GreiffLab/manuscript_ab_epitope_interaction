@@ -41,6 +41,32 @@ rewcolors2  = c(greys[3:4], blues3[1:2])
 blues5 = c('#1010FF','#1010FF','#1010FF',greys[3],'#1010FF')
 outfigdir = 'abdb_figures_2019'
 
+outpdf = function(infile, tag, width=8, height=8){
+  # assumes infile has extensins (.csv etc)
+  # uses the first bit of the file as name and add the tag
+  # uses ggsave, opens pdf plot after saving
+  inname = strsplit(tail(strsplit(infile, '/')[[1]], n=1), '\\.')[[1]][1]
+  outname = sprintf('%s/%s_%s.pdf', outfigdir,inname,tag)
+  ggsave(outname, width=width, height = height)
+  system(sprintf('open %s', outname))
+  print(sprintf('opening %s', outname))
+  
+}
+
+outpng = function(infile, tag, width=8, height=8){
+  # assumes infile has extensins (.csv etc)
+  # uses the first bit of the file as name and add the tag
+  # uses ggsave, opens pdf plot after saving
+  inname = strsplit(tail(strsplit(infile, '/')[[1]], n=1), '\\.')[[1]][1]
+  outname = sprintf('%s/%s_%s.png', outfigdir,inname,tag)
+  ggsave(outname, width=width, height = height)
+  system(sprintf('open %s', outname))
+  print(sprintf('opening %s', outname))
+}
+
+
+
+
 pattern.bar.pie <- function(infile){
   # infile = 'abdb_outfiles_2019/respairs_absort_cutoff5_abresnumi_segments_abshift_abshiftl_paratope_segment_notationx_count.csv'
   content <- read.csv(infile)
@@ -114,7 +140,7 @@ shared_structures = function(){
     geom_bar(mapping = aes(x=cutoff, y=nmotif, fill=source), stat = 'identity') + 
     facet_wrap(~source, scales = 'free')+ 
     geom_text(data=outdf, mapping = aes(x=cutoff, y=nmotif*1.1, label = nmotif)) + 
-    labs(x= 'Cut-offs for number of structures \n(2-20 structures)', y = 'Motifs found in a cut-off') + 
+    labs(x= '# of Ab-Ag complexes\n(2-20 structures)', y = '# of motifs found across a given\nAb-Ag complexes') + 
     theme(axis.title = element_text(size = 25),
           axis.text = element_text(size = 25),
           legend.title = element_blank(), 
