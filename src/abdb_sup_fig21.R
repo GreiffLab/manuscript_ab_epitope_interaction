@@ -241,10 +241,11 @@ rama_clusters  = function(){
     tempdf = data.frame(percent = percent_content, 'source' = rep(cname, n), 'rama_region' = df$rama_region )
     outdf = rbind(outdf, tempdf)
     print(tempdf)
-    print(outdf)
+    # print(outdf)
   }
   outdf$pcnt2 = as.numeric(gsub(",", ".", gsub("\\.", "", outdf$pcnt)))
   print(outdf)
+  # stop()
   ggplot(data=outdf) + 
     geom_bar(mapping = aes(x=rama_region, y = pcnt2, fill= source), stat = 'identity', position = 'dodge') + 
     scale_fill_manual(values = c(abcolor3, ppi_mcolor, alpha(abcolor3,0.5), abcolor, abcolor2, ppi_pcolor)) + 
@@ -258,7 +259,7 @@ rama_clusters  = function(){
 }
 
 # run stuff
-# rama_clusters()
+rama_clusters()
 
 
 

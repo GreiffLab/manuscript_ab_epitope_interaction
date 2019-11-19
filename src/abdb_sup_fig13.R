@@ -159,9 +159,9 @@ seqnet_clustering = function(){
   print(dim(df))
   sdf[is.na(sdf)] = 0
   sdf2mat = data.frame(sdf[,-1])
-  # print(sdf2mat)
-  # stop()
   rownames(sdf2mat) = sdf$motif_source
+  print(sdf2mat)
+  stop()
   edge_intersect = colSums(is.na(sdf[,1:ncol(sdf)])) == 0
   # sdf2 = sdf[, edge_intersect]
   outname = 'abdb_figures_2019/paratope_epitope_ppi_seqnet_edges_heatmap2.pdf'
@@ -179,7 +179,7 @@ seqnet_clustering = function(){
                   legend = TRUE,
                   legend_breaks = c(0.2,0.4,0.6,0.8,1),
                   legend_labels =  c('0.2', '0.4', '0.6', '0.8','Sequential\nfrequency\n1'),
-                  clustering_distance_rows = 'correlation'
+                  clustering_distance_rows = 'correlation',
                   )
   pdf(outname, width = 200, height = 30)
   grid.draw(hmap$gtable)
@@ -387,7 +387,7 @@ seq_dep_circos = function(infile){
 # run stuff
 # sequential_dependency_net('abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired_XXX_X1X_X2X_XX_ppimotif_edge_next.csv')
 # sequential_dependency_net('abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired_XXX_X1X_X2X_XX_ppimotifpartner_edge_next.csv')
-# seqnet_clustering()
+seqnet_clustering()
 # edges_overlap('abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired_XXX_X1X_X2X_XX_ppimotif_edge_next.csv')
 # edges_overlap('abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired_XXX_X1X_X2X_XX_ppimotifpartner_edge_next.csv')
 # edges_overlap_motifwise()

@@ -1,4 +1,4 @@
-rama_region,ABDB Motifs,PPI Motifs,CDRs,FRs,ABDB paratope binders,PPI binders
+rama_region,ABDB Motifs,PPI Motifs,CDRs,FRs,ABDB interacting residues,PPI interacting residues
 A,"9,00843","58,4386","12,8369","5,84063","11,3807","50,5803"
 B,"41,2848","10,6144","32,278","55,3079","32,4339","12,6875"
 D,"16,1076","12,6688","16,9062","6,97998","17,9251","14,0062"
