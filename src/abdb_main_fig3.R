@@ -127,11 +127,11 @@ shared_structures = function(){
     print(i)
     sdf = countdf[countdf$n>=i,]
     # print(dim(sdf))
-    newrow = data_frame(nmotif = dim(sdf)[1], cutoff = i, source = 'Paratope')
+    newrow = data_frame(nmotif = dim(sdf)[1], cutoff = i, source = 'Paratope', motif_percent = dim(sdf)[1]/dim(countdf)[1])
     outdf = rbind(outdf, newrow)
     sdf2 = countdf2[countdf2$n>i,]
     # print(dim(sdf))
-    newrow2 = data_frame(nmotif = dim(sdf2)[1], cutoff = i, source = 'Epitope')
+    newrow2 = data_frame(nmotif = dim(sdf2)[1], cutoff = i, source = 'Epitope', motif_percent = dim(sdf2)[1]/dim(countdf2)[1])
     outdf = rbind(outdf, newrow2)
     # stop()
   }
@@ -139,7 +139,8 @@ shared_structures = function(){
   ggplot(data=outdf) +
     geom_bar(mapping = aes(x=cutoff, y=nmotif, fill=source), stat = 'identity') + 
     facet_wrap(~source, scales = 'free')+ 
-    geom_text(data=outdf, mapping = aes(x=cutoff, y=nmotif*1.1, label = nmotif)) + 
+    # geom_text(data=outdf, mapping = aes(x=cutoff, y=nmotif*1.1, label = nmotif)) + 
+    geom_text(data=outdf, mapping = aes(x=cutoff, y=nmotif, label = sprintf('%s\n%s%%', nmotif, round(motif_percent,2)*100)), nudge_y = 10) + 
     labs(x= '# of Ab-Ag complexes\n(2-20 structures)', y = '# of motifs found across a given\nAb-Ag complexes') + 
     theme(axis.title = element_text(size = 25),
           axis.text = element_text(size = 25),
