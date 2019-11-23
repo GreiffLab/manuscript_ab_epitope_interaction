@@ -60,7 +60,7 @@ ppi_pcolor = rgb(ppi_pcolor_rgb[1], ppi_pcolor_rgb[2], ppi_pcolor_rgb[3])
 print(ppi_mcolor)
 print(ppi_pcolor)
 
-stop()
+# stop()
 my_ccols = c('salmon',
              'deepskyblue1', 'deepskyblue2', 'deepskyblue3', 'deepskyblue4',
              'orange1', 'orange2', 'orange3', 'orange4')
@@ -106,8 +106,12 @@ plot_sl_dl_summary = function(){
   # note to self: the merge sl dl abdb_prepdata_sup_fig18, now also in prepdata_sup_fig5
   infile = 'abdb_outfiles_2019/sl_dl_evalsummary_ppi.csv'
   df = read_csv(infile)
+  intags = c('control_cond_proba_with_prior', 'exp_cond_proba_with_prior', 'exp_NMT', 'control_NMT')
+  outtags = c('motif_paraepipos', 'motif_epiparapos')
+  ## runs for pos failed, disregard for now. time is short
+  df = df %>% filter(exp_tag %in% intags, !use_case %in% outtags)
+  # df = df %>% filter(!use_case %in% outtags)
   print(df)
-  print(length(df$exp_tag))
   # stop()
   df$exp_tag = factor(df$exp_tag, levels = c('control_marginal_proba', 'exp_marginal_proba',
                                               'control_cond_proba', 'exp_cond_proba',
@@ -119,20 +123,26 @@ plot_sl_dl_summary = function(){
                                                'seq_paraepi', 'agg_paraepi', 'seq_epipara', 'agg_epipara'))
   print(df)
   # stop()
-  xticklabels=  c('Motif P to E', 'Motif + pos P to E',
-                 'Motif E to P', 'Motif + pos E to P',
+  ## runs for pos failed, disregard for now. time is short
+  # xticklabels=  c('Motif P to E', 'Motif + pos P to E',
+  #                'Motif E to P', 'Motif + pos E to P',
+  #                'Seq P to E', 'Agg P to E',
+  #                'Seq E to P', 'Agg E to P')
+
+  xticklabels=  c('Motif P to E', 'Motif E to P',
                  'Seq P to E', 'Agg P to E',
                  'Seq E to P', 'Agg E to P')
+  
   # xtickbreaks = unique(dfmed$use_case)
   print(xticklabels)
   barlabels = c()
   for (tag in df$exp_tag){
     if (grepl('NMT', tag)){
-      tag = '' 
+      tag = 'DEEP' 
       barlabels = c(barlabels, tag)
     }
     if (grepl('cond_proba_with', tag)){
-      tag = 'Shallow 3' 
+      tag = 'SHALLOW' 
       barlabels = c(barlabels, tag)
     }
     if (grepl('cond_proba', tag)){
@@ -146,7 +156,7 @@ plot_sl_dl_summary = function(){
   }
   print(barlabels)
   df$exp_tag2 = barlabels
-  print(df)
+  print(df$exp_tag)
   # stop()
   # print(xtickbreaks)
   # print(df)
@@ -179,5 +189,86 @@ plot_sl_dl_summary = function(){
   
 }
 
+
+ld_bin = function(x){
+  x[x>0] = 1
+  return = x
+}
+
+
+dl_ld_binary = function(){
+  # output ldexact and ldnorm centers median and mean.
+  infile = 'abdb_outfiles_2019/ppi_merged_eval_files.csv'
+  # infile = 'abdb_outfiles_2019/merged_eval_files10k.csv'
+  df = read_csv(infile)
+  print(df)
+  bins = ld_bin(df$ldnorm) # binary ld
+  print(sum(bins))
+  print(dim(df))
+  df$ldexact = bins
+  dfmed = df %>% group_by(rep, use_case, data_tag, exp_tag) %>% summarise(ldnorm_mea = mean(ldnorm), 
+                                                                          ldnorm_sd = sd(ldnorm),
+                                                                          ldexact_mea = mean(ldexact),
+                                                                          ldexact_sd = sd(ldexact))
+  print(dfmed)
+  print(dfmed[order(dfmed$ldnorm_mea),])
+  dfmed = dfmed %>% group_by(use_case, data_tag,exp_tag) %>% summarise(repldnormmea = mean(ldnorm_mea), 
+                                                                       repldnormse = sd(ldnorm_mea)/sqrt(length(ldnorm_mea)), 
+                                                                       ldnormreps = length(ldnorm_mea),
+                                                                       repldexactmea = mean(ldexact_mea), 
+                                                                       repldexactse = sd(ldexact_mea)/sqrt(length(ldexact_mea)), 
+                                                                       ldexactreps = length(ldexact_mea))
+  xticklabels=  c('Motif E --> P', 'Motif + position E --> P',
+                 'Motif P --> E', 'Motif + position P --> E',
+                 'Sequence E --> P', 'Sequence P --> E')
+  xtickbreaks = unique(dfmed$use_case)
+  print(xticklabels)
+  print(xtickbreaks)
+  dfmed[dfmed=='control'] = 'control_NMT'
+  dfmed[dfmed=='exp'] = 'exp_NMT'
+  dfmed['source'] = rep('abdb', dim(dfmed)[1])
+  print(dfmed)
+  # stop()
+  write_csv(dfmed, 'abdb_outfiles_2019/ppi_eval_summary.csv')
+  stop()
+}
+  
+agg_dl = function(){
+  infile = 'abdb_outfiles_2019/aggppi_merged_eval_files.csv'
+  df = read_csv(infile)
+  print(df)
+  bins = ld_bin(df$ldnorm) # binary ld
+  print(sum(bins))
+  print(dim(df))
+  df$ldexact = bins
+  dfmed = df %>% group_by(rep, use_case, data_tag, exp_tag) %>% summarise(ldnorm_mea = mean(ldnorm), 
+                                                                          ldnorm_sd = sd(ldnorm),
+                                                                          ldexact_mea = mean(ldexact),
+                                                                          ldexact_sd = sd(ldexact))
+  print(dfmed)
+  print(dfmed[order(dfmed$ldnorm_mea),])
+  dfmed = dfmed %>% group_by(use_case, data_tag,exp_tag) %>% summarise(repldnormmea = mean(ldnorm_mea), 
+                                                                       repldnormse = sd(ldnorm_mea)/sqrt(length(ldnorm_mea)), 
+                                                                       ldnormreps = length(ldnorm_mea),
+                                                                       repldexactmea = mean(ldexact_mea), 
+                                                                       repldexactse = sd(ldexact_mea)/sqrt(length(ldexact_mea)), 
+                                                                       ldexactreps = length(ldexact_mea))
+  
+  # print(dfmed[order(dfmed$repldnormmea),])
+  dfmed[dfmed=='control'] = 'control_NMT'
+  dfmed[dfmed=='exp'] = 'exp_NMT'
+  dfmed[dfmed=='seq'] = 'agg'
+  dfmed[dfmed=='seq_epipara'] = 'agg_epipara'
+  dfmed[dfmed=='seq_paraepi'] = 'agg_paraepi'
+  dfmed['source'] = rep('abdb', dim(dfmed)[1])
+  print(dfmed)
+  # stop()
+  write_csv(dfmed, 'abdb_outfiles_2019/aggppi_eval_summary.csv')
+}
+
+
+
 # run stuff
+# dl_ld_binary()
+# agg_dl()
 plot_sl_dl_summary()

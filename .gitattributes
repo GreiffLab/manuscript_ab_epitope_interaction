@@ -9,3 +9,5 @@ datasets/preprocessed/merged_eval_files.csv filter=lfs diff=lfs merge=lfs -text
 datasets/preprocessed/sub0.01_ppi_partner_overlap.csv filter=lfs diff=lfs merge=lfs -text
 datasets/preprocessed/heavy_light_ag_aaseq_antigen_full_ld.csv filter=lfs diff=lfs merge=lfs -text
 datasets/preprocessed/agg_merged_eval_files.csv filter=lfs diff=lfs merge=lfs -text
+datasets/preprocessed/ppi_merged_eval_files.csv filter=lfs diff=lfs merge=lfs -text
+datasets/preprocessed/aggppi_merged_eval_files.csv filter=lfs diff=lfs merge=lfs -text

@@ -139,8 +139,11 @@ plot_sl_dl_summary = function(){
   print(df$use_case)
   df$use_case = factor(df$use_case, levels = c('motif_paraepi', 'motif_paraepipos', 'motif_epipara', 'motif_epiparapos',
                                                'seq_paraepi', 'agg_paraepi', 'seq_epipara', 'agg_epipara'))
-  print(df)
-  stop()
+  print(df$exp_tag)
+  intags = c('control_cond_proba_with_prior', 'exp_cond_proba_with_prior', 'exp_NMT', 'control_NMT')
+  df = df %>% filter(exp_tag %in% intags)
+  print(dim(df))
+  # stop()
   xticklabels=  c('Motif P to E', 'Motif + pos P to E',
                  'Motif E to P', 'Motif + pos E to P',
                  'Seq P to E', 'Agg P to E',
@@ -150,11 +153,11 @@ plot_sl_dl_summary = function(){
   barlabels = c()
   for (tag in df$exp_tag){
     if (grepl('NMT', tag)){
-      tag = '' 
+      tag = 'DEEP' 
       barlabels = c(barlabels, tag)
     }
     if (grepl('cond_proba_with', tag)){
-      tag = 'Shallow 3' 
+      tag = 'SHALLOW' 
       barlabels = c(barlabels, tag)
     }
     if (grepl('cond_proba', tag)){

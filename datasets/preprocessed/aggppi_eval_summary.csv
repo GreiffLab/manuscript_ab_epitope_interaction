@@ -1,0 +1,4 @@
+use_case,data_tag,exp_tag,repldnormmea,repldnormse,ldnormreps,repldexactmea,repldexactse,ldexactreps,source
+agg_epipara,agg,exp_NMT,0.7794472317287231,NA,1,0.9745094946691061,NA,1,abdb
+agg_paraepi,agg,control_NMT,0.9700872621861734,0.00241902967076707,2,0.9999960291002719,2.4047707135044227e-6,2,abdb
+agg_paraepi,agg,exp_NMT,0.7891411290302749,0.0018392451000878163,2,0.970247878159266,3.315905879943126e-4,2,abdb

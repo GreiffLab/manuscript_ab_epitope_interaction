@@ -5,6 +5,7 @@ import jellyfish
 import os
 from mpi4py import MPI
 import numpy as np
+from find_files import find_files as fifi
 
 pd.set_option('display.max_column', None)
 
@@ -98,7 +99,7 @@ def sl_dl_summary():
     outdf = pd.DataFrame(outdata, columns=colnames)
     print(outdf.shape)
     # sys.exit()
-    evalsumfile = 'abdb_outfiles_2019/eval_summary.csv'
+    evalsumfile = 'abdb_outfiles_2019/ppi_eval_summary.csv'
     dfeval = pd.read_csv(evalsumfile)
     print(dfeval)
     # sys.exit()
@@ -338,7 +339,8 @@ def get_ppi_interacting_segment():
 # infile = 'abdb_outfiles_2019/threedid_no_iglike_notationx_merged_maxgap7_maxlen300_paired_phil.csv'
 # resgapmotif_dataset(infile, 'ppiressingle', 'abgapmotif3', 'aggapmotif3')
 # lost the codes for downloading pdbs (with mpi) due to rm error.
-get_ppi_interacting_segment()
+# get_ppi_interacting_segment()
+sl_dl_summary()
 
 
 
