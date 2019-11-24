@@ -147,6 +147,12 @@ sequential_dependency_net_homo_mus = function(infile) {
 }
 
 
+min_max_scale = function(x){
+  normx = (x-min(x))/(max(x)-min(x))
+  return(normx)
+}
+
+
 seqnet_clustering = function(){
   infiles = list.files('abdb_outfiles_2019', pattern = 'seqnet_edges', full.names = TRUE)
   infiles = infiles[grepl('homo|mus',infiles)]
@@ -155,7 +161,7 @@ seqnet_clustering = function(){
   print(df)
   # stop()
   print(unique(df$motif_source))
-  dfscaled = df %>% group_by(motif_source) %>% mutate(weight = normalize_my(weight))
+  dfscaled = df %>% group_by(motif_source) %>% mutate(weight = min_max_scale(weight))
   print(df[df$weight>1])
   print(dfscaled)
   sdf = spread(dfscaled[,3:5], key = source_target, value = weight)
@@ -178,6 +184,7 @@ seqnet_clustering = function(){
   edge_intersect = colSums(is.na(sdf[,1:ncol(sdf)])) == 0
   # sdf2 = sdf[, edge_intersect]
   outname = 'abdb_figures_2019/homo_mus_paratope_epitope_seqnet_edges_heatmap.pdf'
+  outnamepng = 'abdb_figures_2019/homo_mus_paratope_epitope_seqnet_edges_heatmap.png'
   hmap = pheatmap(sdf2mat,
                   labels_row = sdf$motif_source,
                   annotation_row = metarow,
@@ -195,9 +202,10 @@ seqnet_clustering = function(){
                   clustering_distance_rows = 'correlation'
                   )
   pdf(outname, width = 200, height = 30)
+  png(outnamepng, width = 20000, height = 2000, res = 150)
   grid.draw(hmap$gtable)
   dev.off()
-  system(sprintf('open %s', outname))
+  system(sprintf('open %s', outnamepng))
   
 }
 
