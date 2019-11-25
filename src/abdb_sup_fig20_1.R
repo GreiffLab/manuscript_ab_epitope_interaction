@@ -129,9 +129,9 @@ plot_sl_dl_summary = function(){
   #                'Seq P to E', 'Agg P to E',
   #                'Seq E to P', 'Agg E to P')
 
-  xticklabels=  c('Motif P to E', 'Motif E to P',
-                 'Seq P to E', 'Agg P to E',
-                 'Seq E to P', 'Agg E to P')
+  xticklabels=  c('Motif PPI to PPI partner', 'Motif PPI partner to PPI',
+                 'Seq PPI to PPI partner', 'Agg PPI to PPI partner',
+                 'Seq PPI partner to PPI', 'Agg PPI partner to PPI')
   
   # xtickbreaks = unique(dfmed$use_case)
   print(xticklabels)
@@ -166,7 +166,7 @@ plot_sl_dl_summary = function(){
     geom_bar( position = position_dodge(), stat = 'identity') + 
     geom_text(aes(y= repldnormmea-0.01, label = round(repldnormmea, 2)), size= 4, color = 'black', position = position_dodge(0.9)) + 
     geom_text(aes(y=0.005, label = exp_tag2), angle=90, size= 5, color='black', position = position_dodge(0.9), hjust=0) + 
-    labs(y= 'Mean prediction error', x= 'Use case', fill = 'Experiment type') + 
+    labs(y= 'Prediction error', x= 'Use case', fill = 'Experiment type') + 
     scale_fill_manual(values=my_ccols3) +
     theme(legend.position = 0) + 
     scale_x_discrete(labels = xticklabels) +
