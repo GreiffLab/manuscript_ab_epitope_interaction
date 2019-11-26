@@ -107,7 +107,7 @@ plot_sl_dl_summary = function(){
   infile = 'abdb_outfiles_2019/sl_dl_evalsummary_ppi.csv'
   df = read_csv(infile)
   intags = c('control_cond_proba_with_prior', 'exp_cond_proba_with_prior', 'exp_NMT', 'control_NMT')
-  outtags = c('motif_paraepipos', 'motif_epiparapos')
+  outtags = c('motif_paraepipos', 'motif_epiparapos', 'motif_epipara', 'seq_epipara', 'agg_epipara')
   ## runs for pos failed, disregard for now. time is short
   df = df %>% filter(exp_tag %in% intags, !use_case %in% outtags)
   # df = df %>% filter(!use_case %in% outtags)
@@ -129,10 +129,14 @@ plot_sl_dl_summary = function(){
   #                'Seq P to E', 'Agg P to E',
   #                'Seq E to P', 'Agg E to P')
 
-  xticklabels=  c('Motif PPI to PPI partner', 'Motif PPI partner to PPI',
-                 'Seq PPI to PPI partner', 'Agg PPI to PPI partner',
-                 'Seq PPI partner to PPI', 'Agg PPI partner to PPI')
+  # xticklabels=  c('Motif PPI to PPI partner', 'Motif PPI partner to PPI',
+  #                'Seq PPI to PPI partner', 'Agg PPI to PPI partner',
+  #                'Seq PPI partner to PPI', 'Agg PPI partner to PPI')
+
   
+  xticklabels=  c('Motif PPI to PPI partner', 
+                 'Seq PPI to PPI partner', 'Agg PPI to PPI partner')
+    
   # xtickbreaks = unique(dfmed$use_case)
   print(xticklabels)
   barlabels = c()
@@ -170,6 +174,7 @@ plot_sl_dl_summary = function(){
     scale_fill_manual(values=my_ccols3) +
     theme(legend.position = 0) + 
     scale_x_discrete(labels = xticklabels) +
+    ylim(0,1) +
     theme(axis.title = element_text(size = 30, color = 'gray42'), 
           axis.text = element_text(size=22, color='gray42'))
   outpdf(infile, 'norm_bar', height = 11, width = 25)
