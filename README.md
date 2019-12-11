@@ -9,7 +9,7 @@ Read the manuscript [here](https://www.biorxiv.org/content/10.1101/759498v4)
 
 * ```src``` contains codes (in ```Python``` and ```R```) for main and supplementary figures
 * ```figures``` contains main and supplementary figures
-* Analyses were primarily done usig the files:
+* Analyses were primarily done using the files:
 	* respairs_segment_notationx* (AbDB)
 	* threedid_no_iglike_notationx* (3did)
 
