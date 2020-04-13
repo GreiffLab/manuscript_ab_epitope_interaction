@@ -1,2 +1,4 @@
-file_preper.sh
+*.sh
+*.swp
+*.swo
 README.md.bak
