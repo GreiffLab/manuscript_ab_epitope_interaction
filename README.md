@@ -9,6 +9,10 @@ Read the manuscript [here](https://www.biorxiv.org/content/10.1101/759498v4)
 
 * ```src``` contains codes (in ```Python``` and ```R```) for main and supplementary figures
 * ```figures``` contains main and supplementary figures
+* ```dl``` contains codes for deep learning
+* ```sl``` contains codes for shallow learning
+* ```suplemental_text``` contains codes and tex files the derivation of an analytical solution for the theoretical number of motifs within one CDR/FR region
+* ```ramachandran_files``` contains codes and figures for Ramachandran angle calculations
 * Analyses were primarily done using the files:
 	* respairs_segment_notationx* (AbDB)
 	* threedid_no_iglike_notationx* (3did)
