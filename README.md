@@ -16,6 +16,7 @@ Read the manuscript [here](https://www.biorxiv.org/content/10.1101/759498v4)
 * Analyses were primarily done using the files:
 	* respairs_segment_notationx* (AbDB)
 	* threedid_no_iglike_notationx* (3did)
+* Raw deep learning models and outputfiles are also available at ```https://archive.sigma2.no``` under DOI ```10.11582/2020.00060```
 
 * Dataset details
 
