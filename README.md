@@ -136,6 +136,6 @@ The file contains residues pairs (protein-protein interaction, PPI) of all prote
 3. Versioning: All changes to this dataset may be documented in a changelog in this README document.
 
 
-2019 GreiffLab
+2020 GreiffLab
 
 
