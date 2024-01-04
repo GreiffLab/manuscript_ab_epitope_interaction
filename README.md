@@ -50,7 +50,7 @@ This file contains residues pairs annotated by region (segment). Along with the 
               epitope: interacting residues in an epitope.
               epitope_len: the number of residues in an epitope.
               ag_motif: structural interaction motif of an epitope.
-              agresnumiset: a set containing the residue number in a paratope. 
+              agresnumiset: a set containing the residue number in an epitope. 
               agchain: the chain of the antigen
 
 2. File formats: comma separated file (CSV).
